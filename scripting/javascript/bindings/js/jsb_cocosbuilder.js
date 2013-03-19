@@ -25,7 +25,9 @@ cc.BuilderReader.load = function(file, owner, parentSize)
     }
     else if (owner)
     {
-        node = reader.load(file,owner);
+        // TODO: fix it by sunzhuoshi@gmail.com
+        //node = reader.load(file,owner);
+        node = reader.load(file);        
     }
     else
     {
