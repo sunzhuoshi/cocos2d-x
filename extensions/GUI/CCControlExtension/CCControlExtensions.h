@@ -33,6 +33,5 @@ THE SOFTWARE.
 #include "CCControlSlider.h"
 #include "CCControlStepper.h"
 #include "CCControlSwitch.h"
-#include "CCSpriteControlButton.h"
 
 #endif
