@@ -74,7 +74,7 @@ std::map<int,int> ports_sockets;
 std::map<std::string, js::RootedObject*> globals;
 
 static void executeJSFunctionFromReservedSpot(JSContext *cx, JSObject *obj,
-                                              jsval &dataVal, jsval &retval) {
+                                              unsigned argc, jsval *dataVals, jsval &retval) {
 
     jsval func = JS_GetReservedSlot(obj, 0);
 
@@ -82,10 +82,10 @@ static void executeJSFunctionFromReservedSpot(JSContext *cx, JSObject *obj,
     jsval thisObj = JS_GetReservedSlot(obj, 1);
 	JSAutoCompartment ac(cx, obj);
     if(thisObj == JSVAL_VOID) {
-        JS_CallFunctionValue(cx, obj, func, 1, &dataVal, &retval);
+        JS_CallFunctionValue(cx, obj, func, argc, dataVals, &retval);
     } else {
         assert(!JSVAL_IS_PRIMITIVE(thisObj));
-        JS_CallFunctionValue(cx, JSVAL_TO_OBJECT(thisObj), func, 1, &dataVal, &retval);
+        JS_CallFunctionValue(cx, JSVAL_TO_OBJECT(thisObj), func, argc, dataVals, &retval);
     }
 }
 
@@ -709,13 +709,28 @@ int ScriptingCore::executeMenuItemEvent(CCMenuItem* pMenuItem)
     if (!p) return 0;
 
     jsval retval;
-    jsval dataVal;
-    js_proxy_t *proxy;
-    JS_GET_PROXY(proxy, pMenuItem);
-    dataVal = (proxy ? OBJECT_TO_JSVAL(proxy->obj) : JSVAL_NULL);
+    jsval dataVal = OBJECT_TO_JSVAL(p->obj);
 
-    executeJSFunctionFromReservedSpot(this->cx_, p->obj, dataVal, retval);
+    executeJSFunctionFromReservedSpot(this->cx_, p->obj, 1, &dataVal, retval);
 
+    return 1;
+}
+
+int ScriptingCore::executeControlEvent(void* control, int event)
+{
+    js_proxy_t *p;
+    JS_GET_PROXY(p, control);
+    
+    if (!p) {
+        return 0;
+    }
+    jsval retVal;
+    jsval dataVals[2];
+    dataVals[0] = OBJECT_TO_JSVAL(p->obj);
+    dataVals[1] = INT_TO_JSVAL(event);
+    
+    executeJSFunctionFromReservedSpot(this->cx_, p->obj, 2, &dataVals[0], retVal);
+    
     return 1;
 }
 
