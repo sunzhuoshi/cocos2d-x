@@ -76,6 +76,7 @@ cc.BuilderReader.load = function(file, owner, parentSize)
         var documentControllerName = animationManager.getDocumentControllerName();
         if (!documentControllerName) continue;
 
+        cc.log('documentControllerName: ' + documentControllerName);
         // Create a document controller
         var controller = new _ccbGlobalContext[documentControllerName]();
         controller.controllerName = documentControllerName;
