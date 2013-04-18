@@ -76,6 +76,23 @@ cc.MENU_STATE_TRACKING_TOUCH = 1;
 cc.MENU_HANDLER_PRIORITY = -128;
 cc.DEFAULT_PADDING = 5;
 
+// extension
+cc.CONTROL_EVENT_TOUCH_DOWN = 1 << 0;    // A touch-down event in the control.
+cc.CONTROL_EVENT_TOUCH_DRAGINSIDE = 1 << 1;    // An event where a finger is dragged inside the bounds of the control.
+cc.CONTROL_EVENT_TOUCH_DRAGOUTSIDE = 1 << 2;    // An event where a finger is dragged just outside the bounds of the control.
+cc.CONTROL_EVENT_TOUCH_DRAGENTER = 1 << 3;    // An event where a finger is dragged into the bounds of the control.
+cc.CONTROL_EVENT_TOUCH_DRAGEXIT = 1 << 4;    // An event where a finger is dragged from within a control to outside its bounds.
+cc.CONTROL_EVENT_TOUCH_UPINSIDE = 1 << 5;    // A touch-up event in the control where the finger is inside the bounds of the control.
+cc.CONTROL_EVENT_TOUCH_UPOUTSIDE = 1 << 6;    // A touch-up event in the control where the finger is outside the bounds of the control.
+cc.CONTROL_EVENT_TOUCH_CANCEL = 1 << 7;    // A system event canceling the current touches for the control.
+cc.CONTROL_EVENT_VALUECHANGED = 1 << 8;    // A touch dragging or otherwise manipulating a control; causing it to emit a series of different values.
+
+cc.CONTROL_STATE_NORMAL = 1 << 0; // The normal; or default state of a control梩hat is; enabled but neither selected nor highlighted.
+cc.CONTROL_STATE_HIGHLIGHTED = 1 << 1; // Highlighted state of a control. A control enters this state when a touch down; drag inside or drag enter is performed. You can retrieve and set this value through the highlighted property.
+cc.CONTROL_STATE_DISABLED = 1 << 2; // Disabled state of a control. This state indicates that the control is currently disabled. You can retrieve and set this value through the enabled property.
+cc.CONTROL_STATE_SELECTED = 1 << 3;  // Selected state of a control. This state indicates that the control is currently selected. You can retrieve and set this value through the selected property.
+cc.CONTROL_STATE_INITIAL = 1 << 3;
+
 // reusable objects
 cc._reuse_p = [ {x:0, y:0}, {x:0,y:0}, {x:0,y:0}, {x:0,y:0} ];
 cc._reuse_p_index = 0;
