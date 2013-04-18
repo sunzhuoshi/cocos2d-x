@@ -33,15 +33,34 @@ NS_CC_BEGIN
 
 void CCLog(const char * pszFormat, ...)
 {
-    printf("Cocos2d: ");
+    static char lastLog[kMaxLogLen] = {0};
+    static unsigned int sameLogCount = 1;
+    
     char szBuf[kMaxLogLen];
     
     va_list ap;
     va_start(ap, pszFormat);
     vsnprintf(szBuf, kMaxLogLen, pszFormat, ap);
     va_end(ap);
-    printf("%s", szBuf);
-    printf("\n");
+    if (0 == strlen(lastLog)) {
+        printf("Cocos2d: %s", szBuf);
+        sameLogCount = 1;
+        strcpy(lastLog, szBuf);
+    }
+    else {
+        if (0 == strcmp(lastLog, szBuf)) {
+            sameLogCount ++;
+        }
+        else {
+            if (1 < sameLogCount) {
+                printf("(%u times)", sameLogCount);
+            }
+            printf("\n");
+            printf("Cocos2d: %s", szBuf);
+            sameLogCount = 1;
+            strcpy(lastLog, szBuf);
+        }
+    }
 }
 
 // ios no MessageBox, use CCLog instead
