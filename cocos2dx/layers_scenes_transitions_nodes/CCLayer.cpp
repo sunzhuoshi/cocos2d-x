@@ -512,8 +512,10 @@ GLubyte CCLayerColor::getOpacity()
 /// opacity setter
 void CCLayerColor::setOpacity(GLubyte var)
 {
-    m_cOpacity = var;
-    updateColor();
+    if (onOpacityWillChange(var)) {
+        m_cOpacity = var;
+        updateColor();
+    }
 }
 
 /// color getter

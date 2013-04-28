@@ -160,7 +160,7 @@ void ScriptingCore::executeJSFunctionWithThisObj(jsval thisObj, jsval callback,
 }
 
 
-static void executeJSFunctionWithName(JSContext *cx, JSObject *obj,
+static JSBool executeJSFunctionWithName(JSContext *cx, JSObject *obj,
                                       const char *funcName, jsval &dataVal,
                                       jsval &retval) {
     JSBool hasAction;
@@ -168,14 +168,17 @@ static void executeJSFunctionWithName(JSContext *cx, JSObject *obj,
 
     if (JS_HasProperty(cx, obj, funcName, &hasAction) && hasAction) {
         if(!JS_GetProperty(cx, obj, funcName, &temp_retval)) {
-            return;
+            return JS_FALSE;
         }
         if(temp_retval == JSVAL_VOID) {
-            return;
+            return JS_FALSE;
         }
 		JSAutoCompartment ac(cx, obj);
-        JS_CallFunctionName(cx, obj, funcName,
-                            1, &dataVal, &retval);
+        return JS_CallFunctionName(cx, obj, funcName,
+                                   1, &dataVal, &retval);
+    }
+    else {
+        return JS_FALSE;
     }
 
 }
@@ -664,7 +667,7 @@ void ScriptingCore::cleanupSchedulesAndActions(CCNode *node) {
     }
 }
 
-int ScriptingCore::executeNodeEvent(CCNode* pNode, int nAction)
+int ScriptingCore::executeNodeEvent(CCNode* pNode, int nAction, int nParam, int *nRet)
 {
     js_proxy_t * p;
     JS_GET_PROXY(p, pNode);
@@ -672,7 +675,7 @@ int ScriptingCore::executeNodeEvent(CCNode* pNode, int nAction)
     if (!p) return 0;
 
     jsval retval;
-    jsval dataVal = INT_TO_JSVAL(1);
+    jsval dataVal = INT_TO_JSVAL(nParam);
     js_proxy_t *proxy;
     JS_GET_PROXY(proxy, pNode);
 
@@ -696,6 +699,14 @@ int ScriptingCore::executeNodeEvent(CCNode* pNode, int nAction)
     }
     else if(nAction == kCCNodeOnCleanup) {
         cleanupSchedulesAndActions(pNode);
+    }
+    else if (nAction == kCCNodeOnOpacityWillChange) {
+        retval = BOOLEAN_TO_JSVAL(JS_TRUE);
+        JSBool ret = executeJSFunctionWithName(this->cx_, p->obj, "onOpacityWillChange", dataVal, retval);
+        if (ret && nRet) {
+            *nRet = retval.toBoolean();
+        }
+        return ret;
     }
 
     return 1;

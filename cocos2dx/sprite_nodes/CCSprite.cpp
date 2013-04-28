@@ -915,15 +915,16 @@ void CCSprite::updateColor(void)
 
 void CCSprite::setOpacity(GLubyte opacity)
 {
-    m_nOpacity = opacity;
-
-    // special opacity for premultiplied textures
-    if (m_bOpacityModifyRGB)
-    {
-        setColor(m_sColorUnmodified);
+    if (onOpacityWillChange(opacity)) {
+        m_nOpacity = opacity;
+        
+        // special opacity for premultiplied textures
+        if (m_bOpacityModifyRGB)
+        {
+            setColor(m_sColorUnmodified);
+        }
+        updateColor();
     }
-
-    updateColor();
 }
 
 const ccColor3B& CCSprite::getColor(void)
