@@ -31,6 +31,15 @@
 
 NS_CC_BEGIN
 
+void CCPrint(const char *format, char *buf) {
+    size_t length = strlen(buf);
+    if (buf[length - 1] != '\n') {
+        buf[length - 1] = '\n';
+        buf[length] = '\0';
+    }
+    printf(format, buf);
+}
+
 void CCLog(const char * pszFormat, ...)
 {
     static char lastLog[kMaxLogLen] = {0};
@@ -43,7 +52,10 @@ void CCLog(const char * pszFormat, ...)
     vsnprintf(szBuf, kMaxLogLen, pszFormat, ap);
     va_end(ap);
     if (0 == strlen(lastLog)) {
-        printf("Cocos2d: %s", szBuf);
+        if (szBuf[strlen(szBuf) - 1] != '\n') {
+            strcat(szBuf, "\n");
+        }
+        CCPrint("Cocos2d: %s", szBuf);
         sameLogCount = 1;
         strcpy(lastLog, szBuf);
     }
@@ -55,8 +67,7 @@ void CCLog(const char * pszFormat, ...)
             if (1 < sameLogCount) {
                 printf("(%u times)", sameLogCount);
             }
-            printf("\n");
-            printf("Cocos2d: %s", szBuf);
+            CCPrint("Cocos2d: %s", szBuf);
             sameLogCount = 1;
             strcpy(lastLog, szBuf);
         }
