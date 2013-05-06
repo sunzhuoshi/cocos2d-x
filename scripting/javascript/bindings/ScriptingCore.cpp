@@ -44,7 +44,7 @@
 
 #include "js_bindings_config.h"
 
-#define BYTE_CODE_SUFFIX ".bc"
+#define BYTE_CODE_FILE_EXT ".jsc"
 
 pthread_t debugThread;
 string inData;
@@ -439,12 +439,22 @@ void ScriptingCore::createGlobalContext() {
     }
 }
 
-std::string TransScriptPath(const std::string& path) {
-    if (path.c_str()[0] == '/') {
-        return path;
+std::string TransFilePath(const std::string& filePath) {
+    if (filePath.c_str()[0] == '/') {
+        return filePath;
     }
     else {
-        return cocos2d::CCFileUtils::sharedFileUtils()->fullPathForFilename(path.c_str());
+        return cocos2d::CCFileUtils::sharedFileUtils()->fullPathForFilename(filePath.c_str());
+    }
+}
+
+std::string RemoveFileExt(const std::string& filePath) {
+    size_t pos = filePath.rfind('.');
+    if (0 < pos) {
+        return filePath.substr(0, pos);
+    }
+    else {
+        return filePath;
     }
 }
 
@@ -454,34 +464,35 @@ JSBool ScriptingCore::runScript(const char *path, JSObject* global, JSContext* c
         return false;
     }
     cocos2d::CCFileUtils *futil = cocos2d::CCFileUtils::sharedFileUtils();
-    std::string rpath = TransScriptPath(path);
-    std::string bcPath = TransScriptPath(std::string(path) + BYTE_CODE_SUFFIX);
+    std::string rpath = TransFilePath(path);
     if (global == NULL) {
         global = global_;
     }
     if (cx == NULL) {
         cx = cx_;
     }
-    JSScript *script = NULL;        
-    // this will always compile the script, we can actually check if the script
-    // was compiled before, because it can be in the global map
-    unsigned long length = 0;
-    bool notify = CCFileUtils::sharedFileUtils()->isPopupNotify();
-    CCFileUtils::sharedFileUtils()->setPopupNotify(false);
-    void *data = futil->getFileData(bcPath.c_str(), "rb", &length);
-    CCFileUtils::sharedFileUtils()->setPopupNotify(notify);
-    if (data) {
-        script = JS_DecodeScript(cx, data, length, NULL, NULL);
-    }
-    else {
+    JSScript *script = NULL;    
+    js::RootedObject obj(cx, global);
+	JS::CompileOptions options(cx);
+	options.setUTF8(true).setFileAndLine(rpath.c_str(), 1);
+    
+    // a) check js file first
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-        unsigned char *content = (unsigned char*)CCString::createWithContentsOfFile(rpath.c_str())->getCString();
-        if (content) {
-            script = JS_CompileScript(cx, global, (char*)content, contentSize, path, 1);
-        }
+    unsigned char *content = (unsigned char*)CCString::createWithContentsOfFile(rpath.c_str())->getCString();
+    if (content) {
+        script = JS_CompileScript(cx, global, (char*)content, contentSize, path, 1);
+    }
 #else
         script = JS_CompileUTF8File(cx, global, rpath.c_str());
 #endif
+    // b) no js file, check jsc file
+    if (!script) {
+        std::string byteCodeFilePath = TransFilePath(RemoveFileExt(std::string(path)) + BYTE_CODE_FILE_EXT);
+        unsigned long length = 0;
+        void *data = futil->getFileData(byteCodeFilePath.c_str(), "rb", &length);
+        if (data) {
+            script = JS_DecodeScript(cx, data, length, NULL, NULL);
+        }
     }
     JSBool evaluatedOK = false;
     if (script) {

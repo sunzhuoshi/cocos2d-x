@@ -17,7 +17,7 @@
 
 const char *USAGE = "Usage: jsbcc input_js_file [byte_code_file]\n"\
                     "       Pipe supported";
-const char *BYTE_CODE_FILE_SUFFIX = ".bc";
+const char *BYTE_CODE_FILE_EXT = ".jsc";
 
 enum ErrorCode {
     EC_OK = 0,
@@ -50,6 +50,16 @@ bool WriteFile(const std::string &filePath, void *data, uint32_t length) {
     return false;
 }
 
+std::string RemoveFileExt(const std::string &filePath) {
+    size_t pos = filePath.rfind('.');
+    if (0 < pos) {
+        return filePath.substr(0, pos);
+    }
+    else {
+        return filePath;
+    }
+}
+
 bool CompileFile(const std::string &inputFilePath, const std::string &outputFilePath) {
     bool result = false;
     std::string ofp;
@@ -57,7 +67,7 @@ bool CompileFile(const std::string &inputFilePath, const std::string &outputFile
         ofp = outputFilePath;
     }
     else {
-        ofp = inputFilePath + BYTE_CODE_FILE_SUFFIX;
+        ofp = RemoveFileExt(inputFilePath) + BYTE_CODE_FILE_EXT;
     }
     std::cout << "Input file: " << inputFilePath << std::endl;
     JSRuntime * runtime = JS_NewRuntime(10 * 1024 * 1024);
