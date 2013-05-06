@@ -483,7 +483,7 @@ JSBool ScriptingCore::runScript(const char *path, JSObject* global, JSContext* c
         script = JS_CompileScript(cx, global, (char*)content, contentSize, path, 1);
     }
 #else
-        script = JS_CompileUTF8File(cx, global, rpath.c_str());
+    script = JS_CompileUTF8File(cx, global, rpath.c_str());
 #endif
     // b) no js file, check jsc file
     if (!script) {
