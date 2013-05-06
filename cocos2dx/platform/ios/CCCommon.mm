@@ -65,7 +65,7 @@ void CCLog(const char * pszFormat, ...)
         }
         else {
             if (1 < sameLogCount) {
-                printf("(%u times)", sameLogCount);
+                printf("(%u times)\n", sameLogCount);
             }
             CCPrint("Cocos2d: %s", szBuf);
             sameLogCount = 1;
