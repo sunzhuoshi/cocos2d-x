@@ -617,7 +617,8 @@ bool CCScrollView::ccTouchBegan(CCTouch* touch, CCEvent* event)
         m_fTouchLength = ccpDistance(m_pContainer->convertTouchToNodeSpace((CCTouch*)m_pTouches->objectAtIndex(0)),
                                    m_pContainer->convertTouchToNodeSpace((CCTouch*)m_pTouches->objectAtIndex(1)));
         m_bDragging  = false;
-    } 
+    }
+    CCLayer::ccTouchBegan(touch, event);
     return true;
 }
 
@@ -627,7 +628,7 @@ void CCScrollView::ccTouchMoved(CCTouch* touch, CCEvent* event)
     {
         return;
     }
-
+    CCLayer::ccTouchMoved(touch, event);
     if (m_pTouches->containsObject(touch))
     {
         if (m_pTouches->count() == 1 && m_bDragging)
@@ -683,6 +684,7 @@ void CCScrollView::ccTouchEnded(CCTouch* touch, CCEvent* event)
     {
         return;
     }
+    CCLayer::ccTouchEnded(touch, event);
     if (m_pTouches->containsObject(touch))
     {
         if (m_pTouches->count() == 1 && m_bTouchMoved)
