@@ -439,16 +439,7 @@ void ScriptingCore::createGlobalContext() {
     }
 }
 
-std::string TransFilePath(const std::string& filePath) {
-    if (filePath.c_str()[0] == '/') {
-        return filePath;
-    }
-    else {
-        return cocos2d::CCFileUtils::sharedFileUtils()->fullPathForFilename(filePath.c_str());
-    }
-}
-
-std::string RemoveFileExt(const std::string& filePath) {
+static std::string RemoveFileExt(const std::string& filePath) {
     size_t pos = filePath.rfind('.');
     if (0 < pos) {
         return filePath.substr(0, pos);
@@ -464,7 +455,7 @@ JSBool ScriptingCore::runScript(const char *path, JSObject* global, JSContext* c
         return false;
     }
     cocos2d::CCFileUtils *futil = cocos2d::CCFileUtils::sharedFileUtils();
-    std::string rpath = TransFilePath(path);
+    std::string fullPath = futil->fullPathForFilename(path);
     if (global == NULL) {
         global = global_;
     }
@@ -474,20 +465,19 @@ JSBool ScriptingCore::runScript(const char *path, JSObject* global, JSContext* c
     JSScript *script = NULL;    
     js::RootedObject obj(cx, global);
 	JS::CompileOptions options(cx);
-	options.setUTF8(true).setFileAndLine(rpath.c_str(), 1);
-    
+	options.setUTF8(true).setFileAndLine(fullPath.c_str(), 1);
     // a) check js file first
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
-    unsigned char *content = (unsigned char*)CCString::createWithContentsOfFile(rpath.c_str())->getCString();
+    unsigned char *content = (unsigned char*)CCString::createWithContentsOfFile(path)->getCString();
     if (content) {
         script = JS_CompileScript(cx, global, (char*)content, contentSize, path, 1);
     }
 #else
-    script = JS_CompileUTF8File(cx, global, rpath.c_str());
+    script = JS_CompileUTF8File(cx, global, fullPath.c_str());
 #endif
     // b) no js file, check jsc file
     if (!script) {
-        std::string byteCodeFilePath = TransFilePath(RemoveFileExt(std::string(path)) + BYTE_CODE_FILE_EXT);
+        std::string byteCodeFilePath = RemoveFileExt(std::string(path)) + BYTE_CODE_FILE_EXT;
         unsigned long length = 0;
         void *data = futil->getFileData(byteCodeFilePath.c_str(), "rb", &length);
         if (data) {
