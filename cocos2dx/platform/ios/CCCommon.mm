@@ -34,8 +34,8 @@ NS_CC_BEGIN
 void CCPrint(const char *format, char *buf) {
     size_t length = strlen(buf);
     if (buf[length - 1] != '\n') {
-        buf[length - 1] = '\n';
-        buf[length] = '\0';
+        buf[length] = '\n';
+        buf[length+1] = '\0';
     }
     printf(format, buf);
 }
