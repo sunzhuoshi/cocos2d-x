@@ -11100,10 +11100,10 @@ cc.CCControlButton = {
 setTitleColorDispatchTable : function () {},
 
 /**
- * @method isPushed
- * @return A value converted from C/C++ "bool"
+ * @method setZoomOnTouchDown
+ * @param {bool}
  */
-isPushed : function () {},
+setZoomOnTouchDown : function () {},
 
 /**
  * @method setSelected
@@ -11158,10 +11158,11 @@ setHighlighted : function () {},
 setBackgroundSpriteDispatchTable : function () {},
 
 /**
- * @method setZoomOnTouchDown
- * @param {bool}
+ * @method setTitleForState
+ * @param {cocos2d::CCString*}
+ * @param {unsigned int}
  */
-setZoomOnTouchDown : function () {},
+setTitleForState : function () {},
 
 /**
  * @method getTitleDispatchTable
@@ -11207,6 +11208,12 @@ getTitleTTFSizeForState : function () {},
  * @param {cocos2d::CCDictionary*}
  */
 setTitleDispatchTable : function () {},
+
+/**
+ * @method isPushed
+ * @return A value converted from C/C++ "bool"
+ */
+isPushed : function () {},
 
 /**
  * @method setOpacity
@@ -11264,6 +11271,13 @@ getCurrentTitleColor : function () {},
  * @return A value converted from C/C++ "cocos2d::CCDictionary*"
  */
 getTitleColorDispatchTable : function () {},
+
+/**
+ * @method getTitleLabelForState
+ * @return A value converted from C/C++ "cocos2d::CCNode*"
+ * @param {unsigned int}
+ */
+getTitleLabelForState : function () {},
 
 /**
  * @method setEnabled
@@ -11386,6 +11400,13 @@ setTitleLabelDispatchTable : function () {},
 getTitleLabel : function () {},
 
 /**
+ * @method getTitleBMFontForState
+ * @return A value converted from C/C++ "const char*"
+ * @param {unsigned int}
+ */
+getTitleBMFontForState : function () {},
+
+/**
  * @method getPreferredSize
  * @return A value converted from C/C++ "cocos2d::CCSize"
  */
@@ -11404,11 +11425,10 @@ getVerticalMargin : function () {},
 getBackgroundSpriteDispatchTable : function () {},
 
 /**
- * @method getTitleLabelForState
- * @return A value converted from C/C++ "cocos2d::CCNode*"
- * @param {unsigned int}
+ * @method setTouchPriority
+ * @param {int}
  */
-getTitleLabelForState : function () {},
+setTouchPriority : function () {},
 
 /**
  * @method getCurrentTitle
@@ -11417,18 +11437,10 @@ getTitleLabelForState : function () {},
 getCurrentTitle : function () {},
 
 /**
- * @method getTitleBMFontForState
- * @return A value converted from C/C++ "const char*"
- * @param {unsigned int}
+ * @method getTouchPriority
+ * @return A value converted from C/C++ "int"
  */
-getTitleBMFontForState : function () {},
-
-/**
- * @method setTitleForState
- * @param {cocos2d::CCString*}
- * @param {unsigned int}
- */
-setTitleForState : function () {},
+getTouchPriority : function () {},
 
 /**
  * @method setBackgroundSprite

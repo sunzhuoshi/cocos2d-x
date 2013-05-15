@@ -60,6 +60,8 @@ public:
     virtual void setEnabled(bool enabled);
     virtual void setSelected(bool enabled);
     virtual void setHighlighted(bool enabled);
+    virtual int getTouchPriority();    
+    virtual void setTouchPriority(int priority);
 protected:
     // CCRGBAProtocol
     //bool m_bIsOpacityModifyRGB;
