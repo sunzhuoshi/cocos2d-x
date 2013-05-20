@@ -49587,11 +49587,47 @@ JSBool js_cocos2dx_SimpleAudioEngine_playEffect(JSContext *cx, uint32_t argc, js
 	cobj = (CocosDenshion::SimpleAudioEngine *)(proxy ? proxy->ptr : NULL);
 	JSB_PRECONDITION2( cobj, cx, JS_FALSE, "Invalid Native Object");
 
-	if (argc == 1) {
+	if (argc == 4) {
 		const char* arg0;
 		std::string arg0_tmp; ok &= jsval_to_std_string(cx, argv[0], &arg0_tmp); arg0 = arg0_tmp.c_str();
+		JSBool arg1;
+		ok &= JS_ValueToBoolean(cx, argv[1], &arg1);
+		double arg2;
+		ok &= JS_ValueToNumber(cx, argv[2], &arg2);
+		double arg3;
+		ok &= JS_ValueToNumber(cx, argv[3], &arg3);
 		JSB_PRECONDITION2(ok, cx, JS_FALSE, "Error processing arguments");
-		unsigned int ret = cobj->playEffect(arg0);
+		unsigned int ret = cobj->playEffect(arg0, arg1, arg2, arg3);
+		jsval jsret; jsret = uint32_to_jsval(cx, ret);
+		JS_SET_RVAL(cx, vp, jsret);
+		return JS_TRUE;
+	}
+	if (argc == 5) {
+		const char* arg0;
+		std::string arg0_tmp; ok &= jsval_to_std_string(cx, argv[0], &arg0_tmp); arg0 = arg0_tmp.c_str();
+		JSBool arg1;
+		ok &= JS_ValueToBoolean(cx, argv[1], &arg1);
+		double arg2;
+		ok &= JS_ValueToNumber(cx, argv[2], &arg2);
+		double arg3;
+		ok &= JS_ValueToNumber(cx, argv[3], &arg3);
+		double arg4;
+		ok &= JS_ValueToNumber(cx, argv[4], &arg4);
+		JSB_PRECONDITION2(ok, cx, JS_FALSE, "Error processing arguments");
+		unsigned int ret = cobj->playEffect(arg0, arg1, arg2, arg3, arg4);
+		jsval jsret; jsret = uint32_to_jsval(cx, ret);
+		JS_SET_RVAL(cx, vp, jsret);
+		return JS_TRUE;
+	}
+	if (argc == 3) {
+		const char* arg0;
+		std::string arg0_tmp; ok &= jsval_to_std_string(cx, argv[0], &arg0_tmp); arg0 = arg0_tmp.c_str();
+		JSBool arg1;
+		ok &= JS_ValueToBoolean(cx, argv[1], &arg1);
+		double arg2;
+		ok &= JS_ValueToNumber(cx, argv[2], &arg2);
+		JSB_PRECONDITION2(ok, cx, JS_FALSE, "Error processing arguments");
+		unsigned int ret = cobj->playEffect(arg0, arg1, arg2);
 		jsval jsret; jsret = uint32_to_jsval(cx, ret);
 		JS_SET_RVAL(cx, vp, jsret);
 		return JS_TRUE;
@@ -49603,6 +49639,15 @@ JSBool js_cocos2dx_SimpleAudioEngine_playEffect(JSContext *cx, uint32_t argc, js
 		ok &= JS_ValueToBoolean(cx, argv[1], &arg1);
 		JSB_PRECONDITION2(ok, cx, JS_FALSE, "Error processing arguments");
 		unsigned int ret = cobj->playEffect(arg0, arg1);
+		jsval jsret; jsret = uint32_to_jsval(cx, ret);
+		JS_SET_RVAL(cx, vp, jsret);
+		return JS_TRUE;
+	}
+	if (argc == 1) {
+		const char* arg0;
+		std::string arg0_tmp; ok &= jsval_to_std_string(cx, argv[0], &arg0_tmp); arg0 = arg0_tmp.c_str();
+		JSB_PRECONDITION2(ok, cx, JS_FALSE, "Error processing arguments");
+		unsigned int ret = cobj->playEffect(arg0);
 		jsval jsret; jsret = uint32_to_jsval(cx, ret);
 		JS_SET_RVAL(cx, vp, jsret);
 		return JS_TRUE;
