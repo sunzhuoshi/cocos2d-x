@@ -250,6 +250,10 @@ CCNode* CCBReader::readNodeGraphFromFile(const char *pCCBFileName, CCObject *pOw
     unsigned long size = 0;
 
     unsigned char * pBytes = CCFileUtils::sharedFileUtils()->getFileData(strPath.c_str(), "rb", &size);
+    if (!pBytes || 0 == size) {
+        CCLOG("ccbi file not found or empty: \%s", pCCBFileName);
+        return NULL;
+    }
     CCData *data = new CCData(pBytes, size);
     CC_SAFE_DELETE_ARRAY(pBytes);
 
