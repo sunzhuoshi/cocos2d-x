@@ -12,7 +12,7 @@
 #include "jsapi.h"
 #include "cocos2d_specifics.hpp"
 
-#include "HttpResponse.h"
+#include "network/HttpResponse.h"
 
 #include <sstream>
 
