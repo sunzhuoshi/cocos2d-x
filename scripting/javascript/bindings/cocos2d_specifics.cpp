@@ -4,6 +4,7 @@
 #include <typeinfo>
 #include "js_bindings_config.h"
 #include "generated/jsb_cocos2dx_auto.hpp"
+#include "generated/jsb_cocos2dx_extension_auto.hpp"
 
 USING_NS_CC_EXT;
 
@@ -557,6 +558,10 @@ JSBool js_cocos2dx_setCallback(JSContext *cx, uint32_t argc, jsval *vp) {
 
 JSBool js_cocos2dx_CCMenuItem_setCallback(JSContext *cx, uint32_t argc, jsval *vp) {
     return js_cocos2dx_setCallback<cocos2d::CCMenuItem>(cx, argc, vp);
+}
+
+JSBool js_cocos2dx_CCControlButton_setCallback(JSContext *cx, uint32_t argc, jsval *vp) {
+    return js_cocos2dx_setCallback<cocos2d::extension::CCControlButton>(cx, argc, vp);
 }
 
 
@@ -3464,6 +3469,7 @@ void register_cocos2dx_js_extensions(JSContext* cx, JSObject* global)
 	JS_DefineFunction(cx, jsb_CCSpriteFrame_prototype, "retain", js_cocos2dx_retain, 0, JSPROP_READONLY | JSPROP_PERMANENT);
 	JS_DefineFunction(cx, jsb_CCSpriteFrame_prototype, "release", js_cocos2dx_release, 0, JSPROP_READONLY | JSPROP_PERMANENT);
 	JS_DefineFunction(cx, jsb_CCMenuItem_prototype, "setCallback", js_cocos2dx_CCMenuItem_setCallback, 2, JSPROP_READONLY | JSPROP_PERMANENT);
+    JS_DefineFunction(cx, jsb_CCControlButton_prototype, "setCallback", js_cocos2dx_CCControlButton_setCallback, 2, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, jsb_CCTMXLayer_prototype, "getTileFlagsAt", js_cocos2dx_CCTMXLayer_tileFlagsAt, 2, JSPROP_READONLY | JSPROP_PERMANENT);
     JS_DefineFunction(cx, jsb_CCTMXLayer_prototype, "getTiles", js_cocos2dx_CCTMXLayer_getTiles, 0, JSPROP_READONLY | JSPROP_PERMANENT);
     

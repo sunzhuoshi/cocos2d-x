@@ -206,11 +206,9 @@ public:
     
     virtual int executeMenuItemEvent(CCMenuItem* pMenuItem) = 0;
     
-    //< added by sunzhuoshi
     // Execute a control event
     // Note: only used in GUI extension by sunzhuoshi
     virtual int executeControlEvent(void* control, int event) { return 0; };
-    //>
     
     /** Execute a notification event function */
     virtual int executeNotificationEvent(CCNotificationCenter* pNotificationCenter, const char* pszName) = 0;

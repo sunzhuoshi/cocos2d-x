@@ -32,6 +32,7 @@
 #include "touch_dispatcher/CCTouchDispatcher.h"
 #include "menu_nodes/CCMenu.h"
 #include "touch_dispatcher/CCTouch.h"
+#include "script_support/CCScriptSupport.h"
 
 NS_CC_EXT_BEGIN
 
@@ -126,6 +127,10 @@ void CCControl::sendActionsForControlEvents(CCControlEvent controlEvents)
                 invocation->invoke(this);
             }
         }
+    }
+    if (kScriptTypeNone != m_eScriptType)
+    {
+        CCScriptEngineManager::sharedManager()->getScriptEngine()->executeControlEvent(this, controlEvents);
     }
 }
 void CCControl::addTargetWithActionForControlEvents(CCObject* target, SEL_CCControlHandler action, CCControlEvent controlEvents)
