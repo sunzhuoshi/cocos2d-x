@@ -18,10 +18,10 @@
 USING_NS_CC;
 USING_NS_CC_EXT;
 
-extern JSClass  *js_cocos2dx_CCHttpRequest_class;
-extern JSObject *js_cocos2dx_CCHttpRequest_prototype;
+extern JSClass  *jsb_CCHttpRequest_class;
+extern JSObject *jsb_CCHttpRequest_prototype;
 
-JSBool js_cocos2dx_CCHttpRequest_setUserData(JSContext *cx, uint32_t argc, jsval *vp)
+JSBool js_cocos2dx_extension_CCHttpRequest_setUserData(JSContext *cx, uint32_t argc, jsval *vp)
 {
 	jsval *argv = JS_ARGV(cx, vp);
 	JSBool ok = JS_TRUE;
@@ -41,7 +41,7 @@ JSBool js_cocos2dx_CCHttpRequest_setUserData(JSContext *cx, uint32_t argc, jsval
 	JS_ReportError(cx, "wrong number of arguments: %d, was expecting %d", argc, 1);
 	return JS_FALSE;
 }
-JSBool js_cocos2dx_CCHttpRequest_getUserData(JSContext *cx, uint32_t argc, jsval *vp)
+JSBool js_cocos2dx_extension_CCHttpRequest_getUserData(JSContext *cx, uint32_t argc, jsval *vp)
 {
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
 	js_proxy_t *proxy; JS_GET_NATIVE_PROXY(proxy, obj);
@@ -58,7 +58,7 @@ JSBool js_cocos2dx_CCHttpRequest_getUserData(JSContext *cx, uint32_t argc, jsval
 	JS_ReportError(cx, "wrong number of arguments: %d, was expecting %d", argc, 0);
 	return JS_FALSE;
 }
-JSBool js_cocos2dx_CCHttpRequest_setResponseCallback(JSContext *cx, uint32_t argc, jsval *vp)
+JSBool js_cocos2dx_extension_CCHttpRequest_setResponseCallback(JSContext *cx, uint32_t argc, jsval *vp)
 {
     if (argc >= 1) {
 		jsval *argv = JS_ARGV(cx, vp);
@@ -80,7 +80,7 @@ JSBool js_cocos2dx_CCHttpRequest_setResponseCallback(JSContext *cx, uint32_t arg
     }
     return JS_FALSE;    
 }
-JSBool js_cocos2dx_CCHttpRequest_getSelector(JSContext *cx, uint32_t argc, jsval *vp)
+JSBool js_cocos2dx_extension_CCHttpRequest_getSelector(JSContext *cx, uint32_t argc, jsval *vp)
 {
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
 	js_proxy_t *proxy; JS_GET_NATIVE_PROXY(proxy, obj);
@@ -97,7 +97,7 @@ JSBool js_cocos2dx_CCHttpRequest_getSelector(JSContext *cx, uint32_t argc, jsval
 	JS_ReportError(cx, "wrong number of arguments: %d, was expecting %d", argc, 0);
 	return JS_FALSE;
 }
-JSBool js_cocos2dx_CCHttpRequest_getRequestData(JSContext *cx, uint32_t argc, jsval *vp)
+JSBool js_cocos2dx_extension_CCHttpRequest_getRequestData(JSContext *cx, uint32_t argc, jsval *vp)
 {
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
 	js_proxy_t *proxy; JS_GET_NATIVE_PROXY(proxy, obj);
@@ -114,7 +114,7 @@ JSBool js_cocos2dx_CCHttpRequest_getRequestData(JSContext *cx, uint32_t argc, js
 	JS_ReportError(cx, "wrong number of arguments: %d, was expecting %d", argc, 0);
 	return JS_FALSE;
 }
-JSBool js_cocos2dx_CCHttpRequest_setRequestType(JSContext *cx, uint32_t argc, jsval *vp)
+JSBool js_cocos2dx_extension_CCHttpRequest_setRequestType(JSContext *cx, uint32_t argc, jsval *vp)
 {
 	jsval *argv = JS_ARGV(cx, vp);
 	JSBool ok = JS_TRUE;
@@ -134,7 +134,7 @@ JSBool js_cocos2dx_CCHttpRequest_setRequestType(JSContext *cx, uint32_t argc, js
 	JS_ReportError(cx, "wrong number of arguments: %d, was expecting %d", argc, 1);
 	return JS_FALSE;
 }
-JSBool js_cocos2dx_CCHttpRequest_getHeaders(JSContext *cx, uint32_t argc, jsval *vp)
+JSBool js_cocos2dx_extension_CCHttpRequest_getHeaders(JSContext *cx, uint32_t argc, jsval *vp)
 {
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
 	js_proxy_t *proxy; JS_GET_NATIVE_PROXY(proxy, obj);
@@ -151,7 +151,7 @@ JSBool js_cocos2dx_CCHttpRequest_getHeaders(JSContext *cx, uint32_t argc, jsval 
 	JS_ReportError(cx, "wrong number of arguments: %d, was expecting %d", argc, 0);
 	return JS_FALSE;
 }
-JSBool js_cocos2dx_CCHttpRequest_getRequestType(JSContext *cx, uint32_t argc, jsval *vp)
+JSBool js_cocos2dx_extension_CCHttpRequest_getRequestType(JSContext *cx, uint32_t argc, jsval *vp)
 {
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
 	js_proxy_t *proxy; JS_GET_NATIVE_PROXY(proxy, obj);
@@ -168,7 +168,7 @@ JSBool js_cocos2dx_CCHttpRequest_getRequestType(JSContext *cx, uint32_t argc, js
 	JS_ReportError(cx, "wrong number of arguments: %d, was expecting %d", argc, 0);
 	return JS_FALSE;
 }
-JSBool js_cocos2dx_CCHttpRequest_setRequestData(JSContext *cx, uint32_t argc, jsval *vp)
+JSBool js_cocos2dx_extension_CCHttpRequest_setRequestData(JSContext *cx, uint32_t argc, jsval *vp)
 {
 	jsval *argv = JS_ARGV(cx, vp);
 	JSBool ok = JS_TRUE;
@@ -190,7 +190,7 @@ JSBool js_cocos2dx_CCHttpRequest_setRequestData(JSContext *cx, uint32_t argc, js
 	JS_ReportError(cx, "wrong number of arguments: %d, was expecting %d", argc, 2);
 	return JS_FALSE;
 }
-JSBool js_cocos2dx_CCHttpRequest_setHeaders(JSContext *cx, uint32_t argc, jsval *vp)
+JSBool js_cocos2dx_extension_CCHttpRequest_setHeaders(JSContext *cx, uint32_t argc, jsval *vp)
 {
 	jsval *argv = JS_ARGV(cx, vp);
 	JSBool ok = JS_TRUE;
@@ -211,10 +211,10 @@ JSBool js_cocos2dx_CCHttpRequest_setHeaders(JSContext *cx, uint32_t argc, jsval 
 	return JS_FALSE;
 }
 
-extern JSClass  *js_cocos2dx_CCHttpResponse_class;
-extern JSObject *js_cocos2dx_CCHttpResponse_prototype;
+extern JSClass  *jsb_CCHttpResponse_class;
+extern JSObject *jsb_CCHttpResponse_prototype;
 
-JSBool js_cocos2dx_CCHttpResponse_setResponseData(JSContext *cx, uint32_t argc, jsval *vp)
+JSBool js_cocos2dx_extension_CCHttpResponse_setResponseData(JSContext *cx, uint32_t argc, jsval *vp)
 {
 	jsval *argv = JS_ARGV(cx, vp);
 	JSBool ok = JS_TRUE;
@@ -234,7 +234,7 @@ JSBool js_cocos2dx_CCHttpResponse_setResponseData(JSContext *cx, uint32_t argc, 
 	JS_ReportError(cx, "wrong number of arguments: %d, was expecting %d", argc, 1);
 	return JS_FALSE;
 }
-JSBool js_cocos2dx_CCHttpResponse_getResponseData(JSContext *cx, uint32_t argc, jsval *vp)
+JSBool js_cocos2dx_extension_CCHttpResponse_getResponseData(JSContext *cx, uint32_t argc, jsval *vp)
 {
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
 	js_proxy_t *proxy; JS_GET_NATIVE_PROXY(proxy, obj);
@@ -263,17 +263,17 @@ void jsb_register_network(JSContext *cx, JSObject *global) {
 	} else {
 		JS_ValueToObject(cx, nsval, &ns);
 	}
-    JS_DefineFunction(cx, js_cocos2dx_CCHttpResponse_prototype, "getResponseData", js_cocos2dx_CCHttpResponse_getResponseData, 0, JSPROP_PERMANENT | JSPROP_SHARED);
-    JS_DefineFunction(cx, js_cocos2dx_CCHttpResponse_prototype, "setResponseData", js_cocos2dx_CCHttpResponse_setResponseData, 1, JSPROP_PERMANENT | JSPROP_SHARED);
+    JS_DefineFunction(cx, jsb_CCHttpResponse_prototype, "getResponseData", js_cocos2dx_extension_CCHttpResponse_getResponseData, 0, JSPROP_PERMANENT | JSPROP_SHARED);
+    JS_DefineFunction(cx, jsb_CCHttpResponse_prototype, "setResponseData", js_cocos2dx_extension_CCHttpResponse_setResponseData, 1, JSPROP_PERMANENT | JSPROP_SHARED);
 
-    JS_DefineFunction(cx, js_cocos2dx_CCHttpRequest_prototype, "setUserData", js_cocos2dx_CCHttpRequest_setUserData, 1, JSPROP_PERMANENT | JSPROP_SHARED);
-    JS_DefineFunction(cx, js_cocos2dx_CCHttpRequest_prototype, "getUserData", js_cocos2dx_CCHttpRequest_getUserData, 0, JSPROP_PERMANENT | JSPROP_SHARED);
-    JS_DefineFunction(cx, js_cocos2dx_CCHttpRequest_prototype, "getSelector", js_cocos2dx_CCHttpRequest_getSelector, 0, JSPROP_PERMANENT | JSPROP_SHARED);
-    JS_DefineFunction(cx, js_cocos2dx_CCHttpRequest_prototype, "getRequestData", js_cocos2dx_CCHttpRequest_getRequestData, 0, JSPROP_PERMANENT | JSPROP_SHARED);
-    JS_DefineFunction(cx, js_cocos2dx_CCHttpRequest_prototype, "setRequestType", js_cocos2dx_CCHttpRequest_setRequestType, 1, JSPROP_PERMANENT | JSPROP_SHARED);
-    JS_DefineFunction(cx, js_cocos2dx_CCHttpRequest_prototype, "getHeaders", js_cocos2dx_CCHttpRequest_getHeaders, 0, JSPROP_PERMANENT | JSPROP_SHARED);
-    JS_DefineFunction(cx, js_cocos2dx_CCHttpRequest_prototype, "getRequestType", js_cocos2dx_CCHttpRequest_getRequestType, 0, JSPROP_PERMANENT | JSPROP_SHARED);
-    JS_DefineFunction(cx, js_cocos2dx_CCHttpRequest_prototype, "setRequestData", js_cocos2dx_CCHttpRequest_setRequestData, 2, JSPROP_PERMANENT | JSPROP_SHARED);
-    JS_DefineFunction(cx, js_cocos2dx_CCHttpRequest_prototype, "setHeaders", js_cocos2dx_CCHttpRequest_setHeaders, 1, JSPROP_PERMANENT | JSPROP_SHARED);
-    JS_DefineFunction(cx, js_cocos2dx_CCHttpRequest_prototype, "setResponseCallback", js_cocos2dx_CCHttpRequest_setResponseCallback, 2, JSPROP_READONLY | JSPROP_PERMANENT);    
+    JS_DefineFunction(cx, jsb_CCHttpRequest_prototype, "setUserData", js_cocos2dx_extension_CCHttpRequest_setUserData, 1, JSPROP_PERMANENT | JSPROP_SHARED);
+    JS_DefineFunction(cx, jsb_CCHttpRequest_prototype, "getUserData", js_cocos2dx_extension_CCHttpRequest_getUserData, 0, JSPROP_PERMANENT | JSPROP_SHARED);
+    JS_DefineFunction(cx, jsb_CCHttpRequest_prototype, "getSelector", js_cocos2dx_extension_CCHttpRequest_getSelector, 0, JSPROP_PERMANENT | JSPROP_SHARED);
+    JS_DefineFunction(cx, jsb_CCHttpRequest_prototype, "getRequestData", js_cocos2dx_extension_CCHttpRequest_getRequestData, 0, JSPROP_PERMANENT | JSPROP_SHARED);
+    JS_DefineFunction(cx, jsb_CCHttpRequest_prototype, "setRequestType", js_cocos2dx_extension_CCHttpRequest_setRequestType, 1, JSPROP_PERMANENT | JSPROP_SHARED);
+    JS_DefineFunction(cx, jsb_CCHttpRequest_prototype, "getHeaders", js_cocos2dx_extension_CCHttpRequest_getHeaders, 0, JSPROP_PERMANENT | JSPROP_SHARED);
+    JS_DefineFunction(cx, jsb_CCHttpRequest_prototype, "getRequestType", js_cocos2dx_extension_CCHttpRequest_getRequestType, 0, JSPROP_PERMANENT | JSPROP_SHARED);
+    JS_DefineFunction(cx, jsb_CCHttpRequest_prototype, "setRequestData", js_cocos2dx_extension_CCHttpRequest_setRequestData, 2, JSPROP_PERMANENT | JSPROP_SHARED);
+    JS_DefineFunction(cx, jsb_CCHttpRequest_prototype, "setHeaders", js_cocos2dx_extension_CCHttpRequest_setHeaders, 1, JSPROP_PERMANENT | JSPROP_SHARED);
+    JS_DefineFunction(cx, jsb_CCHttpRequest_prototype, "setResponseCallback", js_cocos2dx_extension_CCHttpRequest_setResponseCallback, 2, JSPROP_READONLY | JSPROP_PERMANENT);    
 }
