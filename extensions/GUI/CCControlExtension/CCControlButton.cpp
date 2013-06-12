@@ -229,6 +229,14 @@ void CCControlButton::setHighlighted(bool enabled)
     }
 }
 
+int CCControlButton::getTouchPriority() {
+    return CCLayer::getTouchPriority();
+}
+
+void CCControlButton::setTouchPriority(int priority) {
+    CCLayer::setTouchPriority(priority);
+}
+
 void CCControlButton::setZoomOnTouchDown(bool zoomOnTouchDown)
 {
     m_zoomOnTouchDown = zoomOnTouchDown;

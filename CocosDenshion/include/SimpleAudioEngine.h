@@ -154,12 +154,24 @@ public:
     // for sound effects
     /**
     @brief Play sound effect
-    @param pszFilePath The path of the effect file,or the FileName of T_SoundResInfo
-    @bLoop Whether to loop the effect playing, default value is false
+    @param filePath The path of the effect file,or the FileName of T_SoundResInfo
+    @loop Whether to loop the effect playing, default value is false
+    @pitch [0.5 to 2.0] think of it as the "note" of the sound. Giving a higher pitch number makes the sound play at a "higher note". A lower value will make the sound lower or "deeper". 1.0 is pitch of original file.
+    @pan [-1.0 to 1.0] stereo affect. Below zero plays your sound more on the left side. Above 0 plays to the right. 0.0 is dead-center.
+    @gain: [0.0 and up] volume. 1.0 is the volume of the original file.
     */
-    unsigned int playEffect(const char* pszFilePath, bool bLoop);
+    unsigned int playEffect(const char* filePath, bool loop, float pitch, float pan, float gain);
+    unsigned int playEffect(const char* filePath, bool loop, float pitch, float pan) {
+        return this->playEffect(filePath, loop, pitch, pan, 1.0f);
+    }
+    unsigned int playEffect(const char* filePath, bool loop, float pitch) {
+        return this->playEffect(filePath, loop, pitch, 0.0f, 1.0f);
+    }
+    unsigned int playEffect(const char* pszFilePath, bool bLoop) {
+        return this->playEffect(pszFilePath, bLoop, 1.0f, 0.0f, 1.0f);
+    }
     unsigned int playEffect(const char* pszFilePath) {
-    	return this->playEffect(pszFilePath, false);
+    	return this->playEffect(pszFilePath, false, 1.0f, 0.0f, 1.0f);
     }
 
     /**

@@ -28,6 +28,7 @@
 
 #include "cocos2d.h"
 #include "ExtensionMacros.h"
+#include "ccTypeInfo.h"
 
 NS_CC_EXT_BEGIN
 
@@ -53,14 +54,22 @@ public:
     virtual void scrollViewDidZoom(CCScrollView* view) = 0;
 };
 
-
 /**
  * ScrollView support for cocos2d for iphone.
  * It provides scroll view functionalities to cocos2d projects natively.
  */
-class CCScrollView : public CCLayer
+class CCScrollView : public CCLayer, public TypeInfo
 {
 public:
+    /**
+     *  Returns an unique ID for this class.
+     *  @note It's only used for JSBindings now.
+     *  @return The unique ID for this class.
+     */
+    virtual long getClassTypeInfo() {
+		static const long id = cocos2d::getHashCodeByString(typeid(cocos2d::extension::CCScrollView).name());
+		return id;
+    }
     CCScrollView();
     virtual ~CCScrollView();
 

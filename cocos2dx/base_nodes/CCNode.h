@@ -64,7 +64,8 @@ enum {
     kCCNodeOnExit,
     kCCNodeOnEnterTransitionDidFinish,
     kCCNodeOnExitTransitionDidStart,
-    kCCNodeOnCleanup
+    kCCNodeOnCleanup,
+    kCCNodeOnOpacityWillChange
 };
 
 /** @brief CCNode is the main element. Anything that gets drawn or contains things that get drawn is a CCNode.
@@ -1300,6 +1301,10 @@ public:
     void setAdditionalTransform(const CCAffineTransform& additionalTransform);
     /// @} end of Coordinate Converters
 
+    //< added by sunzhuoshi
+protected:
+    bool onOpacityWillChange(GLubyte opacity);
+    //>
 private:
     /// lazy allocs
     void childrenAlloc(void);

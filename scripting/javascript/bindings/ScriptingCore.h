@@ -86,8 +86,9 @@ public:
      */
 	virtual int executeGlobalFunction(const char* functionName) { return 0; }
 
-    virtual int executeNodeEvent(CCNode* pNode, int nAction);
+    virtual int executeNodeEvent(CCNode* pNode, int nAction, int nParm = 0, int *ret = NULL);
     virtual int executeMenuItemEvent(CCMenuItem* pMenuItem);
+    virtual int executeControlEvent(void* control, int event);
     virtual int executeNotificationEvent(CCNotificationCenter* pNotificationCenter, const char* pszName);
     virtual int executeCallFuncActionEvent(CCCallFunc* pAction, CCObject* pTarget = NULL);
     virtual int executeSchedule(int nHandler, float dt, CCNode* pNode = NULL);
