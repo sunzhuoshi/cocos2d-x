@@ -1259,24 +1259,6 @@ CCPoint CCNode::convertTouchToNodeSpaceAR(CCTouch *touch)
     return this->convertToNodeSpaceAR(point);
 }
 
-//< added by sunzhuoshi
-bool CCNode::onOpacityWillChange(GLubyte opacity) {
-    if (m_eScriptType == kScriptTypeNone) {
-        return true;
-    }
-    else {
-        int ret, scriptRet;
-        ret = CCScriptEngineManager::sharedManager()->getScriptEngine()->executeNodeEvent(this, kCCNodeOnOpacityWillChange, opacity, &scriptRet);
-        if (ret) { // script run OK, use script return value
-            return scriptRet;
-        }
-        else { // failed to run script, return true
-            return true;
-        }
-    }
-}
-//>
-
 void CCNode::updateTransform()
 {
     // Recursively iterate over children

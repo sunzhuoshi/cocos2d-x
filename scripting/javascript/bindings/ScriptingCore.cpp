@@ -750,14 +750,6 @@ int ScriptingCore::executeNodeEvent(CCNode* pNode, int nAction, int nParam, int 
     else if(nAction == kCCNodeOnCleanup) {
         cleanupSchedulesAndActions(p);
     }
-    else if (nAction == kCCNodeOnOpacityWillChange) {
-        retval = BOOLEAN_TO_JSVAL(JS_TRUE);
-        JSBool ret = executeFunctionWithOwner(OBJECT_TO_JSVAL(p->obj), "onOpacityWillChange", 1, &dataVal, &retval);
-        if (ret && nRet) {
-            *nRet = retval.toBoolean();
-        }
-        return ret;
-    }
     return 1;
 }
 
