@@ -47,6 +47,8 @@
 #include "physics_nodes/CCPhysicsSprite.h"
 #endif
 
+#if CC_ENABLE_SPINE_INTEGRATION
 #include "spine/spine-cocos2dx.h"
+#endif
 
 #endif /* __COCOS2D_EXT_H__ */
