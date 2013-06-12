@@ -913,11 +913,4 @@ static EAGLView *view = 0;
     }
 }
 
-// define here to remove warning
-- (NSArray *)selectionRectsForRange:(UITextRange *)range
-{
-    // TODO: finish it
-    return [NSArray array];
-}
-
 @end

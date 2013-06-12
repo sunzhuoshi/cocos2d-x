@@ -75,18 +75,18 @@ std::map<int,int> ports_sockets;
 std::map<std::string, js::RootedObject*> globals;
 
 static void executeJSFunctionFromReservedSpot(JSContext *cx, JSObject *obj,
-                                              jsval &dataVal, jsval &retval) {
-
+                                              unsigned argc, jsval *dataVals, jsval &retval) {
+    
     jsval func = JS_GetReservedSlot(obj, 0);
-
+    
     if(func == JSVAL_VOID) { return; }
     jsval thisObj = JS_GetReservedSlot(obj, 1);
-    JSAutoCompartment ac(cx, obj);
+	JSAutoCompartment ac(cx, obj);
     if(thisObj == JSVAL_VOID) {
-        JS_CallFunctionValue(cx, obj, func, 1, &dataVal, &retval);
+        JS_CallFunctionValue(cx, obj, func, argc, dataVals, &retval);
     } else {
         assert(!JSVAL_IS_PRIMITIVE(thisObj));
-        JS_CallFunctionValue(cx, JSVAL_TO_OBJECT(thisObj), func, 1, &dataVal, &retval);
+        JS_CallFunctionValue(cx, JSVAL_TO_OBJECT(thisObj), func, argc, dataVals, &retval);
     }
 }
 
@@ -717,15 +717,18 @@ void ScriptingCore::cleanupSchedulesAndActions(js_proxy_t* p)
     }
 }
 
-int ScriptingCore::executeNodeEvent(CCNode* pNode, int nAction)
+int ScriptingCore::executeNodeEvent(CCNode* pNode, int nAction, int nParam, int *nRet)
 {
     js_proxy_t * p;
     JS_GET_PROXY(p, pNode);
+    
     if (!p) return 0;
-
+    
     jsval retval;
-    jsval dataVal = INT_TO_JSVAL(1);
-
+    jsval dataVal = INT_TO_JSVAL(nParam);
+    js_proxy_t *proxy;
+    JS_GET_PROXY(proxy, pNode);
+    
     if(nAction == kCCNodeOnEnter)
     {
         executeFunctionWithOwner(OBJECT_TO_JSVAL(p->obj), "onEnter", 1, &dataVal, &retval);
@@ -747,7 +750,14 @@ int ScriptingCore::executeNodeEvent(CCNode* pNode, int nAction)
     else if(nAction == kCCNodeOnCleanup) {
         cleanupSchedulesAndActions(p);
     }
-
+    else if (nAction == kCCNodeOnOpacityWillChange) {
+        retval = BOOLEAN_TO_JSVAL(JS_TRUE);
+        JSBool ret = executeFunctionWithOwner(OBJECT_TO_JSVAL(p->obj), "onOpacityWillChange", 1, &dataVal, &retval);
+        if (ret && nRet) {
+            *nRet = retval.toBoolean();
+        }
+        return ret;
+    }
     return 1;
 }
 
@@ -764,8 +774,26 @@ int ScriptingCore::executeMenuItemEvent(CCMenuItem* pMenuItem)
     JS_GET_PROXY(proxy, pMenuItem);
     dataVal = (proxy ? OBJECT_TO_JSVAL(proxy->obj) : JSVAL_NULL);
 
-    executeJSFunctionFromReservedSpot(this->cx_, p->obj, dataVal, retval);
+    executeJSFunctionFromReservedSpot(this->cx_, p->obj, 1, &dataVal, retval);
 
+    return 1;
+}
+
+int ScriptingCore::executeControlEvent(void* control, int event)
+{
+    js_proxy_t *p;
+    JS_GET_PROXY(p, control);
+    
+    if (!p) {
+        return 0;
+    }
+    jsval retVal;
+    jsval dataVals[2];
+    dataVals[0] = OBJECT_TO_JSVAL(p->obj);
+    dataVals[1] = INT_TO_JSVAL(event);
+    
+    executeJSFunctionFromReservedSpot(this->cx_, p->obj, 2, &dataVals[0], retVal);
+    
     return 1;
 }
 
