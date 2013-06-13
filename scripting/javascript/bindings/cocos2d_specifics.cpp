@@ -2223,7 +2223,7 @@ JSBool js_cocos2dx_CCTMXLayer_tileFlagsAt(JSContext *cx, uint32_t argc, jsval *v
 		cocos2d::CCPoint arg0;
 		ok &= jsval_to_ccpoint(cx, argv[0], &arg0);
 		cocos2d::ccTMXTileFlags flags;
-		unsigned int ret = cobj->tileGIDAt(arg0, &flags);
+		/*unsigned int ret = */cobj->tileGIDAt(arg0, &flags);
 		jsval jsret;
         jsret = UINT_TO_JSVAL((uint32_t)flags);
 		JS_SET_RVAL(cx, vp, jsret);
@@ -3311,7 +3311,7 @@ JSBool js_cocos2dx_CCGLProgram_createWithString(JSContext *cx, uint32_t argc, js
 {
 	jsval *argv = JS_ARGV(cx, vp);
 	JSBool ok = JS_TRUE;
-	JSObject *obj = JS_THIS_OBJECT(cx,  vp);
+	//JSObject *obj = JS_THIS_OBJECT(cx,  vp);
     if(argc != 2) {
         JS_ReportError(cx, "wrong number of arguments: %d, was expecting %d", argc, 2);
         return JS_FALSE;

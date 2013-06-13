@@ -23,7 +23,7 @@ extern JSObject *jsb_CCHttpRequest_prototype;
 
 JSBool js_cocos2dx_extension_CCHttpRequest_setUserData(JSContext *cx, uint32_t argc, jsval *vp)
 {
-	jsval *argv = JS_ARGV(cx, vp);
+	//jsval *argv = JS_ARGV(cx, vp);
 	JSBool ok = JS_TRUE;
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
 	js_proxy_t *proxy; JS_GET_NATIVE_PROXY(proxy, obj);
@@ -49,7 +49,7 @@ JSBool js_cocos2dx_extension_CCHttpRequest_getUserData(JSContext *cx, uint32_t a
 	JSB_PRECONDITION2( cobj, cx, JS_FALSE, "Invalid Native Object");
     
 	if (argc == 0) {
-		void* ret = cobj->getUserData();
+		//void* ret = cobj->getUserData();
 		jsval jsret;
 #pragma warning NO CONVERSION FROM NATIVE FOR void*;
 		JS_SET_RVAL(cx, vp, jsret);
@@ -105,7 +105,7 @@ JSBool js_cocos2dx_extension_CCHttpRequest_getRequestData(JSContext *cx, uint32_
 	JSB_PRECONDITION2( cobj, cx, JS_FALSE, "Invalid Native Object");
     
 	if (argc == 0) {
-		char* ret = cobj->getRequestData();
+		//char* ret = cobj->getRequestData();
 		jsval jsret;
 #pragma warning NO CONVERSION FROM NATIVE FOR char*;
 		JS_SET_RVAL(cx, vp, jsret);
@@ -192,7 +192,7 @@ JSBool js_cocos2dx_extension_CCHttpRequest_setRequestData(JSContext *cx, uint32_
 }
 JSBool js_cocos2dx_extension_CCHttpRequest_setHeaders(JSContext *cx, uint32_t argc, jsval *vp)
 {
-	jsval *argv = JS_ARGV(cx, vp);
+	//jsval *argv = JS_ARGV(cx, vp);
 	JSBool ok = JS_TRUE;
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
 	js_proxy_t *proxy; JS_GET_NATIVE_PROXY(proxy, obj);
@@ -216,7 +216,7 @@ extern JSObject *jsb_CCHttpResponse_prototype;
 
 JSBool js_cocos2dx_extension_CCHttpResponse_setResponseData(JSContext *cx, uint32_t argc, jsval *vp)
 {
-	jsval *argv = JS_ARGV(cx, vp);
+	//jsval *argv = JS_ARGV(cx, vp);
 	JSBool ok = JS_TRUE;
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
 	js_proxy_t *proxy; JS_GET_NATIVE_PROXY(proxy, obj);
@@ -242,7 +242,7 @@ JSBool js_cocos2dx_extension_CCHttpResponse_getResponseData(JSContext *cx, uint3
 	JSB_PRECONDITION2( cobj, cx, JS_FALSE, "Invalid Native Object");
     
 	if (argc == 0) {
-		std::vector<char>* ret = cobj->getResponseData();
+		//std::vector<char>* ret = cobj->getResponseData();
 		jsval jsret;
 #pragma warning NO CONVERSION FROM NATIVE FOR vector*;
 		JS_SET_RVAL(cx, vp, jsret);
