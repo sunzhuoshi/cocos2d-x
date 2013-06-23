@@ -5698,6 +5698,12 @@ setDelegate : function () {},
 setContentScaleFactor : function () {},
 
 /**
+ * @method getDeltaTime
+ * @return A value converted from C/C++ "float"
+ */
+getDeltaTime : function () {},
+
+/**
  * @method getContentScaleFactor
  * @return A value converted from C/C++ "float"
  */
@@ -5710,10 +5716,10 @@ getContentScaleFactor : function () {},
 getWinSizeInPixels : function () {},
 
 /**
- * @method getDeltaTime
- * @return A value converted from C/C++ "float"
+ * @method getWinRealSizeInPixels
+ * @return A value converted from C/C++ "cocos2d::CCSize"
  */
-getDeltaTime : function () {},
+getWinRealSizeInPixels : function () {},
 
 /**
  * @method setGLDefaultValues

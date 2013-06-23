@@ -28101,6 +28101,23 @@ JSBool js_cocos2dx_CCDirector_setContentScaleFactor(JSContext *cx, uint32_t argc
 	JS_ReportError(cx, "wrong number of arguments: %d, was expecting %d", argc, 1);
 	return JS_FALSE;
 }
+JSBool js_cocos2dx_CCDirector_getDeltaTime(JSContext *cx, uint32_t argc, jsval *vp)
+{
+	JSObject *obj = JS_THIS_OBJECT(cx, vp);
+	js_proxy_t *proxy; JS_GET_NATIVE_PROXY(proxy, obj);
+	cocos2d::CCDirector* cobj = (cocos2d::CCDirector *)(proxy ? proxy->ptr : NULL);
+	JSB_PRECONDITION2( cobj, cx, JS_FALSE, "Invalid Native Object");
+	if (argc == 0) {
+		float ret = cobj->getDeltaTime();
+		jsval jsret;
+		jsret = DOUBLE_TO_JSVAL(ret);
+		JS_SET_RVAL(cx, vp, jsret);
+		return JS_TRUE;
+	}
+
+	JS_ReportError(cx, "wrong number of arguments: %d, was expecting %d", argc, 0);
+	return JS_FALSE;
+}
 JSBool js_cocos2dx_CCDirector_getContentScaleFactor(JSContext *cx, uint32_t argc, jsval *vp)
 {
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
@@ -28135,16 +28152,16 @@ JSBool js_cocos2dx_CCDirector_getWinSizeInPixels(JSContext *cx, uint32_t argc, j
 	JS_ReportError(cx, "wrong number of arguments: %d, was expecting %d", argc, 0);
 	return JS_FALSE;
 }
-JSBool js_cocos2dx_CCDirector_getDeltaTime(JSContext *cx, uint32_t argc, jsval *vp)
+JSBool js_cocos2dx_CCDirector_getWinRealSizeInPixels(JSContext *cx, uint32_t argc, jsval *vp)
 {
 	JSObject *obj = JS_THIS_OBJECT(cx, vp);
 	js_proxy_t *proxy; JS_GET_NATIVE_PROXY(proxy, obj);
 	cocos2d::CCDirector* cobj = (cocos2d::CCDirector *)(proxy ? proxy->ptr : NULL);
 	JSB_PRECONDITION2( cobj, cx, JS_FALSE, "Invalid Native Object");
 	if (argc == 0) {
-		float ret = cobj->getDeltaTime();
+		cocos2d::CCSize ret = cobj->getWinRealSizeInPixels();
 		jsval jsret;
-		jsret = DOUBLE_TO_JSVAL(ret);
+		jsret = ccsize_to_jsval(cx, ret);
 		JS_SET_RVAL(cx, vp, jsret);
 		return JS_TRUE;
 	}
@@ -29133,9 +29150,10 @@ void js_register_cocos2dx_CCDirector(JSContext *cx, JSObject *global) {
 		JS_FN("pause", js_cocos2dx_CCDirector_pause, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
 		JS_FN("setDelegate", js_cocos2dx_CCDirector_setDelegate, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
 		JS_FN("setContentScaleFactor", js_cocos2dx_CCDirector_setContentScaleFactor, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
+		JS_FN("getDeltaTime", js_cocos2dx_CCDirector_getDeltaTime, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
 		JS_FN("getContentScaleFactor", js_cocos2dx_CCDirector_getContentScaleFactor, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
 		JS_FN("getWinSizeInPixels", js_cocos2dx_CCDirector_getWinSizeInPixels, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
-		JS_FN("getDeltaTime", js_cocos2dx_CCDirector_getDeltaTime, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
+		JS_FN("getWinRealSizeInPixels", js_cocos2dx_CCDirector_getWinRealSizeInPixels, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
 		JS_FN("setGLDefaultValues", js_cocos2dx_CCDirector_setGLDefaultValues, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
 		JS_FN("setActionManager", js_cocos2dx_CCDirector_setActionManager, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
 		JS_FN("setAlphaBlending", js_cocos2dx_CCDirector_setAlphaBlending, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),

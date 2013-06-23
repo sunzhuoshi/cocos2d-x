@@ -179,6 +179,10 @@ public:
     */
     CCSize getWinSizeInPixels(void);
     
+    /** returns the real size of the OpenGL view in pixels.
+    */
+    CCSize getWinRealSizeInPixels(void);
+    
     /** returns visible size of the OpenGL view in points.
      *  the value is equal to getWinSize if don't invoke
      *  CCEGLView::setDesignResolutionSize()

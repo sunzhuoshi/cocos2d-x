@@ -501,6 +501,15 @@ CCSize CCDirector::getWinSizeInPixels()
     return CCSizeMake(m_obWinSizeInPoints.width * m_fContentScaleFactor, m_obWinSizeInPoints.height * m_fContentScaleFactor);
 }
 
+CCSize CCDirector::getWinRealSizeInPixels() {
+    if (m_pobOpenGLView) {
+        return m_pobOpenGLView->getFrameSize();
+    }
+    else {
+        return CCSizeZero;
+    }
+}
+
 CCSize CCDirector::getVisibleSize()
 {
     if (m_pobOpenGLView)
