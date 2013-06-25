@@ -208,6 +208,7 @@ public:
 
 // some utility functions
 // to native
+JSBool jsval_to_float_vector(JSContext *cx, jsval vp, std::vector<float> &ret);
 JSBool jsval_to_int32( JSContext *cx, jsval vp, int32_t *ret );
 JSBool jsval_to_uint32( JSContext *cx, jsval vp, uint32_t *ret );
 JSBool jsval_to_uint16( JSContext *cx, jsval vp, uint16_t *ret );

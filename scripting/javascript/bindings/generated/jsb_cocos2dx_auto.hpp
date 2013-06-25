@@ -83,7 +83,6 @@ void js_register_cocos2dx_CCGLProgram(JSContext *cx, JSObject *global);
 void register_all_cocos2dx(JSContext* cx, JSObject* obj);
 JSBool js_cocos2dx_CCGLProgram_fragmentShaderLog(JSContext *cx, uint32_t argc, jsval *vp);
 JSBool js_cocos2dx_CCGLProgram_addAttribute(JSContext *cx, uint32_t argc, jsval *vp);
-JSBool js_cocos2dx_CCGLProgram_setUniformLocationWithMatrix4fv(JSContext *cx, uint32_t argc, jsval *vp);
 JSBool js_cocos2dx_CCGLProgram_getUniformLocationForName(JSContext *cx, uint32_t argc, jsval *vp);
 JSBool js_cocos2dx_CCGLProgram_use(JSContext *cx, uint32_t argc, jsval *vp);
 JSBool js_cocos2dx_CCGLProgram_vertexShaderLog(JSContext *cx, uint32_t argc, jsval *vp);

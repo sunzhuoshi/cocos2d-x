@@ -277,14 +277,6 @@ fragmentShaderLog : function () {},
 addAttribute : function () {},
 
 /**
- * @method setUniformLocationWithMatrix4fv
- * @param {int}
- * @param {float*}
- * @param {unsigned int}
- */
-setUniformLocationWithMatrix4fv : function () {},
-
-/**
  * @method getUniformLocationForName
  * @return A value converted from C/C++ "int"
  * @param {const char*}

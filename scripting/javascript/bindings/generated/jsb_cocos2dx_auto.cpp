@@ -1237,30 +1237,6 @@ JSBool js_cocos2dx_CCGLProgram_addAttribute(JSContext *cx, uint32_t argc, jsval 
 	JS_ReportError(cx, "wrong number of arguments: %d, was expecting %d", argc, 2);
 	return JS_FALSE;
 }
-JSBool js_cocos2dx_CCGLProgram_setUniformLocationWithMatrix4fv(JSContext *cx, uint32_t argc, jsval *vp)
-{
-	jsval *argv = JS_ARGV(cx, vp);
-	JSBool ok = JS_TRUE;
-	JSObject *obj = JS_THIS_OBJECT(cx, vp);
-	js_proxy_t *proxy; JS_GET_NATIVE_PROXY(proxy, obj);
-	cocos2d::CCGLProgram* cobj = (cocos2d::CCGLProgram *)(proxy ? proxy->ptr : NULL);
-	JSB_PRECONDITION2( cobj, cx, JS_FALSE, "Invalid Native Object");
-	if (argc == 3) {
-		int arg0;
-		float* arg1;
-		unsigned int arg2;
-		ok &= jsval_to_int32(cx, argv[0], (int32_t *)&arg0);
-		#pragma warning NO CONVERSION TO NATIVE FOR float*;
-		ok &= jsval_to_uint32(cx, argv[2], &arg2);
-		JSB_PRECONDITION2(ok, cx, JS_FALSE, "Error processing arguments");
-		cobj->setUniformLocationWithMatrix4fv(arg0, arg1, arg2);
-		JS_SET_RVAL(cx, vp, JSVAL_VOID);
-		return JS_TRUE;
-	}
-
-	JS_ReportError(cx, "wrong number of arguments: %d, was expecting %d", argc, 3);
-	return JS_FALSE;
-}
 JSBool js_cocos2dx_CCGLProgram_getUniformLocationForName(JSContext *cx, uint32_t argc, jsval *vp)
 {
 	jsval *argv = JS_ARGV(cx, vp);
@@ -1662,7 +1638,6 @@ void js_register_cocos2dx_CCGLProgram(JSContext *cx, JSObject *global) {
 	static JSFunctionSpec funcs[] = {
 		JS_FN("getFragmentShaderLog", js_cocos2dx_CCGLProgram_fragmentShaderLog, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
 		JS_FN("addAttribute", js_cocos2dx_CCGLProgram_addAttribute, 2, JSPROP_PERMANENT | JSPROP_ENUMERATE),
-		JS_FN("setUniformLocationWithMatrix4fv", js_cocos2dx_CCGLProgram_setUniformLocationWithMatrix4fv, 3, JSPROP_PERMANENT | JSPROP_ENUMERATE),
 		JS_FN("getUniformLocationForName", js_cocos2dx_CCGLProgram_getUniformLocationForName, 1, JSPROP_PERMANENT | JSPROP_ENUMERATE),
 		JS_FN("use", js_cocos2dx_CCGLProgram_use, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
 		JS_FN("getVertexShaderLog", js_cocos2dx_CCGLProgram_vertexShaderLog, 0, JSPROP_PERMANENT | JSPROP_ENUMERATE),
