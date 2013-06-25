@@ -1025,7 +1025,6 @@ JSBool jsval_to_float_vector(JSContext *cx, jsval vp, std::vector<float> &ret)
                           JS_FALSE,
                           "Failed to convert value to number");
         ret[i] = (float)number;
-        CCLog("test: %d", i);
     }
     return JS_TRUE;
 }
