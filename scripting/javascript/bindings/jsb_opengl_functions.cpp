@@ -848,7 +848,7 @@ JSBool JSB_glGetUniformLocation(JSContext *cx, uint32_t argc, jsval *vp) {
 
 	ok &= JSB_jsval_to_uint32( cx, *argvp++, &arg0 );
 	ok &= jsval_to_charptr( cx, *argvp++, &arg1 );
-    printf("%s ", arg1);
+
 	JSB_PRECONDITION2(ok, cx, JS_FALSE, "Error processing arguments");
 	int ret_val;
 
