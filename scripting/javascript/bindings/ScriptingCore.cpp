@@ -1012,6 +1012,26 @@ int ScriptingCore::executeCustomTouchEvent(int eventType,
 }
 
 #pragma mark - Conversion Routines
+JSBool jsval_to_float_vector(JSContext *cx, jsval vp, std::vector<float> &ret)
+{
+    JSObject *jsobj = NULL;
+    uint32_t len = 0;
+    JSB_PRECONDITION2(JS_ValueToObject(cx, vp, &jsobj), cx, JS_FALSE, "Failed to convert value to object");
+    JSB_PRECONDITION2(JS_GetArrayLength(cx, jsobj, &len), cx, JS_FALSE, "Failed to get the length of array ");
+    ret.resize(len);
+    for (uint32_t i=0; i<len; i++) {
+        jsval value;
+        double number = 0.0;
+        JSB_PRECONDITION2(JS_GetElement(cx, jsobj, i, &value), cx, JS_FALSE, "Failed to get array element");
+        JSB_PRECONDITION2(value.isNumber() && JS_ValueToNumber(cx, value, &number) && !isnan(number),
+                          cx,
+                          JS_FALSE,
+                          "Failed to convert value to number");
+        ret[i] = (float)number;
+    }
+    return JS_TRUE;
+}
+
 JSBool jsval_to_int32( JSContext *cx, jsval vp, int32_t *outval )
 {
     JSBool ok = JS_TRUE;
