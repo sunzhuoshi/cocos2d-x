@@ -9,6 +9,12 @@ var cc = cc || {};
 cc._Reader = {
 
 /**
+ * @method addOwnerOutletName
+ * @param {std::string}
+ */
+addOwnerOutletName : function () {},
+
+/**
  * @method getOwnerCallbackNames
  * @return A value converted from C/C++ "cocos2d::CCArray*"
  */
@@ -19,6 +25,12 @@ getOwnerCallbackNames : function () {},
  * @param {const char*}
  */
 setCCBRootPath : function () {},
+
+/**
+ * @method addOwnerOutletNode
+ * @param {cocos2d::CCNode*}
+ */
+addOwnerOutletNode : function () {},
 
 /**
  * @method getOwnerCallbackNodes
@@ -108,6 +120,12 @@ cc.Control = {
 setEnabled : function () {},
 
 /**
+ * @method removeHandleOfControlEvent
+ * @param {unsigned int}
+ */
+removeHandleOfControlEvent : function () {},
+
+/**
  * @method getState
  * @return A value converted from C/C++ "unsigned int"
  */
@@ -187,6 +205,13 @@ init : function () {},
 setHighlighted : function () {},
 
 /**
+ * @method addHandleOfControlEvent
+ * @param {int}
+ * @param {unsigned int}
+ */
+addHandleOfControlEvent : function () {},
+
+/**
  * @method registerWithTouchDispatcher
  */
 registerWithTouchDispatcher : function () {},
@@ -263,10 +288,22 @@ init : function () {},
 setPreferredSize : function () {},
 
 /**
+ * @method getOpacity
+ * @return A value converted from C/C++ "unsigned char"
+ */
+getOpacity : function () {},
+
+/**
  * @method setSpriteFrame
  * @param {cocos2d::CCSpriteFrame*}
  */
 setSpriteFrame : function () {},
+
+/**
+ * @method getColor
+ * @return A value converted from C/C++ "cocos2d::ccColor3B"
+ */
+getColor : function () {},
 
 /**
  * @method getInsetBottom
@@ -425,6 +462,13 @@ setHighlighted : function () {},
 setBackgroundSpriteDispatchTable : function () {},
 
 /**
+ * @method setTitleLabelForState
+ * @param {cocos2d::CCNode*}
+ * @param {unsigned int}
+ */
+setTitleLabelForState : function () {},
+
+/**
  * @method setTitleForState
  * @param {cocos2d::CCString*}
  * @param {unsigned int}
@@ -508,11 +552,10 @@ setTitleTTFForState : function () {},
 setPreferredSize : function () {},
 
 /**
- * @method setTitleLabelForState
- * @param {cocos2d::CCNode*}
- * @param {unsigned int}
+ * @method getHorizontalOrigin
+ * @return A value converted from C/C++ "int"
  */
-setTitleLabelForState : function () {},
+getHorizontalOrigin : function () {},
 
 /**
  * @method ccTouchMoved
@@ -560,10 +603,10 @@ setEnabled : function () {},
 getBackgroundSpriteForState : function () {},
 
 /**
- * @method getHorizontalOrigin
- * @return A value converted from C/C++ "int"
+ * @method getColor
+ * @return A value converted from C/C++ "cocos2d::ccColor3B"
  */
-getHorizontalOrigin : function () {},
+getColor : function () {},
 
 /**
  * @method setMargins
@@ -639,6 +682,12 @@ setBackgroundSpriteFrameForState : function () {},
  * @param {unsigned int}
  */
 setBackgroundSpriteForState : function () {},
+
+/**
+ * @method setColor
+ * @param {cocos2d::ccColor3B}
+ */
+setColor : function () {},
 
 /**
  * @method getTitleLabelDispatchTable
@@ -1363,6 +1412,12 @@ cc.EditBox = {
 setAnchorPoint : function () {},
 
 /**
+ * @method getScriptEditBoxHandler
+ * @return A value converted from C/C++ "int"
+ */
+getScriptEditBoxHandler : function () {},
+
+/**
  * @method getText
  * @return A value converted from C/C++ "const char*"
  */
@@ -1387,6 +1442,12 @@ getPlaceHolder : function () {},
 setFontName : function () {},
 
 /**
+ * @method registerScriptEditBoxHandler
+ * @param {int}
+ */
+registerScriptEditBoxHandler : function () {},
+
+/**
  * @method setPlaceholderFontSize
  * @param {int}
  */
@@ -1397,6 +1458,11 @@ setPlaceholderFontSize : function () {},
  * @param {cocos2d::extension::EditBoxInputMode}
  */
 setInputMode : function () {},
+
+/**
+ * @method unregisterScriptEditBoxHandler
+ */
+unregisterScriptEditBoxHandler : function () {},
 
 /**
  * @method setPlaceholderFontColor
@@ -1450,16 +1516,22 @@ setPosition : function () {},
 setReturnType : function () {},
 
 /**
- * @method getMaxLength
- * @return A value converted from C/C++ "int"
+ * @method getDelegate
+ * @return A value converted from C/C++ "cocos2d::extension::CCEditBoxDelegate*"
  */
-getMaxLength : function () {},
+getDelegate : function () {},
 
 /**
  * @method setInputFlag
  * @param {cocos2d::extension::EditBoxInputFlag}
  */
 setInputFlag : function () {},
+
+/**
+ * @method getMaxLength
+ * @return A value converted from C/C++ "int"
+ */
+getMaxLength : function () {},
 
 /**
  * @method setText
@@ -1507,145 +1579,5 @@ create : function () {},
  * @constructor
  */
 CCEditBox : function () {},
-
-};
-
-/**
- * @class CCHttpRequest
- */
-cc.HttpRequest = {
-
-/**
- * @method getUrl
- * @return A value converted from C/C++ "const char*"
- */
-getUrl : function () {},
-
-/**
- * @method setTag
- * @param {const char*}
- */
-setTag : function () {},
-
-/**
- * @method setUrl
- * @param {const char*}
- */
-setUrl : function () {},
-
-/**
- * @method getTarget
- * @return A value converted from C/C++ "cocos2d::CCObject*"
- */
-getTarget : function () {},
-
-/**
- * @method autorelease
- * @return A value converted from C/C++ "cocos2d::CCObject*"
- */
-autorelease : function () {},
-
-/**
- * @method getRequestDataSize
- * @return A value converted from C/C++ "int"
- */
-getRequestDataSize : function () {},
-
-/**
- * @method getTag
- * @return A value converted from C/C++ "const char*"
- */
-getTag : function () {},
-
-/**
- * @method CCHttpRequest
- * @constructor
- */
-CCHttpRequest : function () {},
-
-};
-
-/**
- * @class CCHttpResponse
- */
-cc.HttpResponse = {
-
-/**
- * @method getErrorBuffer
- * @return A value converted from C/C++ "const char*"
- */
-getErrorBuffer : function () {},
-
-/**
- * @method isSucceed
- * @return A value converted from C/C++ "bool"
- */
-isSucceed : function () {},
-
-/**
- * @method getResponseCode
- * @return A value converted from C/C++ "int"
- */
-getResponseCode : function () {},
-
-/**
- * @method autorelease
- * @return A value converted from C/C++ "cocos2d::CCObject*"
- */
-autorelease : function () {},
-
-/**
- * @method getHttpRequest
- * @return A value converted from C/C++ "cocos2d::extension::CCHttpRequest*"
- */
-getHttpRequest : function () {},
-
-};
-
-/**
- * @class CCHttpClient
- */
-cc.HttpClient = {
-
-/**
- * @method setTimeoutForConnect
- * @param {int}
- */
-setTimeoutForConnect : function () {},
-
-/**
- * @method setTimeoutForRead
- * @param {int}
- */
-setTimeoutForRead : function () {},
-
-/**
- * @method getTimeoutForConnect
- * @return A value converted from C/C++ "int"
- */
-getTimeoutForConnect : function () {},
-
-/**
- * @method send
- * @param {cocos2d::extension::CCHttpRequest*}
- */
-send : function () {},
-
-/**
- * @method getTimeoutForRead
- * @return A value converted from C/C++ "int"
- */
-getTimeoutForRead : function () {},
-
-/**
- * @method destroyInstance
- */
-destroyInstance : function () {},
-
-/**
- * @method getInstance
- * @return A value converted from C/C++ "cocos2d::extension::CCHttpClient*"
- */
-getInstance : function () {},
 
 };
