@@ -771,7 +771,7 @@ int ScriptingCore::executeMenuItemEvent(CCMenuItem* pMenuItem)
     js_proxy_t *proxy = jsb_get_native_proxy(pMenuItem);
     dataVal = (proxy ? OBJECT_TO_JSVAL(proxy->obj) : JSVAL_NULL);
 
-    executeJSFunctionFromReservedSpot(this->cx_, p->obj, dataVal, retval);
+    executeJSFunctionFromReservedSpot(this->cx_, p->obj, 1, &dataVal, retval);
 
     return 1;
 }
