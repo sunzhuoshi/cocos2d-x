@@ -26,18 +26,22 @@ public:
 
 enum {
 	TEST_ASYNCHRONOUS_LOADING = 0,
+    TEST_DIRECT_LOADING,
 	TEST_COCOSTUDIO_WITH_SKELETON,
 	TEST_DRAGON_BONES_2_0,
 	TEST_PERFORMANCE,
+    TEST_PERFORMANCE_BATCHNODE,
 	TEST_CHANGE_ZORDER,
 	TEST_ANIMATION_EVENT,
+    TEST_FRAME_EVENT,
 	TEST_PARTICLE_DISPLAY,
 	TEST_USE_DIFFERENT_PICTURE,
-	TEST_BCOLLIDER_DETECTOR,
+	TEST_COLLIDER_DETECTOR,
 	TEST_BOUDINGBOX,
 	TEST_ANCHORPOINT,
 	TEST_ARMATURE_NESTING,
     TEST_ARMATURE_NESTING_2,
+    TEST_PLAY_SEVERAL_MOVEMENT,
 
 	TEST_LAYER_COUNT
 };
@@ -70,8 +74,16 @@ public:
 	virtual void onEnter();
 	virtual std::string title();
 	virtual std::string subtitle();
+    virtual void restartCallback(CCObject* pSender);
 
 	void dataLoaded(float percent);
+};
+
+class TestDirectLoading : public ArmatureTestLayer
+{
+public:
+    virtual void onEnter();
+    virtual std::string title();
 };
 
 class TestCSWithSkeleton : public ArmatureTestLayer
@@ -97,8 +109,12 @@ public:
 	virtual void onEnter();
 	virtual std::string title();
 	virtual std::string subtitle();
-	virtual void addArmature(cocos2d::extension::CCArmature *armature);
-	void update(float delta);
+    virtual void onIncrease(CCObject* pSender);
+    virtual void onDecrease(CCObject* pSender);
+	virtual void addArmature(int number);
+    virtual void addArmatureToParent(cocos2d::extension::CCArmature *armature);
+    virtual void removeArmatureFromParent(int tag);
+    virtual void refreshTitile();
 
 	int armatureCount;
 
@@ -106,6 +122,16 @@ public:
 	float times;
 	float lastTimes;
 	bool generated;
+};
+
+class TestPerformanceBatchNode : public TestPerformance
+{
+    virtual void onEnter();
+    virtual std::string title();
+    virtual void addArmatureToParent(cocos2d::extension::CCArmature *armature);
+    virtual void removeArmatureFromParent(int tag);
+
+    cocos2d::extension::CCBatchNode *batchNode;
 };
 
 
@@ -131,6 +157,17 @@ public:
 
 	cocos2d::extension::CCArmature *armature;
 };
+
+
+class TestFrameEvent : public ArmatureTestLayer
+{
+public:
+    virtual void onEnter();
+    virtual std::string title();
+    void onFrameEvent(cocos2d::extension::CCBone *bone, const char *evt, int originFrameIndex, int currentFrameIndex);
+    void checkAction(float dt);
+};
+
 
 class TestUseMutiplePicture : public ArmatureTestLayer
 {
@@ -223,6 +260,26 @@ public:
 
 	void destroyCPBody(cpBody *body);
 };
+#elif ENABLE_PHYSICS_SAVE_CALCULATED_VERTEX
+class TestColliderDetector : public ArmatureTestLayer
+{
+public:
+    ~TestColliderDetector();
+
+    virtual void onEnter();
+    virtual std::string title();
+    virtual void update(float delta);
+    virtual void draw();
+
+    void onFrameEvent(cocos2d::extension::CCBone *bone, const char *evt, int originFrameIndex, int currentFrameIndex);
+
+    void initWorld() {};
+
+    cocos2d::extension::CCArmature *armature;
+    cocos2d::extension::CCArmature *armature2;
+
+    cocos2d::CCSprite *bullet;
+};
 #endif
 
 
@@ -295,4 +352,13 @@ public:
 
     bool touchedMenu;
 };
+
+class TestPlaySeveralMovement : public ArmatureTestLayer
+{
+public:
+    virtual void onEnter();
+    virtual std::string title();
+    virtual std::string subtitle();
+};
+
 #endif  // __HELLOWORLD_SCENE_H__

@@ -1,3 +1,4 @@
+
 /****************************************************************************
 Copyright (c) 2013 cocos2d-x.org
 
@@ -144,6 +145,14 @@ public:
     virtual void setAnimation(CCArmatureAnimation *animation);
     virtual CCArmatureAnimation *getAnimation();
 
+    virtual CCTextureAtlas *getTexureAtlasWithTexture(CCTexture2D *texture);
+
+#if ENABLE_PHYSICS_BOX2D_DETECT || ENABLE_PHYSICS_CHIPMUNK_DETECT
+    virtual void setColliderFilter(CCColliderFilter *filter);
+#elif ENABLE_PHYSICS_SAVE_CALCULATED_VERTEX
+    virtual void drawContour();
+#endif
+
 #if ENABLE_PHYSICS_BOX2D_DETECT
     /**
      *  @js NA
@@ -177,7 +186,7 @@ protected:
 
     CC_SYNTHESIZE(CCTextureAtlas *, m_pAtlas, TextureAtlas);
 
-    CC_SYNTHESIZE(CCBone *, m_pParentBone, ParentBone);
+    CC_PROPERTY(CCBone *, m_pParentBone, ParentBone);
 
     CC_SYNTHESIZE(float, m_fVersion, Version);
 
@@ -194,6 +203,8 @@ protected:
     CCPoint m_pOffsetPoint;
 
     CCArmatureAnimation *m_pAnimation;
+
+    CCDictionary *m_pTextureAtlasDic;
 
 #if ENABLE_PHYSICS_BOX2D_DETECT
     CC_PROPERTY(b2Body *, m_pBody, Body);

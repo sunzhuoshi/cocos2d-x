@@ -24,22 +24,23 @@ THE SOFTWARE.
 
 #include "CCActionNode.h"
 #include "CCActionFrameEasing.h"
+#include "CCActionObject.h"
 #include "../GUI/BaseClasses/UIWidget.h"
 #include "../GUI/System/UIHelper.h"
 #include "../Json/DictionaryHelper.h"
 
 NS_CC_EXT_BEGIN
 
-ActionNode::ActionNode()
-: currentFrameIndex(0)
-, destFrameIndex(0)
-, m_fUnitTime(0.1f)
-, m_ActionTag(0)
-, m_Object(NULL)
-, m_actionSpawn(NULL)
-, m_action(NULL)
-, m_FrameArray(NULL)
-, frameArrayNum(0)
+	ActionNode::ActionNode()
+	: currentFrameIndex(0)
+	, destFrameIndex(0)
+	, m_fUnitTime(0.1f)
+	, m_ActionTag(0)
+	, m_Object(NULL)
+	, m_actionSpawn(NULL)
+	, m_action(NULL)
+	, m_FrameArray(NULL)
+	, frameArrayNum(0)
 {
 	m_FrameArray = CCArray::create();
 	m_FrameArray->retain();
@@ -71,13 +72,13 @@ ActionNode::~ActionNode()
 
 }
 
-void ActionNode::initWithDictionary(cs::CSJsonDictionary *dic,CCObject* root)
+void ActionNode::initWithDictionary(const rapidjson::Value& dic,CCObject* root)
 {
 	setActionTag(DICTOOL->getIntValue_json(dic, "ActionTag"));
 	int actionFrameCount = DICTOOL->getArrayCount_json(dic, "actionframelist");
 	for (int i=0; i<actionFrameCount; i++) {
 
-		cs::CSJsonDictionary* actionFrameDic = DICTOOL->getDictionaryFromArray_json(dic, "actionframelist", i);
+		const rapidjson::Value& actionFrameDic = DICTOOL->getDictionaryFromArray_json(dic, "actionframelist", i);
 		int frameInex = DICTOOL->getIntValue_json(actionFrameDic,"frameid");
 
 		bool existPosition = DICTOOL->checkObjectExist_json(actionFrameDic,"positionx");
@@ -86,6 +87,7 @@ void ActionNode::initWithDictionary(cs::CSJsonDictionary *dic,CCObject* root)
 			float positionX = DICTOOL->getFloatValue_json(actionFrameDic, "positionx");
 			float positionY = DICTOOL->getFloatValue_json(actionFrameDic, "positiony");
 			ActionMoveFrame* actionFrame = new ActionMoveFrame();
+			actionFrame->autorelease();
 			actionFrame->setFrameIndex(frameInex);
 			actionFrame->setPosition(CCPointMake(positionX, positionY));
 			CCArray* cActionArray = (CCArray*)m_FrameArray->objectAtIndex((int)kKeyframeMove);
@@ -98,6 +100,7 @@ void ActionNode::initWithDictionary(cs::CSJsonDictionary *dic,CCObject* root)
 			float scaleX = DICTOOL->getFloatValue_json(actionFrameDic, "scalex");
 			float scaleY = DICTOOL->getFloatValue_json(actionFrameDic, "scaley");
 			ActionScaleFrame* actionFrame = new ActionScaleFrame();
+			actionFrame->autorelease();
 			actionFrame->setFrameIndex(frameInex);
 			actionFrame->setScaleX(scaleX);
 			actionFrame->setScaleY(scaleY);
@@ -110,6 +113,7 @@ void ActionNode::initWithDictionary(cs::CSJsonDictionary *dic,CCObject* root)
 		{
 			float rotation = DICTOOL->getFloatValue_json(actionFrameDic, "rotation");
 			ActionRotationFrame* actionFrame = new ActionRotationFrame();
+			actionFrame->autorelease();
 			actionFrame->setFrameIndex(frameInex);
 			actionFrame->setRotation(rotation);
 			CCArray* cActionArray = (CCArray*)m_FrameArray->objectAtIndex((int)kKeyframeRotate);
@@ -121,6 +125,7 @@ void ActionNode::initWithDictionary(cs::CSJsonDictionary *dic,CCObject* root)
 		{
 			int opacity = DICTOOL->getIntValue_json(actionFrameDic, "opacity");
 			ActionFadeFrame* actionFrame = new ActionFadeFrame();
+			actionFrame->autorelease();
 			actionFrame->setFrameIndex(frameInex);
 			actionFrame->setOpacity(opacity);
 			CCArray* cActionArray = (CCArray*)m_FrameArray->objectAtIndex((int)kKeyframeFade);
@@ -134,13 +139,13 @@ void ActionNode::initWithDictionary(cs::CSJsonDictionary *dic,CCObject* root)
 			int colorG = DICTOOL->getIntValue_json(actionFrameDic, "colorg");
 			int colorB = DICTOOL->getIntValue_json(actionFrameDic, "colorb");
 			ActionTintFrame* actionFrame = new ActionTintFrame();
+			actionFrame->autorelease();
 			actionFrame->setFrameIndex(frameInex);
 			actionFrame->setColor(ccc3(colorR,colorG,colorB));
 			CCArray* cActionArray = (CCArray*)m_FrameArray->objectAtIndex((int)kKeyframeTint);
 			cActionArray->addObject(actionFrame);
 		}
 
-		CC_SAFE_DELETE(actionFrameDic);
 	}
 	initActionNodeFromRoot(root);
 }
@@ -157,7 +162,7 @@ void ActionNode::initActionNodeFromRoot(CCObject* root)
 		UIWidget* rootWidget = dynamic_cast<UIWidget*>(root);
 		if (rootWidget != NULL)
 		{
-			UIWidget* widget = UIHelper::instance()->seekActionWidgetByActionTag(rootWidget, getActionTag());
+			UIWidget* widget = UIHelper::seekActionWidgetByActionTag(rootWidget, getActionTag());
 			if (widget != NULL)
 			{
 				setObject(widget);
@@ -290,6 +295,8 @@ CCSpawn * ActionNode::refreshActionProperty()
 			ActionFrame* frame = (ActionFrame*)(cArray->objectAtIndex(i));
 			if (i == 0)
 			{
+				CCAction* cAction = frame->getAction(0);
+				cSequenceArray->addObject(cAction);
 			}
 			else
 			{
@@ -320,7 +327,7 @@ CCSpawn * ActionNode::refreshActionProperty()
 	return m_actionSpawn;
 }
 
-void ActionNode::playAction(bool bloop)
+void ActionNode::playAction()
 {
 	if ( m_Object == NULL || m_actionSpawn == NULL)
 	{
@@ -331,14 +338,27 @@ void ActionNode::playAction(bool bloop)
 	{
 		m_action->release();
 	}
-	if (bloop)
+
+	m_action = CCSequence::create(m_actionSpawn,NULL);
+	m_action->retain();
+
+	this->runAction();
+
+}
+
+void ActionNode::playAction(CCCallFunc* func)
+{
+	if ( m_Object == NULL || m_actionSpawn == NULL)
 	{
-		m_action = CCRepeatForever::create(m_actionSpawn);
+		return;
 	}
-	else
+
+	if (m_action!=NULL)
 	{
-		m_action = CCSequence::create(m_actionSpawn, NULL);
+		m_action->release();
 	}
+	
+	m_action = CCSequence::create(m_actionSpawn, func, NULL);
 	m_action->retain();
 
 	this->runAction();
@@ -479,4 +499,13 @@ void ActionNode::easingToFrame(float duration,float delayTime,ActionFrame* destF
 	cAction->update(delayTime);
 }
 
+
+bool ActionNode::isActionDoneOnce()
+{
+	if (m_action == NULL)
+	{
+		return true;
+	}
+	return m_action->isDone();
+}
 NS_CC_EXT_END

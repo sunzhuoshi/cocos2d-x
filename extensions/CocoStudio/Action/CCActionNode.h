@@ -28,8 +28,8 @@
 #include "cocos2d.h"
 #include "ExtensionMacros.h"
 #include "CCActionFrame.h"
-#include "../Json/CSContentJsonDictionary.h"
-
+#include "../Json/DictionaryHelper.h"
+#include "../Json/rapidjson/document.h"
 NS_CC_EXT_BEGIN
 /**
 *   @js NA
@@ -140,18 +140,24 @@ public:
 
     /**
      * Play the action.
-     *
-     * @param bloop   true the
      */
-	virtual void playAction(bool bloop);
+	virtual void playAction();
     
+	virtual void playAction(CCCallFunc* func);
+
     /**
      * Stop the action.
      */
 	virtual void stopAction();
 	
     /*init properties with a json dictionary*/
-    virtual void initWithDictionary(cs::CSJsonDictionary* dic,CCObject* root);
+	virtual void initWithDictionary(const rapidjson::Value& dic,CCObject* root);
+    /**
+     * Gets if the action is done once time.
+     *
+	 * @return   that if the action is done once time
+     */
+	virtual bool isActionDoneOnce();
 protected:
 	int currentFrameIndex;
 	int destFrameIndex;
@@ -164,7 +170,7 @@ protected:
 	CCAction* m_action;
 	CCArray* m_FrameArray;
 	int frameArrayNum;
-    
+
 protected:
 	virtual CCNode* getActionNode();
 	virtual CCSpawn * refreshActionProperty();
