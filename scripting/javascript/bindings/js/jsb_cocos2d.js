@@ -73,6 +73,9 @@ cc.BLUE = {r:0, g:0, b:255};
 cc.BLACK = {r:0, g:0, b:0};
 cc.WHITE = {r:255, g:255, b:255};
 cc.YELLOW = {r:255, g:255, b:0};
+cc.MAGENTA = {r:255, g:0, b:255};
+cc.ORANGE = {r:255, g:127, b:0};
+cc.GRAY = {r:166, g:166, b:166};
 
 cc.POINT_ZERO = {x:0, y:0};
 
