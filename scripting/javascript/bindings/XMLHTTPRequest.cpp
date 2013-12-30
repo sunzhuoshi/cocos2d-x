@@ -182,7 +182,6 @@ void MinXmlHttpRequest::handle_requestResponse(cocos2d::extension::CCHttpClient 
     {
         CCLOG("response failed");
         CCLOG("error buffer: %s", response->getErrorBuffer());
-        return;
     }
     
     // set header
@@ -212,6 +211,10 @@ void MinXmlHttpRequest::handle_requestResponse(cocos2d::extension::CCHttpClient 
         readyState = DONE;
         data << concatenated;
         
+    }
+    else if (statusCode == 404) {
+        status = 404;
+        readyState = DONE;
     }
     else
     {
