@@ -178,7 +178,7 @@ void MinXmlHttpRequest::handle_requestResponse(cocos2d::extension::CCHttpClient 
     char statusString[64] = {};
     sprintf(statusString, "HTTP Status Code: %d, tag = %s", statusCode, response->getHttpRequest()->getTag());
     
-    if (!response->isSucceed())
+    if (200 != statusCode) // 404, dns error
     {
         CCLOG("response failed");
         CCLOG("error buffer: %s", response->getErrorBuffer());
@@ -204,21 +204,10 @@ void MinXmlHttpRequest::handle_requestResponse(cocos2d::extension::CCHttpClient 
     
     strcpy(concatenated, s2.c_str());
     
-    if (statusCode == 200)
-    {
-        //Succeeded
-        status = 200;
-        readyState = DONE;
+    status = statusCode;
+    readyState = DONE;
+    if (200 == statusCode) {
         data << concatenated;
-        
-    }
-    else if (statusCode == 404) {
-        status = 404;
-        readyState = DONE;
-    }
-    else
-    {
-        status = 0;
     }
     // Free Memory.
     free((void*) concatHeader);
@@ -596,7 +585,6 @@ JS_BINDED_FUNC_IMPL(MinXmlHttpRequest, open)
         
         url = urlstr;
         meth = method;
-        readyState = 1;
         isAsync = async;
         
         if (url.length() > 5 && url.compare(url.length() - 5, 5, ".json") == 0) {
