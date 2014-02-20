@@ -26,13 +26,6 @@
 
 #include "jsapi.h"
 #include "jsfriendapi.h"
-#include "cocos2d.h"
-#include "chipmunk.h"
-#include "SimpleAudioEngine.h"
-
-// Globals
-// one shared key for associations
-extern char * JSB_association_proxy_key;
 
 #ifdef __cplusplus
 extern "C" {
@@ -75,9 +68,8 @@ extern "C" {
 	
 	
 	// needed for callbacks. It does nothing.
-	JSBool JSB_do_nothing(JSContext *cx, uint32_t argc, jsval *vp);
+	bool JSB_do_nothing(JSContext *cx, uint32_t argc, jsval *vp);
 
-	extern const char* JSB_version;
 #ifdef __cplusplus
 }
 #endif

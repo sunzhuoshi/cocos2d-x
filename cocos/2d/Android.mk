@@ -12,6 +12,7 @@ CCAction.cpp \
 CCActionCamera.cpp \
 CCActionCatmullRom.cpp \
 CCActionEase.cpp \
+CCTweenFunction.cpp \
 CCActionGrid.cpp \
 CCActionGrid3D.cpp \
 CCActionInstant.cpp \
@@ -24,7 +25,6 @@ CCActionTween.cpp \
 CCAnimation.cpp \
 CCAnimationCache.cpp \
 CCAtlasNode.cpp \
-CCCamera.cpp \
 ccCArray.cpp \
 CCClippingNode.cpp \
 CCComponent.cpp \
@@ -43,13 +43,14 @@ CCEventListener.cpp \
 CCEventListenerAcceleration.cpp \
 CCEventListenerCustom.cpp \
 CCEventListenerKeyboard.cpp \
+CCEventListenerMouse.cpp \
 CCEventListenerTouch.cpp \
+CCEventMouse.cpp \
 CCEventTouch.cpp \
 CCFont.cpp \
+CCFontCharMap.cpp \
 CCFontAtlas.cpp \
 CCFontAtlasCache.cpp \
-CCFontAtlasFactory.cpp \
-CCFontDefinition.cpp \
 CCFontFNT.cpp \
 CCFontFreeType.cpp \
 ccFPSImages.c \
@@ -58,6 +59,7 @@ CCGLProgram.cpp \
 ccGLStateCache.cpp \
 CCGrabber.cpp \
 CCGrid.cpp \
+CCNodeGrid.cpp \
 CCIMEDispatcher.cpp \
 CCLabel.cpp \
 CCLabelAtlas.cpp \
@@ -88,7 +90,6 @@ CCSpriteBatchNode.cpp \
 CCSpriteFrame.cpp \
 CCSpriteFrameCache.cpp \
 CCTextFieldTTF.cpp \
-CCTextImage.cpp \
 CCTexture2D.cpp \
 CCTextureAtlas.cpp \
 CCTextureCache.cpp \
@@ -111,14 +112,25 @@ cocos2d.cpp \
 TGAlib.cpp \
 TransformUtils.cpp \
 ZipUtils.cpp \
-platform/CCEGLViewProtocol.cpp \
+platform/CCGLViewProtocol.cpp \
 platform/CCFileUtils.cpp \
 platform/CCSAXParser.cpp \
 platform/CCThread.cpp \
+platform/CCImage.cpp \
+renderer/CCCustomCommand.cpp \
+renderer/CCFrustum.cpp \
+renderer/CCGroupCommand.cpp \
+renderer/CCMaterialManager.cpp \
+renderer/CCQuadCommand.cpp \
+renderer/CCBatchCommand.cpp \
+renderer/CCRenderCommand.cpp \
+renderer/CCRenderer.cpp \
+renderer/CCRenderMaterial.cpp \
 ../base/atitc.cpp \
 ../base/CCAffineTransform.cpp \
 ../base/CCArray.cpp \
 ../base/CCAutoreleasePool.cpp \
+../base/CCConsole.cpp \
 ../base/CCData.cpp \
 ../base/CCDataVisitor.cpp \
 ../base/CCDictionary.cpp \
@@ -127,6 +139,7 @@ platform/CCThread.cpp \
 ../base/CCObject.cpp \
 ../base/CCSet.cpp \
 ../base/CCString.cpp \
+../base/CCValue.cpp \
 ../base/etc1.cpp \
 ../base/s3tc.cpp \
 ../math/kazmath/src/aabb.c \
@@ -147,22 +160,19 @@ platform/CCThread.cpp \
 ../physics/CCPhysicsJoint.cpp \
 ../physics/CCPhysicsShape.cpp \
 ../physics/CCPhysicsWorld.cpp \
-../physics/box2d/CCPhysicsBodyInfo.cpp \
-../physics/box2d/CCPhysicsContactInfo.cpp \
-../physics/box2d/CCPhysicsJointInfo.cpp \
-../physics/box2d/CCPhysicsShapeInfo.cpp \
-../physics/box2d/CCPhysicsWorldInfo.cpp \
-../physics/chipmunk/CCPhysicsBodyInfo.cpp \
-../physics/chipmunk/CCPhysicsContactInfo.cpp \
-../physics/chipmunk/CCPhysicsJointInfo.cpp \
-../physics/chipmunk/CCPhysicsShapeInfo.cpp \
-../physics/chipmunk/CCPhysicsWorldInfo.cpp \
+../physics/chipmunk/CCPhysicsBodyInfo_chipmunk.cpp \
+../physics/chipmunk/CCPhysicsContactInfo_chipmunk.cpp \
+../physics/chipmunk/CCPhysicsJointInfo_chipmunk.cpp \
+../physics/chipmunk/CCPhysicsShapeInfo_chipmunk.cpp \
+../physics/chipmunk/CCPhysicsWorldInfo_chipmunk.cpp \
 ../../external/tinyxml2/tinyxml2.cpp \
 ../../external/unzip/ioapi.cpp \
-../../external/unzip/unzip.cpp
+../../external/unzip/unzip.cpp \
+../../external/edtaa3func/edtaa3func.cpp
 
 
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH) \
+                    $(LOCAL_PATH)/renderer \
                     $(LOCAL_PATH)/../math/kazmath/include \
                     platform/android \
                     $(LOCAL_PATH)/../physics \
@@ -172,13 +182,15 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH) \
                     $(LOCAL_PATH)/../../external/chipmunk/include/chipmunk
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH) \
+                    $(LOCAL_PATH)/renderer \
                     $(LOCAL_PATH)/../math/kazmath/include \
                     $(LOCAL_PATH)/platform/android \
                     $(LOCAL_PATH)/../physics \
                     $(LOCAL_PATH)/../base \
                     $(LOCAL_PATH)/../../external/tinyxml2 \
                     $(LOCAL_PATH)/../../external/unzip \
-                    $(LOCAL_PATH)/../../external/chipmunk/include/chipmunk
+                    $(LOCAL_PATH)/../../external/chipmunk/include/chipmunk \
+                    $(LOCAL_PATH)/../../external/edtaa3func
 
 
 LOCAL_LDLIBS := -lGLESv2 \
@@ -197,9 +209,9 @@ LOCAL_WHOLE_STATIC_LIBRARIES += cocos2dxandroid_static
 
 # define the macro to compile through support/zip_support/ioapi.c
 LOCAL_CFLAGS   := -Wno-psabi  -DUSE_FILE32API
-LOCAL_CPPFLAGS := -Wno-literal-suffix
+LOCAL_CPPFLAGS := -Wno-literal-suffix -Wno-deprecated-declarations
 LOCAL_EXPORT_CFLAGS   := -Wno-psabi -DUSE_FILE32API
-LOCAL_EXPORT_CPPFLAGS := -Wno-literal-suffix
+LOCAL_EXPORT_CPPFLAGS := -Wno-literal-suffix -Wno-deprecated-declarations
 
 include $(BUILD_STATIC_LIBRARY)
 

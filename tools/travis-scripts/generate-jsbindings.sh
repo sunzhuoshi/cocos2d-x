@@ -8,7 +8,7 @@
 # Dependencies
 #
 # For bindings generator:
-# (see ../../../tojs/genbindings.sh and ../../../tolua/genbindings.sh
+# (see ../../../tojs/genbindings.py and ../../../tolua/genbindings.py
 # ... for the defaults used if the environment is not customized)
 #
 #  * $PYTHON_BIN
@@ -20,7 +20,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 COCOS2DX_ROOT="$DIR"/../..
 TOJS_ROOT=$COCOS2DX_ROOT/tools/tojs
 TOLUA_ROOT=$COCOS2DX_ROOT/tools/tolua
-GENERATED_WORKTREE="$COCOS2DX_ROOT"/scripting/auto-generated
+GENERATED_WORKTREE="$COCOS2DX_ROOT"/cocos/scripting/auto-generated
 COMMITTAG="[AUTO]"
 
 # Exit on error
@@ -39,7 +39,7 @@ if [ "$PLATFORM"x = "ios"x ]; then
     cd Cheetah-2.4.4
     sudo python setup.py install 2> /dev/null > /dev/null
     popd
-else
+elif [ $(command -v apt-get) ]; then
     sudo apt-get --force-yes --yes install python-yaml python-cheetah
 fi
 
@@ -47,12 +47,12 @@ generate_bindings_glue_codes()
 {
     echo "Create auto-generated jsbinding glue codes."
     pushd "$TOJS_ROOT"
-    ./genbindings.sh
+    ./genbindings.py
     popd
 
     echo "Create auto-generated luabinding glue codes."
     pushd "$TOLUA_ROOT"
-    ./genbindings.sh
+    ./genbindings.py
     popd
 }
 
@@ -75,10 +75,10 @@ echo "Set git user for the submodule of ${GENERATED_WORKTREE}"
 git config user.email ${GH_EMAIL}
 git config user.name ${GH_USER}
 #Set remotes
-git remote add upstream https://${GH_USER}:${GH_PASSWORD}@github.com/folecr/cocos2dx-autogen-bindings.git 2> /dev/null > /dev/null
+git remote add upstream https://${GH_USER}:${GH_PASSWORD}@github.com/cocos2d-x/bindings-auto-generated.git 2> /dev/null > /dev/null
 
-echo "Delete all directories and files except '.git' and 'README'."
-ls -a | grep -E -v ^\[.\]\{1,2\}$ | grep -E -v ^\.git$ | grep -E -v ^README$ | xargs -I{} rm -rf {}
+echo "Delete all directories and files except '.git' and 'README.md'."
+ls -a | grep -E -v ^\[.\]\{1,2\}$ | grep -E -v ^\.git$ | grep -E -v ^README\.md$ | xargs -I{} rm -rf {}
 echo "Show files in ${GENERATED_WORKTREE} folder."
 ls -a
 popd

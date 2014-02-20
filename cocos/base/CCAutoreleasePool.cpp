@@ -1,5 +1,6 @@
 /****************************************************************************
-Copyright (c) 2010 cocos2d-x.org
+Copyright (c) 2010-2012 cocos2d-x.org
+Copyright (c) 2013-2014 Chukong Technologies Inc.
 
 http://www.cocos2d-x.org
 
@@ -26,61 +27,71 @@ THE SOFTWARE.
 
 NS_CC_BEGIN
 
-static PoolManager* s_pPoolManager = NULL;
-
 AutoreleasePool::AutoreleasePool()
+: _name("")
+#if defined(COCOS2D_DEBUG) && (COCOS2D_DEBUG > 0)
+, _isClearing(false)
+#endif
 {
-    _managedObjectArray = new Array();
-    _managedObjectArray->initWithCapacity(150);
+    _managedObjectArray.reserve(150);
+    PoolManager::getInstance()->push(this);
+}
+
+AutoreleasePool::AutoreleasePool(const std::string &name)
+: _name(name)
+#if defined(COCOS2D_DEBUG) && (COCOS2D_DEBUG > 0)
+, _isClearing(false)
+#endif
+{
+    _managedObjectArray.reserve(150);
+    PoolManager::getInstance()->push(this);
 }
 
 AutoreleasePool::~AutoreleasePool()
 {
     CCLOGINFO("deallocing AutoreleasePool: %p", this);
-    CC_SAFE_DELETE(_managedObjectArray);
+    clear();
+    
+    PoolManager::getInstance()->pop();
 }
 
 void AutoreleasePool::addObject(Object* object)
 {
-    _managedObjectArray->addObject(object);
-
-    CCASSERT(object->_reference > 1, "reference count should be greater than 1");
-    ++(object->_autoReleaseCount);
-    object->release(); // no ref count, in this case autorelease pool added.
-}
-
-void AutoreleasePool::removeObject(Object* object)
-{
-    for (unsigned int i = 0; i < object->_autoReleaseCount; ++i)
-    {
-        _managedObjectArray->removeObject(object, false);
-    }
+    _managedObjectArray.push_back(object);
 }
 
 void AutoreleasePool::clear()
 {
-    if(_managedObjectArray->count() > 0)
+#if defined(COCOS2D_DEBUG) && (COCOS2D_DEBUG > 0)
+    _isClearing = true;
+#endif
+    for (const auto &obj : _managedObjectArray)
     {
-        //CCAutoreleasePool* pReleasePool;
-#ifdef _DEBUG
-        int nIndex = _managedObjectArray->count() - 1;
+        obj->release();
+    }
+    _managedObjectArray.clear();
+#if defined(COCOS2D_DEBUG) && (COCOS2D_DEBUG > 0)
+    _isClearing = false;
 #endif
+}
 
-        Object* pObj = NULL;
-        CCARRAY_FOREACH_REVERSE(_managedObjectArray, pObj)
-        {
-            if(!pObj)
-                break;
+bool AutoreleasePool::contains(Object* object) const
+{
+    for (const auto& obj : _managedObjectArray)
+    {
+        if (obj == object)
+            return true;
+    }
+    return false;
+}
 
-            --(pObj->_autoReleaseCount);
-            //(*it)->release();
-            //delete (*it);
-#ifdef _DEBUG
-            nIndex--;
-#endif
-        }
-
-        _managedObjectArray->removeAllObjects();
+void AutoreleasePool::dump()
+{
+    CCLOG("autorelease pool: %s, number of managed object %d\n", _name.c_str(), static_cast<int>(_managedObjectArray.size()));
+    CCLOG("%20s%20s%20s", "Object pointer", "Object id", "reference count");
+    for (const auto &obj : _managedObjectArray)
+    {
+        CCLOG("%20p%20u%20u\n", obj, obj->_ID, obj->getReferenceCount());
     }
 }
 
@@ -91,114 +102,77 @@ void AutoreleasePool::clear()
 //
 //--------------------------------------------------------------------
 
-PoolManager* PoolManager::sharedPoolManager()
+PoolManager* PoolManager::s_singleInstance = nullptr;
+
+PoolManager* PoolManager::getInstance()
 {
-    if (s_pPoolManager == NULL)
+    if (s_singleInstance == nullptr)
     {
-        s_pPoolManager = new PoolManager();
+        s_singleInstance = new PoolManager();
+        // Add the first auto release pool
+        s_singleInstance->_curReleasePool = new AutoreleasePool("cocos2d autorelease pool");
+        s_singleInstance->_releasePoolStack.push_back(s_singleInstance->_curReleasePool);
     }
-    return s_pPoolManager;
+    return s_singleInstance;
 }
 
-void PoolManager::purgePoolManager()
+void PoolManager::destroyInstance()
 {
-    CC_SAFE_DELETE(s_pPoolManager);
+    delete s_singleInstance;
+    s_singleInstance = nullptr;
 }
 
 PoolManager::PoolManager()
 {
-    _releasePoolStack = new Array();    
-    _releasePoolStack->initWithCapacity(150);
-    _curReleasePool = 0;
 }
 
 PoolManager::~PoolManager()
 {
     CCLOGINFO("deallocing PoolManager: %p", this);
-    finalize();
- 
-     // we only release the last autorelease pool here 
-    _curReleasePool = 0;
-    _releasePoolStack->removeObjectAtIndex(0);
- 
-    CC_SAFE_DELETE(_releasePoolStack);
-}
-
-void PoolManager::finalize()
-{
-    if(_releasePoolStack->count() > 0)
+    
+    while (!_releasePoolStack.empty())
     {
-        //CCAutoreleasePool* pReleasePool;
-        Object* pObj = NULL;
-        CCARRAY_FOREACH(_releasePoolStack, pObj)
-        {
-            if(!pObj)
-                break;
-            AutoreleasePool* pPool = static_cast<AutoreleasePool*>(pObj);
-            pPool->clear();
-        }
+        AutoreleasePool* pool = _releasePoolStack.back();
+        _releasePoolStack.pop_back();
+        
+        delete pool;
     }
 }
 
-void PoolManager::push()
+
+AutoreleasePool* PoolManager::getCurrentPool() const
 {
-    AutoreleasePool* pPool = new AutoreleasePool();       //ref = 1
-    _curReleasePool = pPool;
+    return _curReleasePool;
+}
 
-    _releasePoolStack->addObject(pPool);                   //ref = 2
+bool PoolManager::isObjectInPools(Object* obj) const
+{
+    for (const auto& pool : _releasePoolStack)
+    {
+        if (pool->contains(obj))
+            return true;
+    }
+    return false;
+}
 
-    pPool->release();                                       //ref = 1
+void PoolManager::push(AutoreleasePool *pool)
+{
+    _releasePoolStack.push_back(pool);
+    _curReleasePool = pool;
 }
 
 void PoolManager::pop()
 {
-    if (! _curReleasePool)
+    // Can not pop the pool that created by engine
+    CC_ASSERT(_releasePoolStack.size() >= 1);
+    
+    _releasePoolStack.pop_back();
+    
+    // Should update _curReleasePool if a temple pool is released
+    if (_releasePoolStack.size() > 1)
     {
-        return;
+        _curReleasePool = _releasePoolStack.back();
     }
-
-    int nCount = _releasePoolStack->count();
-
-    _curReleasePool->clear();
- 
-    if (nCount > 1)
-    {
-        _releasePoolStack->removeObjectAtIndex(nCount-1);
-
-//         if(nCount > 1)
-//         {
-//             _curReleasePool = _releasePoolStack->getObjectAtIndex(nCount - 2);
-//             return;
-//         }
-        _curReleasePool = (AutoreleasePool*)_releasePoolStack->getObjectAtIndex(nCount - 2);
-    }
-
-    /*_curReleasePool = NULL;*/
-}
-
-void PoolManager::removeObject(Object* object)
-{
-    CCASSERT(_curReleasePool, "current auto release pool should not be null");
-
-    _curReleasePool->removeObject(object);
-}
-
-void PoolManager::addObject(Object* object)
-{
-    getCurReleasePool()->addObject(object);
-}
-
-
-AutoreleasePool* PoolManager::getCurReleasePool()
-{
-    if(!_curReleasePool)
-    {
-        push();
-    }
-
-    CCASSERT(_curReleasePool, "current auto release pool should not be null");
-
-    return _curReleasePool;
 }
 
 NS_CC_END

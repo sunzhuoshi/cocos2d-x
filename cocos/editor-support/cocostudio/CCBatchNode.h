@@ -1,5 +1,5 @@
 /****************************************************************************
-Copyright (c) 2013 cocos2d-x.org
+Copyright (c) 2013-2014 Chukong Technologies Inc.
 
 http://www.cocos2d-x.org
 
@@ -25,7 +25,12 @@ THE SOFTWARE.
 #ifndef __CCBATCHNODE_H__
 #define __CCBATCHNODE_H__
 
+#include "CCNode.h"
 #include "cocostudio/CCArmatureDefine.h"
+
+namespace cocos2d {
+    class GroupCommand;
+}
 
 namespace cocostudio {
 
@@ -38,14 +43,33 @@ public:
      * @js ctor
      */
     BatchNode();
-
-    virtual bool init();
-    virtual void addChild(cocos2d::Node *child, int zOrder, int tag);
-    virtual void visit();
-    void draw();
-
+    /**
+     * @ js NA
+     * @ lua NA
+     */
+    ~BatchNode();
+    /**
+     *  @js NA
+     */
+    virtual bool init() override;
+    virtual void addChild(cocos2d::Node *pChild) override;
+    virtual void addChild(cocos2d::Node *pChild, int zOrder) override;
+    virtual void addChild(cocos2d::Node *pChild, int zOrder, int tag) override;
+    virtual void removeChild(cocos2d::Node* child, bool cleanup) override;
+    /**
+     *  @js NA
+     *  @lua NA
+     */
+    virtual void visit() override;
+    /**
+     *  @js NA
+     */
+    void draw() override;
+    
 protected:
-    cocos2d::TextureAtlas *_atlas;
+    void generateGroupCommand();
+
+    cocos2d::GroupCommand* _groupCommand;
 };
 
 }

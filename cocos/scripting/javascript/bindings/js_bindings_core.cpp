@@ -24,14 +24,11 @@
 #include "js_bindings_config.h"
 #include "js_bindings_core.h"
 
-
 // cocos2d + chipmunk registration files
 #include "chipmunk/js_bindings_chipmunk_registration.h"
-
+#include "cocos2d.h"
 
 //#pragma mark - Hash
-
-using namespace cocos2d;
 
 typedef struct _hashJSObject
 {
@@ -42,17 +39,6 @@ typedef struct _hashJSObject
 
 static tHashJSObject *hash = NULL;
 static tHashJSObject *reverse_hash = NULL;
-
-// Globals
-char* JSB_association_proxy_key = NULL;
-
-const char* JSB_version = "0.3-beta";
-
-
-static void its_finalize(JSFreeOp *fop, JSObject *obj)
-{
-	CCLOGINFO("Finalizing global class");
-}
 
 //#pragma mark JSBCore - Helper free functions
 static void reportError(JSContext *cx, const char *message, JSErrorReport *report)
@@ -68,7 +54,7 @@ static void reportError(JSContext *cx, const char *message, JSErrorReport *repor
 void* jsb_get_proxy_for_jsobject(JSObject *obj)
 {
 	tHashJSObject *element = NULL;
-	HASH_FIND_INT(hash, &obj, element);
+	HASH_FIND_PTR(hash, &obj, element);
 	
 	if( element )
 		return element->proxy;
@@ -88,13 +74,13 @@ void jsb_set_proxy_for_jsobject(void *proxy, JSObject *obj)
 	element->proxy = proxy;
 	element->jsObject = obj;
 
-	HASH_ADD_INT( hash, jsObject, element );
+	HASH_ADD_PTR( hash, jsObject, element );
 }
 
 void jsb_del_proxy_for_jsobject(JSObject *obj)
 {
 	tHashJSObject *element = NULL;
-	HASH_FIND_INT(hash, &obj, element);
+	HASH_FIND_PTR(hash, &obj, element);
 	if( element ) {		
 		HASH_DEL(hash, element);
 		free(element);
@@ -107,7 +93,7 @@ void jsb_del_proxy_for_jsobject(JSObject *obj)
 JSObject* jsb_get_jsobject_for_proxy(void *proxy)
 {
 	tHashJSObject *element = NULL;
-	HASH_FIND_INT(reverse_hash, &proxy, element);
+	HASH_FIND_PTR(reverse_hash, &proxy, element);
 	
 	if( element )
 		return element->jsObject;
@@ -123,13 +109,13 @@ void jsb_set_jsobject_for_proxy(JSObject *jsobj, void* proxy)
 	element->proxy = proxy;
 	element->jsObject = jsobj;
 	
-	HASH_ADD_INT( reverse_hash, proxy, element );
+	HASH_ADD_PTR( reverse_hash, proxy, element );
 }
 
 void jsb_del_jsobject_for_proxy(void* proxy)
 {
 	tHashJSObject *element = NULL;
-	HASH_FIND_INT(reverse_hash, &proxy, element);
+	HASH_FIND_PTR(reverse_hash, &proxy, element);
 	if( element ) {		
 		HASH_DEL(reverse_hash, element);
 		free(element);
@@ -172,8 +158,8 @@ void jsb_set_c_proxy_for_jsobject( JSObject *jsobj, void *handle, unsigned long 
 
 //#pragma mark Do Nothing - Callbacks
 
-JSBool JSB_do_nothing(JSContext *cx, uint32_t argc, jsval *vp)
+bool JSB_do_nothing(JSContext *cx, uint32_t argc, jsval *vp)
 {
 	JS_SET_RVAL(cx, vp, JSVAL_VOID);
-	return JS_TRUE;
+	return true;
 }

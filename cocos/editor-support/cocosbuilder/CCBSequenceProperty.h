@@ -1,7 +1,8 @@
 #ifndef __CCB_SEQUENCE_PROPERTY_H__
 #define __CCB_SEQUENCE_PROPERTY_H__
 
-#include "cocos2d.h"
+#include "CCObject.h"
+#include "CCVector.h"
 #include "CCBKeyframe.h"
 
 namespace cocosbuilder {
@@ -27,12 +28,12 @@ public:
     int getType();
     void setType(int type);
     
-    cocos2d::Array* getKeyframes();
+    cocos2d::Vector<CCBKeyframe*>& getKeyframes();
 
 private:
     std::string _name;
     int _type;
-    cocos2d::Array *_keyframes;
+    cocos2d::Vector<CCBKeyframe*> _keyframes;
 };
 
 }

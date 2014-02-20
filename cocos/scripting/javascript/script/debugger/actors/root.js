@@ -152,6 +152,7 @@ function RootActor(aConnection, aParameters) {
   this.conn = aConnection;
   this._parameters = aParameters;
   this._onTabListChanged = this.onTabListChanged.bind(this);
+  this._onAddonListChanged = this.onAddonListChanged.bind(this);
   this._extraActors = {};
 }
 
@@ -164,15 +165,26 @@ RootActor.prototype = {
    */
   sayHello: function() {
     return {
-      from: "root",
+      from: this.actorID,
       applicationType: this.applicationType,
       /* This is not in the spec, but it's used by tests. */
       testConnectionPrefix: this.conn.prefix,
       traits: {
-        sources: true
+        sources: true,
+        editOuterHTML: true
       }
     };
   },
+
+  /**
+   * This is true for the root actor only, used by some child actors
+   */
+  get isRootActor() true,
+
+  /**
+   * The (chrome) window, for use by child actors
+   */
+  get window() Services.wm.getMostRecentWindow(DebuggerServer.chromeWindowType),
 
   /**
    * Disconnects the actor from the browser window.
@@ -181,6 +193,9 @@ RootActor.prototype = {
     /* Tell the live lists we aren't watching any more. */
     if (this._parameters.tabList) {
       this._parameters.tabList.onListChanged = null;
+    }
+    if (this._parameters.addonList) {
+      this._parameters.addonList.onListChanged = null;
     }
     if (typeof this._parameters.onShutdown === 'function') {
       this._parameters.onShutdown();
@@ -195,10 +210,9 @@ RootActor.prototype = {
    * the next listTabs request.
    */
   onListTabs: function() {
-
     let tabList = this._parameters.tabList;
     if (!tabList) {
-      return { from: "root", error: "noTabs",
+      return { from: this.actorID, error: "noTabs",
                message: "This root actor has no browser tabs." };
     }
 
@@ -212,55 +226,96 @@ RootActor.prototype = {
     let newActorPool = new ActorPool(this.conn);
     let tabActorList = [];
     let selected;
-    for (let tabActor of tabList) {
-      if (tabActor.selected) {
-        selected = tabActorList.length;
+    return tabList.getList().then((tabActors) => {
+      for (let tabActor of tabActors) {
+        if (tabActor.selected) {
+          selected = tabActorList.length;
+        }
+        tabActor.parentID = this.actorID;
+        newActorPool.addActor(tabActor);
+        tabActorList.push(tabActor);
       }
-      tabActor.parentID = this.actorID;
-      newActorPool.addActor(tabActor);
-      tabActorList.push(tabActor);
-    }
 
-    /* DebuggerServer.addGlobalActor support: create actors. */
-    this._createExtraActors(this._parameters.globalActorFactories, newActorPool);
+      /* DebuggerServer.addGlobalActor support: create actors. */
+      this._createExtraActors(this._parameters.globalActorFactories, newActorPool);
 
-    /*
-     * Drop the old actorID -> actor map. Actors that still mattered were
-     * added to the new map; others will go away.
-     */
-    if (this._tabActorPool) {
-      this.conn.removeActorPool(this._tabActorPool);
-    }
-    this._tabActorPool = newActorPool;
-    this.conn.addActorPool(this._tabActorPool);
+      /*
+       * Drop the old actorID -> actor map. Actors that still mattered were
+       * added to the new map; others will go away.
+       */
+      if (this._tabActorPool) {
+        this.conn.removeActorPool(this._tabActorPool);
+      }
+      this._tabActorPool = newActorPool;
+      this.conn.addActorPool(this._tabActorPool);
 
-    let reply = {
-      "from": "root",
-      "selected": selected || 0,
-      "tabs": [actor.grip() for (actor of tabActorList)]
-    };
+      let reply = {
+        "from": this.actorID,
+        "selected": selected || 0,
+        "tabs": [actor.form() for (actor of tabActorList)],
+      };
 
-    /* DebuggerServer.addGlobalActor support: name actors in 'listTabs' reply. */
-    this._appendExtraActors(reply);
+      /* DebuggerServer.addGlobalActor support: name actors in 'listTabs' reply. */
+      this._appendExtraActors(reply);
 
-    /*
-     * Now that we're actually going to report the contents of tabList to
-     * the client, we're responsible for letting the client know if it
-     * changes.
-     */
-    tabList.onListChanged = this._onTabListChanged;
+      /*
+       * Now that we're actually going to report the contents of tabList to
+       * the client, we're responsible for letting the client know if it
+       * changes.
+       */
+      tabList.onListChanged = this._onTabListChanged;
 
-    return reply;
+      return reply;
+    });
   },
 
   onTabListChanged: function () {
-    this.conn.send({ from:"root", type:"tabListChanged" });
+    this.conn.send({ from: this.actorID, type:"tabListChanged" });
     /* It's a one-shot notification; no need to watch any more. */
     this._parameters.tabList.onListChanged = null;
   },
 
+  onListAddons: function () {
+    let addonList = this._parameters.addonList;
+    if (!addonList) {
+      return { from: this.actorID, error: "noAddons",
+               message: "This root actor has no browser addons." };
+    }
+
+    return addonList.getList().then((addonActors) => {
+      let addonActorPool = new ActorPool(this.conn);
+      for (let addonActor of addonActors) {
+          addonActorPool.addActor(addonActor);
+      }
+
+      if (this._addonActorPool) {
+        this.conn.removeActorPool(this._addonActorPool);
+      }
+      this._addonActorPool = addonActorPool;
+      this.conn.addActorPool(this._addonActorPool);
+
+      addonList.onListChanged = this._onAddonListChanged;
+
+      return {
+        "from": this.actorID,
+        "addons": [addonActor.form() for (addonActor of addonActors)]
+      };
+    });
+  },
+
+  onAddonListChanged: function () {
+    this.conn.send({ from: this.actorID, type: "addonListChanged" });
+    this._parameters.addonList.onListChanged = null;
+  },
+
   /* This is not in the spec, but it's used by tests. */
-  onEcho: (aRequest) => aRequest,
+  onEcho: function (aRequest) {
+    /*
+     * Request packets are frozen. Copy aRequest, so that
+     * DebuggerServerConnection.onPacket can attach a 'from' property.
+     */
+    return JSON.parse(JSON.stringify(aRequest));
+  },
 
   /* Support for DebuggerServer.addGlobalActor. */
   _createExtraActors: CommonCreateExtraActors,
@@ -325,5 +380,6 @@ RootActor.prototype = {
 
 RootActor.prototype.requestTypes = {
   "listTabs": RootActor.prototype.onListTabs,
+  "listAddons": RootActor.prototype.onListAddons,
   "echo": RootActor.prototype.onEcho
 };

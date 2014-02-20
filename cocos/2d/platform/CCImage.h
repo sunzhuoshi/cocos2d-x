@@ -1,5 +1,6 @@
 /****************************************************************************
-Copyright (c) 2010 cocos2d-x.org
+Copyright (c) 2010-2012 cocos2d-x.org
+Copyright (c) 2013-2014 Chukong Technologies Inc.
 
 http://www.cocos2d-x.org
 
@@ -85,31 +86,20 @@ public:
         S3TC,
         //! ATITC
         ATITC,
+        //! TGA
+        TGA,
         //! Raw Data
         RAW_DATA,
         //! Unknown format
         UNKOWN
     };
 
-    enum class TextAlign
-    {
-        CENTER        = 0x33, ///< Horizontal center and vertical center.
-        TOP           = 0x13, ///< Horizontal center and vertical top.
-        TOP_RIGHT     = 0x12, ///< Horizontal right and vertical top.
-        RIGHT         = 0x32, ///< Horizontal right and vertical center.
-        BOTTOM_RIGHT = 0x22, ///< Horizontal right and vertical bottom.
-        BOTTOM        = 0x23, ///< Horizontal center and vertical bottom.
-        BOTTOM_LEFT  = 0x21, ///< Horizontal left and vertical bottom.
-        LEFT          = 0x31, ///< Horizontal left and vertical center.
-        TOP_LEFT      = 0x11, ///< Horizontal left and vertical top.
-    };
-    
     /**
     @brief Load the image from the specified path.
     @param path   the absolute file path.
     @return true if loaded correctly.
     */
-    bool initWithImageFile(const char *path);
+    bool initWithImageFile(const std::string& path);
 
     /**
     @brief Load image from stream buffer.
@@ -119,63 +109,16 @@ public:
     * @js NA
     * @lua NA
     */
-    bool initWithImageData(const unsigned char * data, int dataLen);
+    bool initWithImageData(const unsigned char * data, ssize_t dataLen);
 
     // @warning kFmtRawData only support RGBA8888
-    bool initWithRawData(const unsigned char * data, int dataLen, int width, int height, int bitsPerComponent, bool preMulti = false);
+    bool initWithRawData(const unsigned char * data, ssize_t dataLen, int width, int height, int bitsPerComponent, bool preMulti = false);
 
-    /**
-    @brief Create image with specified string.
-    @param text       the text the image will show (cannot be nil).
-    @param width      the image width, if 0, the width will match the text's width.
-    @param height     the image height, if 0, the height will match the text's height.
-    @param alignMask  the test Alignment
-    @param fontName   the name of the font used to draw the text. If nil, use the default system font.
-    @param size       the font size, if 0, use the system default size.
-    * @js NA
-    * @lua NA
-    */
-    bool initWithString(
-        const char *    text,
-        int             width = 0,
-        int             height = 0,
-        TextAlign       alignMask = TextAlign::CENTER,
-        const char *    fontName = 0,
-        int             size = 0);
-    
-    #if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID) || (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-    
-        bool initWithStringShadowStroke(
-                                            const char *    pText,
-                                            int             nWidth      = 0,
-                                            int             nHeight     = 0,
-                                            TextAlign       eAlignMask  = TextAlign::CENTER,
-                                            const char *    pFontName   = 0,
-                                            int             nSize       = 0,
-                                            float           textTintR   = 1,
-                                            float           textTintG   = 1,
-                                            float           textTintB   = 1,
-                                            bool shadow                 = false,
-                                            float shadowOffsetX         = 0.0,
-                                            float shadowOffsetY         = 0.0,
-                                            float shadowOpacity         = 0.0,
-                                            float shadowBlur            = 0.0,
-                                            bool  stroke                =  false,
-                                            float strokeR               = 1,
-                                            float strokeG               = 1,
-                                            float strokeB               = 1,
-                                            float strokeSize            = 1
-                                        
-                                        );
-    
-    #endif
-    
-    
     // Getters
     inline unsigned char *   getData()               { return _data; }
-    inline int               getDataLen()            { return _dataLen; }
+    inline ssize_t           getDataLen()            { return _dataLen; }
     inline Format            getFileType()           {return _fileType; }
-    inline Texture2D::PixelFormat getRenderFormat()    { return _renderFormat; }
+    inline Texture2D::PixelFormat getRenderFormat()  { return _renderFormat; }
     inline int               getWidth()              { return _width; }
     inline int               getHeight()             { return _height; }
     inline bool              isPremultipliedAlpha()  { return _preMulti;   }
@@ -193,22 +136,24 @@ public:
      @param    filePath        the file's absolute path, including file suffix.
      @param    isToRGB        whether the image is saved as RGB format.
      */
-    bool saveToFile(const char *filePath, bool isToRGB = true);
+    bool saveToFile(const std::string &filename, bool isToRGB = true);
 
 protected:
-    bool initWithJpgData(const unsigned char *  data, int dataLen);
-    bool initWithPngData(const unsigned char * data, int dataLen);
-    bool initWithTiffData(const unsigned char * data, int dataLen);
-    bool initWithWebpData(const unsigned char * data, int dataLen);
-    bool initWithPVRData(const unsigned char * data, int dataLen);
-    bool initWithPVRv2Data(const unsigned char * data, int dataLen);
-    bool initWithPVRv3Data(const unsigned char * data, int dataLen);
-    bool initWithETCData(const unsigned char * data, int dataLen);
-    bool initWithS3TCData(const unsigned char * data, int dataLen);
-    bool initWithATITCData(const unsigned char *data, int dataLen);
+    bool initWithJpgData(const unsigned char *  data, ssize_t dataLen);
+    bool initWithPngData(const unsigned char * data, ssize_t dataLen);
+    bool initWithTiffData(const unsigned char * data, ssize_t dataLen);
+    bool initWithWebpData(const unsigned char * data, ssize_t dataLen);
+    bool initWithPVRData(const unsigned char * data, ssize_t dataLen);
+    bool initWithPVRv2Data(const unsigned char * data, ssize_t dataLen);
+    bool initWithPVRv3Data(const unsigned char * data, ssize_t dataLen);
+    bool initWithETCData(const unsigned char * data, ssize_t dataLen);
+    bool initWithS3TCData(const unsigned char * data, ssize_t dataLen);
+    bool initWithATITCData(const unsigned char *data, ssize_t dataLen);
+    typedef struct sImageTGA tImageTGA;
+    bool initWithTGAData(tImageTGA* tgaData);
 
-    bool saveImageToPNG(const char *filePath, bool isToRGB = true);
-    bool saveImageToJPG(const char *filePath);
+    bool saveImageToPNG(const std::string& filePath, bool isToRGB = true);
+    bool saveImageToJPG(const std::string& filePath);
     
 private:
     /**
@@ -217,7 +162,7 @@ private:
      */
     static const int MIPMAP_MAX = 16;
     unsigned char *_data;
-    int _dataLen;
+    ssize_t _dataLen;
     int _width;
     int _height;
     Format _fileType;
@@ -227,6 +172,7 @@ private:
     int _numberOfMipmaps;
     // false if we cann't auto detect the image is premultiplied or not.
     bool _hasPremultipliedAlpha;
+    std::string _filePath;
 
 
 private:
@@ -241,17 +187,17 @@ private:
      @param imageType the type of image, currently only supporting two types.
      @return  true if loaded correctly.
      */
-    bool initWithImageFileThreadSafe(const char *fullpath);
+    bool initWithImageFileThreadSafe(const std::string& fullpath);
     
-    Format detectFormat(const unsigned char * data, int dataLen);
-    bool isPng(const unsigned char * data, int dataLen);
-    bool isJpg(const unsigned char * data, int dataLen);
-    bool isTiff(const unsigned char * data, int dataLen);
-    bool isWebp(const unsigned char * data, int dataLen);
-    bool isPvr(const unsigned char * data, int dataLen);
-    bool isEtc(const unsigned char * data, int dataLen);
-    bool isS3TC(const unsigned char * data,int dataLen);
-    bool isATITC(const unsigned char *data, int dataLen);
+    Format detectFormat(const unsigned char * data, ssize_t dataLen);
+    bool isPng(const unsigned char * data, ssize_t dataLen);
+    bool isJpg(const unsigned char * data, ssize_t dataLen);
+    bool isTiff(const unsigned char * data, ssize_t dataLen);
+    bool isWebp(const unsigned char * data, ssize_t dataLen);
+    bool isPvr(const unsigned char * data, ssize_t dataLen);
+    bool isEtc(const unsigned char * data, ssize_t dataLen);
+    bool isS3TC(const unsigned char * data,ssize_t dataLen);
+    bool isATITC(const unsigned char *data, ssize_t dataLen);
 };
 
 // end of platform group
