@@ -26,7 +26,6 @@
 #define __DICTIONARYHELPER_H__
 
 #include "cocos2d.h"
-#include "cocos-ext.h"
 #include "ExtensionMacros.h"
 #include "rapidjson/document.h"
 
@@ -37,7 +36,7 @@ NS_CC_EXT_BEGIN
 *   @js NA
 *   @lua NA
 */
-class DictionaryHelper
+class CC_EX_DLL DictionaryHelper
 {
 public:
     DictionaryHelper();

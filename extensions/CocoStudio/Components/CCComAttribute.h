@@ -25,18 +25,15 @@ THE SOFTWARE.
 #ifndef __CC_EXTENTIONS_CCCOMATTRIBUTE_H__
 #define __CC_EXTENTIONS_CCCOMATTRIBUTE_H__
 
-#include "cocos2d.h"
-#include "cocos-ext.h"
-#include "ExtensionMacros.h"
-#include "../Json/rapidjson/document.h"
-#include <string>
+#include "CCComBase.h"
 
 NS_CC_EXT_BEGIN
 /**
  *  @lua NA
  */
-class CCComAttribute : public cocos2d::CCComponent
+class CC_EX_DLL CCComAttribute : public cocos2d::CCComponent
 {
+	DECLARE_CLASS_COMPONENT_INFO
 protected:
     /**
      *  @js ctor
@@ -50,6 +47,7 @@ protected:
 public:
    virtual bool init();
    static CCComAttribute* create(void);
+   virtual bool serialize(void* r);
    
    void setInt(const char *key, int value);
    void setFloat(const char *key, float value);
@@ -60,12 +58,11 @@ public:
    float  getFloat(const char *key, float def = 0.0f) const;
    bool   getBool(const char *key, bool def = false) const;
    const char* getCString(const char *key, const char *def = NULL) const;
-   /**
-    *  @js NA
-    */
-   void parse(const char *data);
+   
+   bool parse(const std::string &jsonPath);
 private:
    cocos2d::CCDictionary *_dict;
+   rapidjson::Document _doc;
 };
 
 NS_CC_EXT_END

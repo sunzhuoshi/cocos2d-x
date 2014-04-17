@@ -37,7 +37,7 @@ class CCArmature;
 /**
  * @lua NA
  */
-class CCBone : public CCNodeRGBA
+class CC_EX_DLL CCBone : public CCNodeRGBA
 {
 public:
     /**
@@ -91,9 +91,14 @@ public:
 
     void removeDisplay(int index);
 
-    void changeDisplayByIndex(int index, bool force);
-    void changeDisplayByName(const char *name, bool force);
+    /**
+     * @deprecated please use changeDisplayWithIndex and changeDisplayWithName
+     */
+    CC_DEPRECATED_ATTRIBUTE void changeDisplayByIndex(int index, bool force);
+    CC_DEPRECATED_ATTRIBUTE void changeDisplayByName(const char *name, bool force);
 
+    void changeDisplayWithIndex(int index, bool force);
+    void changeDisplayWithName(const char *name, bool force);
 
     /**
      * Add a child to this bone, and it will let this child call setParent(CCBone *parent) function to set self to it's parent
@@ -152,8 +157,19 @@ public:
      * Whether or not the bone's transform property changed. if true, the bone will update the transform.
      */
     virtual inline void setTransformDirty(bool dirty) { m_bBoneTransformDirty = dirty; }
-
     virtual inline bool isTransformDirty() { return m_bBoneTransformDirty; }
+
+    /*
+     * Set blend function
+     */
+    virtual void setBlendFunc(const ccBlendFunc& blendFunc);
+    virtual ccBlendFunc getBlendFunc(void) { return m_sBlendFunc; }
+
+    /*
+     * Set if blend function is dirty 
+     */
+    virtual void setBlendDirty(bool dirty) { m_bBlendDirty = dirty; }
+    virtual bool isBlendDirty(void) { return m_bBlendDirty; }
 
     virtual CCAffineTransform nodeToArmatureTransform();
     virtual CCAffineTransform nodeToWorldTransform();
@@ -192,7 +208,6 @@ public:
      */
     CC_SYNTHESIZE(bool, m_bIgnoreMovementBoneData, IgnoreMovementBoneData)
 
-    CC_SYNTHESIZE(CCBlendType, m_eBlendType, BlendType)
 protected:
     virtual void applyParentTransform(CCBone *parent);
 
@@ -217,6 +232,9 @@ protected:
 
     //! Data version
     float m_fDataVersion;
+
+    ccBlendFunc m_sBlendFunc; 
+    bool m_bBlendDirty;
 };
 
 NS_CC_EXT_END

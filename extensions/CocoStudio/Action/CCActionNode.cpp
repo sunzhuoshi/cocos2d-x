@@ -80,6 +80,16 @@ void ActionNode::initWithDictionary(const rapidjson::Value& dic,CCObject* root)
 
 		const rapidjson::Value& actionFrameDic = DICTOOL->getDictionaryFromArray_json(dic, "actionframelist", i);
 		int frameInex = DICTOOL->getIntValue_json(actionFrameDic,"frameid");
+        int frameTweenType = DICTOOL->getIntValue_json(actionFrameDic,"tweenType");
+        
+        std::vector<float> frameTweenParameter;
+        int frameTweenParameterNum = DICTOOL->getArrayCount_json(actionFrameDic, "tweenParameter");
+        
+        for (int j = 0; j < frameTweenParameterNum; j++)
+        {
+            float value = DICTOOL->getFloatValueFromArray_json(actionFrameDic, "tweenParameter", j);
+            frameTweenParameter.push_back(value);
+        }
 
 		bool existPosition = DICTOOL->checkObjectExist_json(actionFrameDic,"positionx");
 		if (existPosition)
@@ -88,6 +98,8 @@ void ActionNode::initWithDictionary(const rapidjson::Value& dic,CCObject* root)
 			float positionY = DICTOOL->getFloatValue_json(actionFrameDic, "positiony");
 			ActionMoveFrame* actionFrame = new ActionMoveFrame();
 			actionFrame->autorelease();
+            actionFrame->setEasingType(frameTweenType);
+            actionFrame->setEasingParameter(frameTweenParameter);
 			actionFrame->setFrameIndex(frameInex);
 			actionFrame->setPosition(CCPointMake(positionX, positionY));
 			CCArray* cActionArray = (CCArray*)m_FrameArray->objectAtIndex((int)kKeyframeMove);
@@ -101,6 +113,8 @@ void ActionNode::initWithDictionary(const rapidjson::Value& dic,CCObject* root)
 			float scaleY = DICTOOL->getFloatValue_json(actionFrameDic, "scaley");
 			ActionScaleFrame* actionFrame = new ActionScaleFrame();
 			actionFrame->autorelease();
+            actionFrame->setEasingType(frameTweenType);
+            actionFrame->setEasingParameter(frameTweenParameter);
 			actionFrame->setFrameIndex(frameInex);
 			actionFrame->setScaleX(scaleX);
 			actionFrame->setScaleY(scaleY);
@@ -114,6 +128,8 @@ void ActionNode::initWithDictionary(const rapidjson::Value& dic,CCObject* root)
 			float rotation = DICTOOL->getFloatValue_json(actionFrameDic, "rotation");
 			ActionRotationFrame* actionFrame = new ActionRotationFrame();
 			actionFrame->autorelease();
+            actionFrame->setEasingType(frameTweenType);
+            actionFrame->setEasingParameter(frameTweenParameter);
 			actionFrame->setFrameIndex(frameInex);
 			actionFrame->setRotation(rotation);
 			CCArray* cActionArray = (CCArray*)m_FrameArray->objectAtIndex((int)kKeyframeRotate);
@@ -126,6 +142,8 @@ void ActionNode::initWithDictionary(const rapidjson::Value& dic,CCObject* root)
 			int opacity = DICTOOL->getIntValue_json(actionFrameDic, "opacity");
 			ActionFadeFrame* actionFrame = new ActionFadeFrame();
 			actionFrame->autorelease();
+            actionFrame->setEasingType(frameTweenType);
+            actionFrame->setEasingParameter(frameTweenParameter);
 			actionFrame->setFrameIndex(frameInex);
 			actionFrame->setOpacity(opacity);
 			CCArray* cActionArray = (CCArray*)m_FrameArray->objectAtIndex((int)kKeyframeFade);
@@ -140,12 +158,13 @@ void ActionNode::initWithDictionary(const rapidjson::Value& dic,CCObject* root)
 			int colorB = DICTOOL->getIntValue_json(actionFrameDic, "colorb");
 			ActionTintFrame* actionFrame = new ActionTintFrame();
 			actionFrame->autorelease();
+            actionFrame->setEasingType(frameTweenType);
+            actionFrame->setEasingParameter(frameTweenParameter);
 			actionFrame->setFrameIndex(frameInex);
 			actionFrame->setColor(ccc3(colorR,colorG,colorB));
 			CCArray* cActionArray = (CCArray*)m_FrameArray->objectAtIndex((int)kKeyframeTint);
 			cActionArray->addObject(actionFrame);
 		}
-
 	}
 	initActionNodeFromRoot(root);
 }
@@ -155,14 +174,10 @@ void ActionNode::initActionNodeFromRoot(CCObject* root)
 	CCNode* rootNode = dynamic_cast<CCNode*>(root);
 	if (rootNode != NULL)
 	{
-		CCLog("Need a definition of <initActionNodeFromRoot> for gameObject");
-	}
-	else
-	{
-		UIWidget* rootWidget = dynamic_cast<UIWidget*>(root);
+        cocos2d::ui::Widget* rootWidget = dynamic_cast<cocos2d::ui::Widget*>(root);
 		if (rootWidget != NULL)
 		{
-			UIWidget* widget = UIHelper::seekActionWidgetByActionTag(rootWidget, getActionTag());
+			cocos2d::ui::Widget* widget = cocos2d::ui::UIHelper::seekActionWidgetByActionTag(rootWidget, getActionTag());
 			if (widget != NULL)
 			{
 				setObject(widget);
@@ -211,10 +226,10 @@ CCNode* ActionNode::getActionNode()
 	}
 	else
 	{
-		UIWidget* rootWidget = dynamic_cast<UIWidget*>(m_Object);
+		cocos2d::ui::Widget* rootWidget = dynamic_cast<cocos2d::ui::Widget*>(m_Object);
 		if (rootWidget != NULL)
 		{
-			return rootWidget->getRenderer();
+			return rootWidget;
 		}
 	}
 	return NULL;
@@ -302,7 +317,7 @@ CCSpawn * ActionNode::refreshActionProperty()
 			{
 				ActionFrame* srcFrame = (ActionFrame*)(cArray->objectAtIndex(i-1));
 				float duration = (frame->getFrameIndex() - srcFrame->getFrameIndex()) * getUnitTime();
-				CCAction* cAction = frame->getAction(duration);
+				CCAction* cAction = frame->getAction(duration,srcFrame);
 				cSequenceArray->addObject(cAction);
 			}
 		}
@@ -340,25 +355,6 @@ void ActionNode::playAction()
 	}
 
 	m_action = CCSequence::create(m_actionSpawn,NULL);
-	m_action->retain();
-
-	this->runAction();
-
-}
-
-void ActionNode::playAction(CCCallFunc* func)
-{
-	if ( m_Object == NULL || m_actionSpawn == NULL)
-	{
-		return;
-	}
-
-	if (m_action!=NULL)
-	{
-		m_action->release();
-	}
-	
-	m_action = CCSequence::create(m_actionSpawn, func, NULL);
 	m_action->retain();
 
 	this->runAction();
@@ -459,7 +455,7 @@ bool ActionNode::updateActionToTimeLine(float fTime)
 
 			if (frame->getFrameIndex()*getUnitTime() == fTime)
 			{
-				this->easingToFrame(1.0f,1.0f,frame);
+				this->easingToFrame(1.0f,1.0f,NULL,frame);
 				bFindFrame = true;
 				break;
 			}
@@ -467,7 +463,7 @@ bool ActionNode::updateActionToTimeLine(float fTime)
 			{
 				if (i == 0)
 				{
-					this->easingToFrame(1.0f,1.0f,frame);
+					this->easingToFrame(1.0f,1.0f,NULL,frame);
 					bFindFrame = false;
 				}
 				else
@@ -475,9 +471,9 @@ bool ActionNode::updateActionToTimeLine(float fTime)
 					srcFrame = (ActionFrame*)(cArray->objectAtIndex(i-1));
 					float duration = (frame->getFrameIndex() - srcFrame->getFrameIndex())*getUnitTime();
 					float delaytime = fTime - srcFrame->getFrameIndex()*getUnitTime();
-					this->easingToFrame(duration,1.0f,srcFrame);
+					this->easingToFrame(duration,1.0f,NULL,srcFrame);
 					//float easingTime = ActionFrameEasing::bounceTime(delaytime);
-					this->easingToFrame(duration,delaytime/duration,frame);
+					this->easingToFrame(duration,delaytime/duration,srcFrame,frame);
 					bFindFrame = true;
 				}
 				break;
@@ -487,9 +483,9 @@ bool ActionNode::updateActionToTimeLine(float fTime)
 	return bFindFrame;
 }
 
-void ActionNode::easingToFrame(float duration,float delayTime,ActionFrame* destFrame)
+void ActionNode::easingToFrame(float duration,float delayTime,ActionFrame* srcFrame,ActionFrame* destFrame)
 {
-	CCAction* cAction = destFrame->getAction(duration);
+	CCAction* cAction = destFrame->getAction(duration,srcFrame);
 	CCNode* cNode = this->getActionNode();
 	if (cAction == NULL || cNode == NULL)
 	{

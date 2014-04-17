@@ -49,7 +49,7 @@ typedef void (CCObject::*SEL_FrameEventCallFunc)(CCBone *, const char *, int, in
 #define movementEvent_selector(_SELECTOR) (SEL_MovementEventCallFunc)(&_SELECTOR)
 #define frameEvent_selector(_SELECTOR) (SEL_FrameEventCallFunc)(&_SELECTOR)
 
-struct CCFrameEvent
+struct CC_EX_DLL CCFrameEvent
 {
     CCBone *bone;
     const char *frameEventName;
@@ -57,7 +57,7 @@ struct CCFrameEvent
     int currentFrameIndex;
 };
 
-struct CCMovementEvent
+struct CC_EX_DLL CCMovementEvent
 {
     CCArmature *armature;
     MovementEventType movementType;
@@ -67,7 +67,7 @@ struct CCMovementEvent
 /**
  *  @lua NA
  */
-class  CCArmatureAnimation : public CCProcessBase
+class  CC_EX_DLL CCArmatureAnimation : public CCProcessBase
 {
 public:
     /**
@@ -107,7 +107,7 @@ public:
     virtual float getSpeedScale() const;
 
     //! The animation update speed
-    virtual void setAnimationInternal(float animationInternal);
+    CC_DEPRECATED_ATTRIBUTE virtual void setAnimationInternal(float animationInternal) {};
 
     using CCProcessBase::play;
     /**
@@ -142,13 +142,26 @@ public:
 
     /**
      * Play animation by index, the other param is the same to play.
+     * Deprecated, please use playWithIndex
      * @param  animationIndex  the animation index you want to play
      */
-    virtual void playByIndex(int animationIndex,  int durationTo = -1, int durationTween = -1,  int loop = -1, int tweenEasing = TWEEN_EASING_MAX);
+    CC_DEPRECATED_ATTRIBUTE virtual void playByIndex(int animationIndex,  int durationTo = -1, int durationTween = -1,  int loop = -1, int tweenEasing = TWEEN_EASING_MAX);
+    virtual void playWithIndex(int animationIndex,  int durationTo = -1, int durationTween = -1,  int loop = -1, int tweenEasing = TWEEN_EASING_MAX);
 
-    virtual void play(bool loop, const std::string *movementNames, int movementNumber);
+    /**
+     * Play several animation by names
+     */
+    virtual void playWithNames(const std::vector<std::string>& movementNames, int durationTo = -1, bool loop = true);
 
-    virtual void playByIndex(bool loop, const int *movementIndexes, int movementNumber);
+    /**
+     * Play several animation by indexes
+     */
+    virtual void playWithIndexes(const std::vector<int>& movementIndexes, int durationTo = -1, bool loop = true);
+
+
+    // For bindings
+    virtual void playWithArray(cocos2d::CCArray *movementNames, int durationTo = -1, bool loop = true);
+    virtual void playWithIndexArray(cocos2d::CCArray *movementIndexes, int durationTo = -1, bool loop = true);
 
     /**
      * Go to specified frame and play current movement.
@@ -280,6 +293,7 @@ protected:
     bool m_bOnMovementList;
     bool m_bMovementListLoop;
     unsigned int m_uMovementIndex;
+	int m_iMovementListDurationTo;
 
     CCObject *m_pUserObject;
 protected:

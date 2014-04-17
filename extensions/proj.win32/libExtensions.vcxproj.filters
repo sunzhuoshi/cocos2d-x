@@ -94,6 +94,12 @@
     <Filter Include="CocoStudio\Json\rapidjson\internal">
       <UniqueIdentifier>{4bc1ff8f-db4a-47fd-a689-8a5fe4ac2513}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CocoStudio\Trigger">
+      <UniqueIdentifier>{1e0308e3-d686-4fb2-af94-fdb25c8a2b46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CocoStudio\Reader\WidgetReader">
+      <UniqueIdentifier>{d0949a0d-a150-443d-9b5a-84d8e367d5e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\GUI\CCScrollView\CCScrollView.cpp">
@@ -375,9 +381,6 @@
     <ClCompile Include="..\CocoStudio\Components\CCInputDelegate.cpp">
       <Filter>CocoStudio\Components</Filter>
     </ClCompile>
-    <ClCompile Include="..\CocoStudio\GUI\BaseClasses\UIRootWidget.cpp">
-      <Filter>CocoStudio\GUI\BaseClasses</Filter>
-    </ClCompile>
     <ClCompile Include="..\CocoStudio\GUI\BaseClasses\UIWidget.cpp">
       <Filter>CocoStudio\GUI\BaseClasses</Filter>
     </ClCompile>
@@ -388,12 +391,6 @@
       <Filter>CocoStudio\GUI\System</Filter>
     </ClCompile>
     <ClCompile Include="..\CocoStudio\GUI\System\UIHelper.cpp">
-      <Filter>CocoStudio\GUI\System</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CocoStudio\GUI\System\UIInputManager.cpp">
-      <Filter>CocoStudio\GUI\System</Filter>
-    </ClCompile>
-    <ClCompile Include="..\CocoStudio\GUI\System\UILayer.cpp">
       <Filter>CocoStudio\GUI\System</Filter>
     </ClCompile>
     <ClCompile Include="..\CocoStudio\GUI\UIWidgets\ScrollWidget\UIListView.cpp">
@@ -429,9 +426,6 @@
     <ClCompile Include="..\CocoStudio\GUI\UIWidgets\UISlider.cpp">
       <Filter>CocoStudio\GUI\UIWidgets</Filter>
     </ClCompile>
-    <ClCompile Include="..\CocoStudio\GUI\UIWidgets\UISwitch.cpp">
-      <Filter>CocoStudio\GUI\UIWidgets</Filter>
-    </ClCompile>
     <ClCompile Include="..\CocoStudio\GUI\UIWidgets\UITextField.cpp">
       <Filter>CocoStudio\GUI\UIWidgets</Filter>
     </ClCompile>
@@ -456,9 +450,6 @@
     <ClCompile Include="..\CocoStudio\Action\CCActionObject.cpp">
       <Filter>CocoStudio\Action</Filter>
     </ClCompile>
-    <ClCompile Include="..\CocoStudio\GUI\UIWidgets\ScrollWidget\UIListViewEx.cpp">
-      <Filter>CocoStudio\GUI\UIWidgets\ScrollWidget</Filter>
-    </ClCompile>
     <ClCompile Include="..\CocoStudio\Reader\GUIReader.cpp">
       <Filter>CocoStudio\Reader</Filter>
     </ClCompile>
@@ -470,6 +461,69 @@
     </ClCompile>
     <ClCompile Include="..\CocoStudio\Reader\SceneReader.cpp">
       <Filter>CocoStudio\Reader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Action\CCActionEaseEx.cpp">
+      <Filter>CocoStudio\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Trigger\ObjectFactory.cpp">
+      <Filter>CocoStudio\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Trigger\TriggerBase.cpp">
+      <Filter>CocoStudio\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Trigger\TriggerMng.cpp">
+      <Filter>CocoStudio\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Trigger\TriggerObj.cpp">
+      <Filter>CocoStudio\Trigger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\GUI\System\UITouchGroup.cpp">
+      <Filter>CocoStudio\GUI\System</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Reader\WidgetReader\WidgetReader.cpp">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Reader\WidgetReader\ButtonReader\ButtonReader.cpp">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Reader\WidgetReader\CheckBoxReader\CheckBoxReader.cpp">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Reader\WidgetReader\ImageViewReader\ImageViewReader.cpp">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Reader\WidgetReader\LabelAtlasReader\LabelAtlasReader.cpp">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Reader\WidgetReader\LabelBMFontReader\LabelBMFontReader.cpp">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Reader\WidgetReader\LabelReader\LabelReader.cpp">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Reader\WidgetReader\LayoutReader\LayoutReader.cpp">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Reader\WidgetReader\ListViewReader\ListViewReader.cpp">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Reader\WidgetReader\LoadingBarReader\LoadingBarReader.cpp">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Reader\WidgetReader\PageViewReader\PageViewReader.cpp">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Reader\WidgetReader\ScrollViewReader\ScrollViewReader.cpp">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Reader\WidgetReader\SliderReader\SliderReader.cpp">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\Reader\WidgetReader\TextFieldReader\TextFieldReader.cpp">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CocoStudio\GUI\UIWidgets\UIRichText.cpp">
+      <Filter>CocoStudio\GUI\UIWidgets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -718,9 +772,6 @@
     <ClInclude Include="..\CocoStudio\Components\CCInputDelegate.h">
       <Filter>CocoStudio\Components</Filter>
     </ClInclude>
-    <ClInclude Include="..\CocoStudio\GUI\BaseClasses\UIRootWidget.h">
-      <Filter>CocoStudio\GUI\BaseClasses</Filter>
-    </ClInclude>
     <ClInclude Include="..\CocoStudio\GUI\BaseClasses\UIWidget.h">
       <Filter>CocoStudio\GUI\BaseClasses</Filter>
     </ClInclude>
@@ -731,12 +782,6 @@
       <Filter>CocoStudio\GUI\System</Filter>
     </ClInclude>
     <ClInclude Include="..\CocoStudio\GUI\System\UIHelper.h">
-      <Filter>CocoStudio\GUI\System</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CocoStudio\GUI\System\UIInputManager.h">
-      <Filter>CocoStudio\GUI\System</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CocoStudio\GUI\System\UILayer.h">
       <Filter>CocoStudio\GUI\System</Filter>
     </ClInclude>
     <ClInclude Include="..\CocoStudio\GUI\UIWidgets\Compatible\CompatibleClasses.h">
@@ -778,9 +823,6 @@
     <ClInclude Include="..\CocoStudio\GUI\UIWidgets\UISlider.h">
       <Filter>CocoStudio\GUI\UIWidgets</Filter>
     </ClInclude>
-    <ClInclude Include="..\CocoStudio\GUI\UIWidgets\UISwitch.h">
-      <Filter>CocoStudio\GUI\UIWidgets</Filter>
-    </ClInclude>
     <ClInclude Include="..\CocoStudio\GUI\UIWidgets\UITextField.h">
       <Filter>CocoStudio\GUI\UIWidgets</Filter>
     </ClInclude>
@@ -801,9 +843,6 @@
     </ClInclude>
     <ClInclude Include="..\CocoStudio\Action\CCActionObject.h">
       <Filter>CocoStudio\Action</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CocoStudio\GUI\UIWidgets\ScrollWidget\UIListViewEx.h">
-      <Filter>CocoStudio\GUI\UIWidgets\ScrollWidget</Filter>
     </ClInclude>
     <ClInclude Include="..\CocoStudio\Reader\GUIReader.h">
       <Filter>CocoStudio\Reader</Filter>
@@ -847,6 +886,76 @@
     <ClInclude Include="..\CocoStudio\Json\rapidjson\internal\strfunc.h">
       <Filter>CocoStudio\Json\rapidjson\internal</Filter>
     </ClInclude>
+    <ClInclude Include="..\CocoStudio\Action\CCActionEaseEx.h">
+      <Filter>CocoStudio\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Trigger\ObjectFactory.h">
+      <Filter>CocoStudio\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Trigger\TriggerBase.h">
+      <Filter>CocoStudio\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Trigger\TriggerMng.h">
+      <Filter>CocoStudio\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Trigger\TriggerObj.h">
+      <Filter>CocoStudio\Trigger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\GUI\System\UITouchGroup.h">
+      <Filter>CocoStudio\GUI\System</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Components\CCComBase.h">
+      <Filter>CocoStudio\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Reader\WidgetReader\WidgetReader.h">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Reader\WidgetReader\WidgetReaderProtocol.h">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Reader\WidgetReader\ButtonReader\ButtonReader.h">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Reader\WidgetReader\CheckBoxReader\CheckBoxReader.h">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Reader\WidgetReader\ImageViewReader\ImageViewReader.h">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Reader\WidgetReader\LabelAtlasReader\LabelAtlasReader.h">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Reader\WidgetReader\LabelBMFontReader\LabelBMFontReader.h">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Reader\WidgetReader\LabelReader\LabelReader.h">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Reader\WidgetReader\LayoutReader\LayoutReader.h">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Reader\WidgetReader\ListViewReader\ListViewReader.h">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Reader\WidgetReader\LoadingBarReader\LoadingBarReader.h">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Reader\WidgetReader\PageViewReader\PageViewReader.h">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Reader\WidgetReader\ScrollViewReader\ScrollViewReader.h">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Reader\WidgetReader\SliderReader\SliderReader.h">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\Reader\WidgetReader\TextFieldReader\TextFieldReader.h">
+      <Filter>CocoStudio\Reader\WidgetReader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CocoStudio\GUI\UIWidgets\UIRichText.h">
+      <Filter>CocoStudio\GUI\UIWidgets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\ExtensionExport.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\spine\Animation.h">

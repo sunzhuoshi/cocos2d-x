@@ -35,7 +35,7 @@ NS_CC_EXT_BEGIN
 *   @js NA
 *   @lua NA
 */
-class ActionNode:public CCObject
+class CC_EX_DLL ActionNode:public CCObject
 {
 public:
     
@@ -142,8 +142,6 @@ public:
      * Play the action.
      */
 	virtual void playAction();
-    
-	virtual void playAction(CCCallFunc* func);
 
     /**
      * Stop the action.
@@ -176,7 +174,7 @@ protected:
 	virtual CCSpawn * refreshActionProperty();
 	virtual void runAction();
 	virtual void initActionNodeFromRoot(CCObject* root);
-	virtual void easingToFrame(float duration,float delayTime,ActionFrame* destFrame);
+	virtual void easingToFrame(float duration,float delayTime,ActionFrame* srcFrame,ActionFrame* destFrame);
 };
 
 NS_CC_EXT_END

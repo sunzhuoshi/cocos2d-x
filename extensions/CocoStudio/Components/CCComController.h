@@ -25,15 +25,16 @@ THE SOFTWARE.
 #ifndef __CC_EXTENTIONS_CCCOMCONTROLLER_H__
 #define __CC_EXTENTIONS_CCCOMCONTROLLER_H__
 
-#include "cocos2d.h"
+#include "CCComBase.h"
 #include "CCInputDelegate.h"
 
 NS_CC_EXT_BEGIN
 /**
  *  @lua NA
  */
-class CCComController : public cocos2d::CCComponent, public CCInputDelegate
+class CC_EX_DLL CCComController : public cocos2d::CCComponent, public CCInputDelegate
 {
+	DECLARE_CLASS_COMPONENT_INFO
 public:
    /**
     *  @js ctor
