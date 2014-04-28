@@ -30,13 +30,12 @@ THE SOFTWARE.
 
 #include "CCPlatformMacros.h"
 
-#include "CCObject.h"
+#include "CCRef.h"
 #include "ccTypes.h"
 #include "CCGeometry.h"
 #include "CCVector.h"
 #include "CCGL.h"
 #include "CCLabelAtlas.h"
-
 #include "kazmath/mat4.h"
 
 
@@ -59,9 +58,11 @@ class EventDispatcher;
 class EventCustom;
 class EventListenerCustom;
 class TextureCache;
-class Frustum;
 class Renderer;
+
+#if  (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
 class Console;
+#endif
 
 /**
 @brief Class that creates and handles the main Window and manages how
@@ -83,7 +84,7 @@ and when to execute the Scenes.
   - GL_COLOR_ARRAY is enabled
   - GL_TEXTURE_COORD_ARRAY is enabled
 */
-class CC_DLL Director : public Object
+class CC_DLL Director : public Ref
 {
 public:
     static const char *EVENT_PROJECTION_CHANGED;
@@ -331,12 +332,6 @@ public:
     */
     void setContentScaleFactor(float scaleFactor);
     float getContentScaleFactor() const { return _contentScaleFactor; }
-    
-    /**
-     Get the Culling Frustum
-     */
-    
-    Frustum* getFrustum() const { return _cullingFrustum; }
 
     /** Gets the Scheduler associated with this director
      @since v2.0
@@ -376,7 +371,9 @@ public:
     /** Returns the Console 
      @since v3.0
      */
+#if  (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
     Console* getConsole() const { return _console; }
+#endif
 
     /* Gets delta time since last tick to main loop */
 	float getDeltaTime() const;
@@ -451,8 +448,6 @@ protected:
     unsigned int _frames;
     float _secondsPerFrame;
     
-    Frustum *_cullingFrustum;
-     
     /* The running scene */
     Scene *_runningScene;
     
@@ -487,9 +482,11 @@ protected:
     /* Renderer for the Director */
     Renderer *_renderer;
 
+#if  (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
     /* Console for the director */
     Console *_console;
-    
+#endif
+
     // GLViewProtocol will recreate stats labels to fit visible rect
     friend class GLViewProtocol;
 };

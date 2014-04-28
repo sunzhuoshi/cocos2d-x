@@ -35,7 +35,6 @@ THE SOFTWARE.
 #include "CCDrawingPrimitives.h"
 #include "CCNS.h"
 #include "CCScene.h"
-#include "CCArray.h"
 #include "CCScheduler.h"
 #include "ccMacros.h"
 #include "CCTransition.h"
@@ -44,7 +43,8 @@ THE SOFTWARE.
 #include "CCAutoreleasePool.h"
 #include "platform/CCFileUtils.h"
 #include "CCApplication.h"
-#include "CCLabelBMFont.h"
+#include "CCFontFNT.h"
+#include "CCFontAtlasCache.h"
 #include "CCActionManager.h"
 #include "CCAnimationCache.h"
 #include "CCTouch.h"
@@ -88,7 +88,7 @@ extern const char* cocos2dVersion(void);
 const char *Director::EVENT_PROJECTION_CHANGED = "director_projection_changed";
 const char *Director::EVENT_AFTER_DRAW = "director_after_draw";
 const char *Director::EVENT_AFTER_VISIT = "director_after_visit";
-const char *Director::EVENT_AFTER_UPDATE = "director_after_udpate";
+const char *Director::EVENT_AFTER_UPDATE = "director_after_update";
 
 Director* Director::getInstance()
 {
@@ -134,15 +134,13 @@ bool Director::init(void)
 
     _openGLView = nullptr;
 
-    _cullingFrustum = new Frustum();
-
     _contentScaleFactor = 1.0f;
 
     // scheduler
     _scheduler = new Scheduler();
     // action manager
     _actionManager = new ActionManager();
-    _scheduler->scheduleUpdateForTarget(_actionManager, Scheduler::PRIORITY_SYSTEM, false);
+    _scheduler->scheduleUpdate(_actionManager, Scheduler::PRIORITY_SYSTEM, false);
 
     _eventDispatcher = new EventDispatcher();
     _eventAfterDraw = new EventCustom(EVENT_AFTER_DRAW);
@@ -159,8 +157,10 @@ bool Director::init(void)
     initTextureCache();
 
     _renderer = new Renderer;
-    _console = new Console;
 
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
+    _console = new Console;
+#endif
     return true;
 }
 
@@ -176,7 +176,7 @@ Director::~Director(void)
     CC_SAFE_RELEASE(_notificationNode);
     CC_SAFE_RELEASE(_scheduler);
     CC_SAFE_RELEASE(_actionManager);
-    CC_SAFE_RELEASE(_eventDispatcher);
+    
 
     delete _eventAfterUpdate;
     delete _eventAfterDraw;
@@ -184,8 +184,13 @@ Director::~Director(void)
     delete _eventProjectionChanged;
 
     delete _renderer;
-    delete _console;
 
+#if (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
+    delete _console;
+#endif
+
+    CC_SAFE_RELEASE(_eventDispatcher);
+    
     // clean auto release pool
     PoolManager::destroyInstance();
 
@@ -251,6 +256,12 @@ void Director::drawScene()
 {
     // calculate "global" dt
     calculateDeltaTime();
+    
+    // skip one flame when _deltaTime equal to zero.
+    if(_deltaTime < FLT_EPSILON)
+    {
+        return;
+    }
 
     if (_openGLView)
     {
@@ -275,27 +286,21 @@ void Director::drawScene()
 
     kmGLPushMatrix();
 
-    //construct the frustum
-    {
-        kmMat4 view;
-        kmMat4 projection;
-        kmGLGetMatrix(KM_GL_PROJECTION, &projection);
-        kmGLGetMatrix(KM_GL_MODELVIEW, &view);
-
-        _cullingFrustum->setupFromMatrix(view, projection);
-    }
+    // global identity matrix is needed... come on kazmath!
+    kmMat4 identity;
+    kmMat4Identity(&identity);
 
     // draw the scene
     if (_runningScene)
     {
-        _runningScene->visit();
+        _runningScene->visit(_renderer, identity, false);
         _eventDispatcher->dispatchEvent(_eventAfterVisit);
     }
 
     // draw the notifications node
     if (_notificationNode)
     {
-        _notificationNode->visit();
+        _notificationNode->visit(_renderer, identity, false);
     }
 
     if (_displayStats)
@@ -389,7 +394,10 @@ void Director::setOpenGLView(GLView *openGLView)
 
         CHECK_GL_ERROR_DEBUG();
 
-//        _touchDispatcher->setDispatchEvents(true);
+        if (_eventDispatcher)
+        {
+            _eventDispatcher->setEnabled(true);
+        }
     }
 }
 
@@ -424,9 +432,9 @@ void Director::setViewport()
     }
 }
 
-void Director::setNextDeltaTimeZero(bool bNextDeltaTimeZero)
+void Director::setNextDeltaTimeZero(bool nextDeltaTimeZero)
 {
-    _nextDeltaTimeZero = bNextDeltaTimeZero;
+    _nextDeltaTimeZero = nextDeltaTimeZero;
 }
 
 void Director::setProjection(Projection projection)
@@ -440,6 +448,12 @@ void Director::setProjection(Projection projection)
         case Projection::_2D:
             kmGLMatrixMode(KM_GL_PROJECTION);
             kmGLLoadIdentity();
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WP8
+            if(getOpenGLView() != nullptr)
+            {
+                kmGLMultMatrix( getOpenGLView()->getOrientationMatrix());
+            }
+#endif
             kmMat4 orthoMatrix;
             kmMat4OrthographicProjection(&orthoMatrix, 0, size.width, 0, size.height, -1024, 1024);
             kmGLMultMatrix(&orthoMatrix);
@@ -455,21 +469,30 @@ void Director::setProjection(Projection projection)
 
             kmGLMatrixMode(KM_GL_PROJECTION);
             kmGLLoadIdentity();
-
+            
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WP8
+            //if needed, we need to add a rotation for Landscape orientations on Windows Phone 8 since it is always in Portrait Mode
+            GLView* view = getOpenGLView();
+            if(getOpenGLView() != nullptr)
+            {
+                kmGLMultMatrix(getOpenGLView()->getOrientationMatrix());
+            }
+#endif
             // issue #1334
-            kmMat4PerspectiveProjection(&matrixPerspective, 60, (GLfloat)size.width/size.height, 0.1f, zeye*2);
-            // kmMat4PerspectiveProjection( &matrixPerspective, 60, (GLfloat)size.width/size.height, 0.1f, 1500);
+            kmMat4PerspectiveProjection(&matrixPerspective, 60, (GLfloat)size.width/size.height, 10, zeye+size.height/2);
+//            kmMat4PerspectiveProjection( &matrixPerspective, 60, (GLfloat)size.width/size.height, 0.1f, 1500);
 
             kmGLMultMatrix(&matrixPerspective);
 
-            kmGLMatrixMode(KM_GL_MODELVIEW);
-            kmGLLoadIdentity();
             kmVec3 eye, center, up;
             kmVec3Fill(&eye, size.width/2, size.height/2, zeye);
             kmVec3Fill(&center, size.width/2, size.height/2, 0.0f);
             kmVec3Fill(&up, 0.0f, 1.0f, 0.0f);
             kmMat4LookAt(&matrixLookup, &eye, &center, &up);
             kmGLMultMatrix(&matrixLookup);
+
+            kmGLMatrixMode(KM_GL_MODELVIEW);
+            kmGLLoadIdentity();
             break;
         }
 
@@ -491,11 +514,17 @@ void Director::setProjection(Projection projection)
 
 void Director::purgeCachedData(void)
 {
-    LabelBMFont::purgeCachedData();
+    FontFNT::purgeCachedData();
+    FontAtlasCache::purgeCachedData();
+
     if (s_SharedDirector->getOpenGLView())
     {
         SpriteFrameCache::getInstance()->removeUnusedSpriteFrames();
         _textureCache->removeUnusedTextures();
+
+        // Note: some tests such as ActionsTest are leaking refcounted textures
+        // There should be no test textures left in the cache
+        log("%s\n", _textureCache->getCachedTextureInfo().c_str());
     }
     FileUtils::getInstance()->purgeCachedEntries();
 }
@@ -539,6 +568,11 @@ static void GLToClipTransform(kmMat4 *transformOut)
 {
 	kmMat4 projection;
 	kmGLGetMatrix(KM_GL_PROJECTION, &projection);
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_WP8
+    //if needed, we need to undo the rotation for Landscape orientation in order to get the correct positions
+	kmMat4Multiply(&projection, Director::getInstance()->getOpenGLView()->getReverseOrientationMatrix(), &projection);
+#endif
 
 	kmMat4 modelview;
 	kmGLGetMatrix(KM_GL_MODELVIEW, &modelview);
@@ -629,6 +663,17 @@ void Director::replaceScene(Scene *scene)
 {
     CCASSERT(_runningScene, "Use runWithScene: instead to start the director");
     CCASSERT(scene != nullptr, "the scene should not be null");
+	
+    if (_nextScene)
+    {
+        if (_nextScene->isRunning())
+        {
+            _nextScene->onExitTransitionDidStart();
+            _nextScene->onExit();
+        }
+        _nextScene->cleanup();
+        _nextScene = nullptr;
+    }
 
     ssize_t index = _scenesStack.size();
 
@@ -717,9 +762,11 @@ void Director::purgeDirector()
     // cleanup scheduler
     getScheduler()->unscheduleAll();
     
-    // don't release the event handlers
-    // They are needed in case the director is run again
-//    _touchDispatcher->removeAllDelegates();
+    // Disable event dispatching
+    if (_eventDispatcher)
+    {
+        _eventDispatcher->setEnabled(false);
+    }
 
     if (_runningScene)
     {
@@ -741,10 +788,9 @@ void Director::purgeDirector()
     CC_SAFE_RELEASE_NULL(_FPSLabel);
     CC_SAFE_RELEASE_NULL(_drawnBatchesLabel);
     CC_SAFE_RELEASE_NULL(_drawnVerticesLabel);
-    CC_SAFE_DELETE(_cullingFrustum);
 
     // purge bitmap cache
-    LabelBMFont::purgeCachedData();
+    FontFNT::purgeCachedData();
 
     FontFreeType::shutdownFreeType();
 
@@ -880,9 +926,13 @@ void Director::showStats()
             prevVerts = currentVerts;
         }
 
-        _drawnVerticesLabel->visit();
-        _drawnBatchesLabel->visit();
-        _FPSLabel->visit();
+        // global identity matrix is needed... come on kazmath!
+        kmMat4 identity;
+        kmMat4Identity(&identity);
+
+        _drawnVerticesLabel->visit(_renderer, identity, false);
+        _drawnBatchesLabel->visit(_renderer, identity, false);
+        _FPSLabel->visit(_renderer, identity, false);
     }
 }
 
@@ -1031,6 +1081,9 @@ void DisplayLinkDirector::startAnimation()
     _invalid = false;
 
     Application::getInstance()->setAnimationInterval(_animationInterval);
+    
+    // fix issue #3509, skip one fps to avoid incorrect time calculation.
+    setNextDeltaTimeZero(true);
 }
 
 void DisplayLinkDirector::mainLoop()

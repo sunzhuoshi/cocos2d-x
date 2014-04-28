@@ -26,7 +26,7 @@ THE SOFTWARE.
 #ifndef __CC_IMAGE_H__
 #define __CC_IMAGE_H__
 
-#include "CCObject.h"
+#include "CCRef.h"
 #include "CCTexture2D.h"
 
 // premultiply alpha, or the effect will wrong when want to use other pixel format in Texture2D,
@@ -53,7 +53,7 @@ typedef struct _MipmapInfo
     int len;
 }MipmapInfo;
 
-class CC_DLL Image : public Object
+class CC_DLL Image : public Ref
 {
 public:
     friend class TextureCache;
@@ -155,7 +155,7 @@ protected:
     bool saveImageToPNG(const std::string& filePath, bool isToRGB = true);
     bool saveImageToJPG(const std::string& filePath);
     
-private:
+protected:
     /**
      @brief Determine how many mipmaps can we have.
      Its same as define but it respects namespaces
@@ -175,7 +175,7 @@ private:
     std::string _filePath;
 
 
-private:
+protected:
     // noncopyable
     Image(const Image&    rImg);
     Image & operator=(const Image&);

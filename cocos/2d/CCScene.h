@@ -59,30 +59,18 @@ public:
 
     using Node::addChild;
     virtual std::string getDescription() const override;
-
-protected:
+    
+CC_CONSTRUCTOR_ACCESS:
     Scene();
     virtual ~Scene();
-    bool init();
     
-    friend class Node;
+    virtual bool init() override;
+
+protected:
     friend class SpriteBatchNode;
     
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(Scene);
-    
-#if CC_USE_PHYSICS
-public:
-    virtual void addChild(Node* child, int zOrder, int tag) override;
-    virtual void update(float delta) override;
-    inline PhysicsWorld* getPhysicsWorld() { return _physicsWorld; }
-    static Scene *createWithPhysics();
-protected:
-    bool initWithPhysics();
-    void addChildToPhysicsWorld(Node* child);
-
-    PhysicsWorld* _physicsWorld;
-#endif // CC_USE_PHYSICS
 };
 
 // end of scene group

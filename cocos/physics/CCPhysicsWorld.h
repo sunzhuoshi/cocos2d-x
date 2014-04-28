@@ -29,7 +29,7 @@
 #if CC_USE_PHYSICS
 
 #include "CCVector.h"
-#include "CCObject.h"
+#include "CCRef.h"
 #include "CCGeometry.h"
 
 #include <list>
@@ -44,8 +44,9 @@ class PhysicsContact;
 
 typedef Point Vect;
 
+class Node;
 class Sprite;
-class Scene;
+class Layer;
 class DrawNode;
 class PhysicsDebugDraw;
 
@@ -92,9 +93,9 @@ public:
     /** Adds a joint to the physics world.*/
     virtual void addJoint(PhysicsJoint* joint);
     /** Remove a joint from physics world.*/
-    virtual void removeJoint(PhysicsJoint* joint, bool destroy);
+    virtual void removeJoint(PhysicsJoint* joint, bool destroy = true);
     /** Remove all joints from physics world.*/
-    virtual void removeAllJoints(bool destroy);
+    virtual void removeAllJoints(bool destroy = true);
     
     /** Remove a body from physics world. */
     virtual void removeBody(PhysicsBody* body);
@@ -118,8 +119,8 @@ public:
     /** Get body by tag */
     PhysicsBody* getBody(int tag) const;
     
-    /** Get scene contain this physics world */
-    inline Scene& getScene() const { return *_scene; }
+    /** Get layer contain this physics world */
+    inline Layer& getLayer() const { return *_layer; }
     /** get the gravity value */
     inline Vect getGravity() const { return _gravity; }
     /** set the gravity value */
@@ -143,8 +144,8 @@ public:
     inline int getDebugDrawMask() { return _debugDrawMask; }
     
 protected:
-    static PhysicsWorld* construct(Scene& scene);
-    bool init(Scene& scene);
+    static PhysicsWorld* construct(Layer& layer);
+    bool init(Layer& layer);
     
     virtual void addBody(PhysicsBody* body);
     virtual void addShape(PhysicsShape* shape);
@@ -179,7 +180,7 @@ protected:
     
     Vector<PhysicsBody*> _bodies;
     std::list<PhysicsJoint*> _joints;
-    Scene* _scene;
+    Layer* _layer;
     
     bool _delayDirty;
     PhysicsDebugDraw* _debugDraw;
@@ -195,8 +196,9 @@ protected:
     PhysicsWorld();
     virtual ~PhysicsWorld();
     
+    friend class Node;
     friend class Sprite;
-    friend class Scene;
+    friend class Layer;
     friend class PhysicsBody;
     friend class PhysicsShape;
     friend class PhysicsJoint;
