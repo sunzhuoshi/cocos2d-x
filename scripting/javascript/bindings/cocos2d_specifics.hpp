@@ -110,18 +110,8 @@ protected:
 class JSCCBAnimationWrapper: public JSCallbackWrapper {
 public:
     JSCCBAnimationWrapper() {}
-    virtual ~JSCCBAnimationWrapper() {}
-    
-    void animationCompleteCallback() const {
-        
-        JSContext *cx = ScriptingCore::getInstance()->getGlobalContext();
-        jsval retval = JSVAL_NULL;
-        
-        if(!JSVAL_IS_VOID(jsCallback)  && !JSVAL_IS_VOID(jsThisObj)) {
-            JS_CallFunctionValue(cx, JSVAL_TO_OBJECT(jsThisObj), jsCallback, 0, NULL, &retval);
-        }
-    }
-    
+    virtual ~JSCCBAnimationWrapper() {}    
+    void animationCompleteCallback(CCNode* node, const char* sequenceName) const;
 };
 
 

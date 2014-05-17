@@ -89,7 +89,7 @@ JSBool js_cocos2dx_CCBAnimationManager_animationCompleteCallback(JSContext *cx, 
             tmpCobj->setJSCallbackFunc(argv[1]);
         }
         
-        node->setAnimationCompletedCallback(tmpCobj, callfunc_selector(JSCCBAnimationWrapper::animationCompleteCallback));
+        node->setAnimationCompletedCallback(tmpCobj, callfuncND_selector(JSCCBAnimationWrapper::animationCompleteCallback));
         
         JS_SetReservedSlot(proxy->obj, 0, argv[0]);
         JS_SetReservedSlot(proxy->obj, 1, argv[1]);

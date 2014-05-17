@@ -748,6 +748,20 @@ JSBool js_platform(JSContext *cx, uint32_t argc, jsval *vp)
 	return JS_TRUE;
 }
 
+void JSCCBAnimationWrapper::animationCompleteCallback(cocos2d::CCNode *node, const char *sequenceName) const
+{
+    JSContext *cx = ScriptingCore::getInstance()->getGlobalContext();
+    jsval retval = JSVAL_NULL;
+    js_proxy_t *proxy = js_get_or_create_proxy<cocos2d::CCNode>(cx, node);
+    jsval valArr[2];
+    valArr[0] = OBJECT_TO_JSVAL(proxy->obj);
+    valArr[1] = c_string_to_jsval(cx, sequenceName);
+    
+    if(!JSVAL_IS_VOID(jsCallback)  && !JSVAL_IS_VOID(jsThisObj)) {
+        JS_CallFunctionValue(cx, JSVAL_TO_OBJECT(jsThisObj), jsCallback, 2, valArr, &retval);
+    }
+}
+
 JSCallbackWrapper::JSCallbackWrapper()
 : jsCallback(JSVAL_VOID), jsThisObj(JSVAL_VOID), extraData(JSVAL_VOID)
 {

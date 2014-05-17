@@ -827,7 +827,7 @@ void CCBAnimationManager::debug()
     
 }
 
-void CCBAnimationManager::setAnimationCompletedCallback(CCObject *target, SEL_CallFunc callbackFunc) {
+void CCBAnimationManager::setAnimationCompletedCallback(CCObject *target, SEL_CallFuncND callbackFunc) {
     if (target)
     {
         target->retain();
@@ -864,7 +864,7 @@ void CCBAnimationManager::sequenceCompleted()
     }
     
     if (mTarget && mAnimationCompleteCallbackFunc) {
-        (mTarget->*mAnimationCompleteCallbackFunc)();
+        (mTarget->*mAnimationCompleteCallbackFunc)(this->mRootNode, (void *)runningSequenceName);
     }
     
     if (nextSeqId != -1)
