@@ -120,16 +120,16 @@ bool SimpleAudioEngine::isBackgroundMusicPlaying()
 // effect function
 //////////////////////////////////////////////////////////////////////////
 
-unsigned int SimpleAudioEngine::playEffect(const char* pszFilePath, bool bLoop)
+unsigned int SimpleAudioEngine::playEffect(const char* filePath, bool loop, float pitch, float pan, float gain)
 {
-    unsigned int nRet = _Hash(pszFilePath);
+    unsigned int nRet = _Hash(filePath);
 
-    preloadEffect(pszFilePath);
+    preloadEffect(filePath);
 
     EffectList::iterator p = sharedList().find(nRet);
     if (p != sharedList().end())
     {
-        p->second->Play((bLoop) ? -1 : 1);
+        p->second->Play((loop) ? -1 : 1);
     }
 
     return nRet;

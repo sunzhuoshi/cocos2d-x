@@ -74,6 +74,12 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4267;4251;4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
+    <Lib>
+      <AdditionalDependencies>ws2_32.lib;libcurl_imp.lib</AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>..\..\cocos2dx\platform\third_party\win32\libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>    
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
