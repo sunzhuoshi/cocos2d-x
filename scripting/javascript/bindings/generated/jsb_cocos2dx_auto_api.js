@@ -6149,6 +6149,12 @@ CCSprite : function () {},
 cc.LabelTTF = {
 
 /**
+ * @method setAdjustsFontSizeToFitWidth
+ * @param {bool}
+ */
+setAdjustsFontSizeToFitWidth : function () {},
+
+/**
  * @method enableShadow
  * @param {cocos2d::CCSize}
  * @param {float}
@@ -6180,6 +6186,12 @@ getString : function () {},
  * @param {ccFontDefinition*}
  */
 setTextDefinition : function () {},
+
+/**
+ * @method getAdjustsFontSizeToFitWidth
+ * @return A value converted from C/C++ "bool"
+ */
+getAdjustsFontSizeToFitWidth : function () {},
 
 /**
  * @method setFontName

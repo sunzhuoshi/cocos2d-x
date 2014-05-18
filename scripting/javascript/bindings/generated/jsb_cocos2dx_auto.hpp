@@ -1799,11 +1799,13 @@ JSBool js_cocos2dx_CCLabelTTF_constructor(JSContext *cx, uint32_t argc, jsval *v
 void js_cocos2dx_CCLabelTTF_finalize(JSContext *cx, JSObject *obj);
 void js_register_cocos2dx_CCLabelTTF(JSContext *cx, JSObject *global);
 void register_all_cocos2dx(JSContext* cx, JSObject* obj);
+JSBool js_cocos2dx_CCLabelTTF_setAdjustsFontSizeToFitWidth(JSContext *cx, uint32_t argc, jsval *vp);
 JSBool js_cocos2dx_CCLabelTTF_enableShadow(JSContext *cx, uint32_t argc, jsval *vp);
 JSBool js_cocos2dx_CCLabelTTF_setDimensions(JSContext *cx, uint32_t argc, jsval *vp);
 JSBool js_cocos2dx_CCLabelTTF_getFontSize(JSContext *cx, uint32_t argc, jsval *vp);
 JSBool js_cocos2dx_CCLabelTTF_getString(JSContext *cx, uint32_t argc, jsval *vp);
 JSBool js_cocos2dx_CCLabelTTF_setTextDefinition(JSContext *cx, uint32_t argc, jsval *vp);
+JSBool js_cocos2dx_CCLabelTTF_getAdjustsFontSizeToFitWidth(JSContext *cx, uint32_t argc, jsval *vp);
 JSBool js_cocos2dx_CCLabelTTF_setFontName(JSContext *cx, uint32_t argc, jsval *vp);
 JSBool js_cocos2dx_CCLabelTTF_getHorizontalAlignment(JSContext *cx, uint32_t argc, jsval *vp);
 JSBool js_cocos2dx_CCLabelTTF_initWithStringAndTextDefinition(JSContext *cx, uint32_t argc, jsval *vp);

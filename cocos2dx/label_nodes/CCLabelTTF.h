@@ -151,6 +151,12 @@ public:
     const char* getFontName();
     void setFontName(const char *fontName);
     
+    void setAdjustsFontSizeToFitWidth(bool adjust) {
+        m_adjustsFontSizeToFitWidth = adjust;
+    }
+    bool getAdjustsFontSizeToFitWidth() {
+        return m_adjustsFontSizeToFitWidth;
+    }
 private:
     bool updateTexture();
 protected:
@@ -186,8 +192,8 @@ protected:
         
     /** font tint */
     ccColor3B   m_textFillColor;
-
-    
+    // TODO: finish it 
+    bool m_adjustsFontSizeToFitWidth;
 };
 
 
