@@ -824,6 +824,10 @@ void CCScale9Sprite::setOpacity(GLubyte opacity)
             pNode->setOpacity(opacity);
         }
     }
+    if (kScriptTypeNone != m_eScriptType)
+    {
+        CCScriptEngineManager::sharedManager()->getScriptEngine()->executeRGBAProtocolOnOpacitySetEvent(this, opacity);
+    }
 }
 
 GLubyte CCScale9Sprite::getOpacity()

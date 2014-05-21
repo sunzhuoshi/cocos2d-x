@@ -85,7 +85,7 @@ public:
      @return The integer value returned from the script function.
      */
 	virtual int executeGlobalFunction(const char* functionName) { return 0; }
-
+    virtual int executeRGBAProtocolOnOpacitySetEvent(void* object, unsigned int opacity);
     virtual int executeNodeEvent(CCNode* pNode, int nAction);
     virtual int executeMenuItemEvent(CCMenuItem* pMenuItem);
     virtual int executeControlEvent(void* control, int event);

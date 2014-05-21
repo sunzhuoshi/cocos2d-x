@@ -728,6 +728,16 @@ void ScriptingCore::cleanupSchedulesAndActions(js_proxy_t* p)
     }
 }
 
+int ScriptingCore::executeRGBAProtocolOnOpacitySetEvent(void* object, unsigned int opacity)
+{
+    js_proxy_t * p = jsb_get_native_proxy(object);
+    if (!p) return 0;
+    jsval retval;
+    jsval dataVal = UINT_TO_JSVAL(opacity);
+    executeFunctionWithOwner(OBJECT_TO_JSVAL(p->obj), "onOpacitySet", 1, &dataVal, &retval);
+    return 1;
+}
+
 int ScriptingCore::executeNodeEvent(CCNode* pNode, int nAction)
 {
     js_proxy_t * p = jsb_get_native_proxy(pNode);

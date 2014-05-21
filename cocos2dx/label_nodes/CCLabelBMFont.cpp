@@ -837,6 +837,10 @@ void CCLabelBMFont::setOpacity(GLubyte opacity)
         }
         this->updateDisplayedOpacity(parentOpacity);
 	}
+    if (kScriptTypeNone != m_eScriptType)
+    {
+        CCScriptEngineManager::sharedManager()->getScriptEngine()->executeRGBAProtocolOnOpacitySetEvent(this, opacity);
+    }
 }
 
 void CCLabelBMFont::setOpacityModifyRGB(bool var)

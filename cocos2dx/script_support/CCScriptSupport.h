@@ -44,6 +44,7 @@ class CCMenuItem;
 class CCNotificationCenter;
 class CCCallFunc;
 class CCAcceleration;
+class CCRGBAProtocol;
 
 enum ccScriptType {
     kScriptTypeNone = 0,
@@ -199,6 +200,9 @@ public:
      */
     virtual int executeGlobalFunction(const char* functionName) = 0;
     
+    // added support for setOpacity event to simplify opacity logic by sunzhuoshi
+    // TODO: find why CCRGBAProtocol *object failed to get native proxy
+    virtual int executeRGBAProtocolOnOpacitySetEvent(void* object, unsigned int opacity) = 0;
     /**
      @brief Execute a node event function
      @param pNode which node produce this event

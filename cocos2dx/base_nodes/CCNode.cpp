@@ -1345,6 +1345,10 @@ void CCNodeRGBA::setOpacity(GLubyte opacity)
         }
         this->updateDisplayedOpacity(parentOpacity);
 	}
+    if (kScriptTypeNone != m_eScriptType)
+    {
+        CCScriptEngineManager::sharedManager()->getScriptEngine()->executeRGBAProtocolOnOpacitySetEvent(this, opacity);
+    }
 }
 
 void CCNodeRGBA::updateDisplayedOpacity(GLubyte parentOpacity)

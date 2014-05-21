@@ -542,6 +542,10 @@ void CCLayerRGBA::setOpacity(GLubyte opacity)
         }
         updateDisplayedOpacity(parentOpacity);
 	}
+    if (kScriptTypeNone != m_eScriptType)
+    {
+        CCScriptEngineManager::sharedManager()->getScriptEngine()->executeRGBAProtocolOnOpacitySetEvent(this, opacity);
+    }
 }
 
 const ccColor3B& CCLayerRGBA::getColor()
