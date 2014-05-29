@@ -2084,6 +2084,7 @@ JSBool js_cocos2dx_retain(JSContext *cx, uint32_t argc, jsval *vp)
 		js_proxy_t *proxy = jsb_get_js_proxy(thisObj);
 		if (proxy) {
 			((CCObject *)proxy->ptr)->retain();
+            JS_SET_RVAL(cx, vp, OBJECT_TO_JSVAL(thisObj));
 			return JS_TRUE;
 		}
 	}
