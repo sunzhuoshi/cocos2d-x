@@ -29,7 +29,7 @@
 
 #import <UIKit/UIAlert.h>
 
-#define CLEAR_LOG 1
+#define CLEAR_LOG 0
 
 NS_CC_BEGIN
 

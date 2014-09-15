@@ -764,7 +764,7 @@ JS_BINDED_FUNC_IMPL(MinXmlHttpRequest, overrideMimeType)
  *
  */
 static void basic_object_finalize(JSFreeOp *freeOp, JSObject *obj) {
-    CCLOG("basic_object_finalize %p ...", obj);
+    CCLOGINFO("basic_object_finalize %p ...", obj);
 }
 
 /**
