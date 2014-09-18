@@ -192,16 +192,16 @@ void SimpleAudioEngine::setEffectsVolume(float volume)
 	}
 }
 
-unsigned int SimpleAudioEngine::playEffect(const char* pszFilePath, bool bLoop)
+unsigned int SimpleAudioEngine::playEffect(const char* filePath, bool loop, float pitch, float pan, float gain)
 {
-	std::string fullPath = getFullPathWithoutAssetsPrefix(pszFilePath);
+	std::string fullPath = getFullPathWithoutAssetsPrefix(filePath);
 	if (s_bI9100)
 	{
-		return SimpleAudioEngineOpenSL::sharedEngine()->playEffect(fullPath.c_str(), bLoop);
+		return SimpleAudioEngineOpenSL::sharedEngine()->playEffect(fullPath.c_str(), loop);
 	}
 	else 
 	{
-		return playEffectJNI(fullPath.c_str(), bLoop);
+		return playEffectJNI(fullPath.c_str(), loop);
 	}
 }
 
