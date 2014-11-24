@@ -291,7 +291,7 @@ public:
      */
     void end();
 
-	/** restart the execution
+    /** restart the execution
      * @lua endToLua
      */
     void restart();
@@ -411,7 +411,7 @@ protected:
 #endif    
     bool _purgeDirectorInNextLoop; // this flag will be set to true in end()
 #if CC_ENABLE_SCRIPT_BINDING
-	bool _restartDirectorInNextLoop; // this flag will be set to true in restart()
+    bool _restartDirectorInNextLoop; // this flag will be set to true in restart()
 #endif    
     void setNextScene();
     

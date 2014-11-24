@@ -946,80 +946,80 @@ void Director::end()
 
 void Director::restart()
 {
-	_restartDirectorInNextLoop = true;
+    _restartDirectorInNextLoop = true;
 }
 
 void Director::restartDirector()
 {
 #if CC_ENABLE_SCRIPT_BINDING
-	// cleanup scheduler
-	//getScheduler()->unscheduleAll();
-	// Disable event dispatching
-	if (_eventDispatcher)
-	{
-		_eventDispatcher->setEnabled(false);
-	}
+    // cleanup scheduler
+    //getScheduler()->unscheduleAll();
+    // Disable event dispatching
+    if (_eventDispatcher)
+    {
+        _eventDispatcher->setEnabled(false);
+    }
 
-	if (_runningScene)
-	{
-		_runningScene->onExit();
-		_runningScene->cleanup();
-		_runningScene->release();
-	}
+    if (_runningScene)
+    {
+        _runningScene->onExit();
+        _runningScene->cleanup();
+        _runningScene->release();
+    }
 
-	_runningScene = nullptr;
-	_nextScene = nullptr;
+    _runningScene = nullptr;
+    _nextScene = nullptr;
 
-	// remove all objects, but don't release it.
-	// runWithScene might be executed after 'end'.
-	_scenesStack.clear();
+    // remove all objects, but don't release it.
+    // runWithScene might be executed after 'end'.
+    _scenesStack.clear();
 
-	stopAnimation();
+    stopAnimation();
 
-	CC_SAFE_RELEASE_NULL(_FPSLabel);
-	CC_SAFE_RELEASE_NULL(_drawnBatchesLabel);
-	CC_SAFE_RELEASE_NULL(_drawnVerticesLabel);
+    CC_SAFE_RELEASE_NULL(_FPSLabel);
+    CC_SAFE_RELEASE_NULL(_drawnBatchesLabel);
+    CC_SAFE_RELEASE_NULL(_drawnVerticesLabel);
 
-	// purge bitmap cache
-	FontFNT::purgeCachedData();
+    // purge bitmap cache
+    FontFNT::purgeCachedData();
 
-	FontFreeType::shutdownFreeType();
+    FontFreeType::shutdownFreeType();
 
-	// purge all managed caches
+    // purge all managed caches
 
-	AnimationCache::destroyInstance();
-	SpriteFrameCache::destroyInstance();
-	GLProgramCache::destroyInstance();
-	GLProgramStateCache::destroyInstance();
-	FileUtils::destroyInstance();
+    AnimationCache::destroyInstance();
+    SpriteFrameCache::destroyInstance();
+    GLProgramCache::destroyInstance();
+    GLProgramStateCache::destroyInstance();
+    FileUtils::destroyInstance();
 
-	// cocos2d-x specific data structures
-	UserDefault::destroyInstance();
+    // cocos2d-x specific data structures
+    UserDefault::destroyInstance();
 
-	GL::invalidateStateCache();
+    GL::invalidateStateCache();
 
-	//destroyTextureCache();
-	_textureCache->removeAllTextures();
+    //destroyTextureCache();
+    _textureCache->removeAllTextures();
 
-	// OpenGL view
-// 	if (_openGLView)
-// 	{
-// 		_openGLView->release();
-// 		_openGLView = nullptr;
-// 	}
+    // OpenGL view
+    // if (_openGLView)
+    // {
+    //     _openGLView->release();
+    //     _openGLView = nullptr;
+    // }
 
-	// Disable event dispatching
-	if (_eventDispatcher)
-	{
-		_eventDispatcher->setEnabled(true);
-	}
+    // Disable event dispatching
+    if (_eventDispatcher)
+    {
+        _eventDispatcher->setEnabled(true);
+    }
 
-	// release the objects
-	PoolManager::getInstance()->getCurrentPool()->clear();
+    // release the objects
+    PoolManager::getInstance()->getCurrentPool()->clear();
 
-	ScriptEvent scriptEvent(kRestartGame, NULL);
-	ScriptEngineManager::getInstance()->getScriptEngine()->sendEvent(&scriptEvent);
-#endif
+    ScriptEvent scriptEvent(kRestartGame, NULL);
+    ScriptEngineManager::getInstance()->getScriptEngine()->sendEvent(&scriptEvent);
+    #endif
 }
 
 void Director::purgeDirector()
@@ -1377,11 +1377,11 @@ void DisplayLinkDirector::mainLoop()
         purgeDirector();
     }
 #if CC_ENABLE_SCRIPT_BINDING
-	else if (_restartDirectorInNextLoop)
-	{
-		_restartDirectorInNextLoop = false;
-		restartDirector();
-	}
+    else if (_restartDirectorInNextLoop)
+    {
+        _restartDirectorInNextLoop = false;
+        restartDirector();
+    }
 #endif
     else if (! _invalid)
     {
