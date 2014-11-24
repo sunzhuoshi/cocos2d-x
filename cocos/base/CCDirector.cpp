@@ -129,8 +129,8 @@ bool Director::init(void)
     // purge ?
     _purgeDirectorInNextLoop = false;
 #if CC_ENABLE_SCRIPT_BINDING
-	// restart ?
-	_restartDirectorInNextLoop = false;
+    // restart ?
+    _restartDirectorInNextLoop = false;
 #endif
     _winSizeInPoints = Size::ZERO;
 

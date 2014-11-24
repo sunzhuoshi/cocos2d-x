@@ -406,8 +406,9 @@ public:
 
 protected:
     void purgeDirector();
-	void restartDirector();
-
+#if CC_ENABLE_SCRIPT_BINDING
+    void restartDirector();
+#endif    
     bool _purgeDirectorInNextLoop; // this flag will be set to true in end()
 #if CC_ENABLE_SCRIPT_BINDING
 	bool _restartDirectorInNextLoop; // this flag will be set to true in restart()
