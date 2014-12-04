@@ -933,6 +933,7 @@ void Director::end()
     _purgeDirectorInNextLoop = true;
 }
 
+#if CC_ENABLE_SCRIPT_BINDING
 void Director::restart()
 {
     _restartDirectorInNextLoop = true;
@@ -940,7 +941,6 @@ void Director::restart()
 
 void Director::restartDirector()
 {
-#if CC_ENABLE_SCRIPT_BINDING
     // cleanup scheduler
     //getScheduler()->unscheduleAll();
     // Disable event dispatching
@@ -1008,8 +1008,8 @@ void Director::restartDirector()
 
     ScriptEvent scriptEvent(kRestartGame, NULL);
     ScriptEngineManager::getInstance()->getScriptEngine()->sendEvent(&scriptEvent);
-    #endif
 }
+#endif
 
 void Director::purgeDirector()
 {
