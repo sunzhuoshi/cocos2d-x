@@ -980,7 +980,9 @@ void Director::restartDirector()
     SpriteFrameCache::destroyInstance();
     GLProgramCache::destroyInstance();
     GLProgramStateCache::destroyInstance();
-    FileUtils::destroyInstance();
+    std::vector<std::string> searchPaths;
+    FileUtils::getInstance()->setSearchPaths(searchPaths);
+    FileUtils::getInstance()->purgeCachedEntries();
 
     // cocos2d-x specific data structures
     UserDefault::destroyInstance();
