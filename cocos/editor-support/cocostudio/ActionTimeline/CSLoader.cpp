@@ -505,7 +505,7 @@ Node* CSLoader::loadSimpleNode(const rapidjson::Value& json)
 {
     Node* node = Node::create();
     // fix memory leak for v3.3
-    //node->retain();
+    node->retain();
     initNode(node, json);
     
     return node;
@@ -525,7 +525,7 @@ Node* CSLoader::loadSubGraph(const rapidjson::Value& json)
         node = Node::create();
     }
     // fix memory leak for v3.3
-    //node->retain();
+    node->retain();
     
     initNode(node, json);
     
@@ -564,7 +564,7 @@ Node* CSLoader::loadSprite(const rapidjson::Value& json)
     }
     
     // fix memory leak for v3.3
-    //sprite->retain();
+    sprite->retain();
     
     initNode(sprite, json);
     
@@ -587,7 +587,7 @@ Node* CSLoader::loadParticle(const rapidjson::Value& json)
     ParticleSystemQuad* particle = ParticleSystemQuad::create(filePath);
     particle->setTotalParticles(num);
     // fix memory leak for v3.3
-    //particle->retain();
+    particle->retain();
     
     initNode(particle, json);
     
@@ -637,7 +637,7 @@ Node* CSLoader::loadWidget(const rapidjson::Value& json)
         std::string guiClassName = getGUIClassName(classname);
         widget = dynamic_cast<Widget*>(ObjectFactory::getInstance()->createObject(guiClassName));
         // fix memory leak for v3.3
-        //widget->retain();
+        widget->retain();
         
         WidgetReaderProtocol* reader = dynamic_cast<WidgetReaderProtocol*>(ObjectFactory::getInstance()->createObject(readerName));
         
@@ -648,7 +648,7 @@ Node* CSLoader::loadWidget(const rapidjson::Value& json)
         widget = dynamic_cast<Widget*>(ObjectFactory::getInstance()->createObject(classname));
         
         //fix memory leak for v3.3
-        //widget->retain();
+        widget->retain();
         
         //
         // 1st., custom widget parse properties of parent widget with parent widget reader
