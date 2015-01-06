@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+﻿﻿/****************************************************************************
 Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2013 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
@@ -773,17 +773,17 @@ Vec2 Director::convertToUI(const Vec2& glPoint)
     Vec4 glCoord(glPoint.x, glPoint.y, 0.0, 1);
     transform.transformVector(glCoord, &clipCoord);
 
-	/*
-	BUG-FIX #5506
+    /*
+    BUG-FIX #5506
 
-	a = (Vx, Vy, Vz, 1)
-	b = (a×M)T
-	Out = 1 ⁄ bw(bx, by, bz)
-	*/
-	
-	clipCoord.x = clipCoord.x / clipCoord.w;
-	clipCoord.y = clipCoord.y / clipCoord.w;
-	clipCoord.z = clipCoord.z / clipCoord.w;
+    a = (Vx, Vy, Vz, 1)
+    b = (a×M)T
+    Out = 1 ⁄ bw(bx, by, bz)
+    */
+    
+    clipCoord.x = clipCoord.x / clipCoord.w;
+    clipCoord.y = clipCoord.y / clipCoord.w;
+    clipCoord.z = clipCoord.z / clipCoord.w;
 
     Size glSize = _openGLView->getDesignResolutionSize();
     float factor = 1.0/glCoord.w;
@@ -951,74 +951,6 @@ void Director::end()
 void Director::restart()
 {
     _restartDirectorInNextLoop = true;
-}
-
-void Director::restartDirector()
-{
-    // cleanup scheduler
-    getScheduler()->unscheduleAll();
-    // Disable event dispatching
-    if (_eventDispatcher)
-    {
-        _eventDispatcher->setEnabled(false);
-    }
-
-    if (_runningScene)
-    {
-        _runningScene->onExit();
-        _runningScene->cleanup();
-        _runningScene->release();
-    }
-
-    _runningScene = nullptr;
-    _nextScene = nullptr;
-
-    // remove all objects, but don't release it.
-    // runWithScene might be executed after 'end'.
-    _scenesStack.clear();
-
-    stopAnimation();
-
-    CC_SAFE_RELEASE_NULL(_FPSLabel);
-    CC_SAFE_RELEASE_NULL(_drawnBatchesLabel);
-    CC_SAFE_RELEASE_NULL(_drawnVerticesLabel);
-
-    // purge bitmap cache
-    FontFNT::purgeCachedData();
-
-    FontFreeType::shutdownFreeType();
-
-    // purge all managed caches
-
-    AnimationCache::destroyInstance();
-    SpriteFrameCache::destroyInstance();
-    GLProgramCache::destroyInstance();
-    GLProgramStateCache::destroyInstance();
-    std::vector<std::string> searchPaths;
-    FileUtils::getInstance()->setSearchPaths(searchPaths);
-    FileUtils::getInstance()->purgeCachedEntries();
-
-    // cocos2d-x specific data structures
-    UserDefault::destroyInstance();
-
-    GL::invalidateStateCache();
-
-    //destroyTextureCache();
-    _textureCache->removeAllTextures();
-
-    // Disable event dispatching
-    if (_eventDispatcher)
-    {
-        _eventDispatcher->setEnabled(true);
-    }
-
-    // release the objects
-    PoolManager::getInstance()->getCurrentPool()->clear();
-    
-#if CC_ENABLE_SCRIPT_BINDING
-    ScriptEvent scriptEvent(kRestartGame, NULL);
-    ScriptEngineManager::getInstance()->getScriptEngine()->sendEvent(&scriptEvent);
-#endif
 }
 
 void Director::reset()
@@ -1378,7 +1310,6 @@ void Director::setEventDispatcher(EventDispatcher* dispatcher)
         _eventDispatcher = dispatcher;
     }
 }
-
 
 /***************************************************
 * implementation of DisplayLinkDirector
