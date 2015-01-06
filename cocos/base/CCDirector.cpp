@@ -953,7 +953,6 @@ void Director::restart()
     _restartDirectorInNextLoop = true;
 }
 
-<<<<<<< HEAD
 void Director::restartDirector()
 {
     // cleanup scheduler
