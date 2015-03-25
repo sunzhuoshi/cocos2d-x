@@ -139,7 +139,7 @@ public:
     
     long getContentSize(const std::string &srcUrl);
     
-    void getContentSizeAsync(const std::string &srcUrl);
+    void getHeaderAsync(const std::string &srcUrl, const HeaderCallback &callback);
     
     void downloadToBufferAsync(const std::string &srcUrl, unsigned char *buffer, const long &size, const std::string &customId = "");
     

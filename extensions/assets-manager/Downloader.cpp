@@ -325,8 +325,9 @@ long Downloader::getContentSize(const std::string &srcUrl)
     return info.contentSize;
 }
 
-void Downloader::getContentSizeAsync(const std::string &srcUrl)
+void Downloader::getHeaderAsync(const std::string &srcUrl, const HeaderCallback &callback)
 {
+    setHeaderCallback(callback);
     auto t = std::thread(&Downloader::prepareHeader, this, srcUrl, nullptr);
     t.detach();
 }
