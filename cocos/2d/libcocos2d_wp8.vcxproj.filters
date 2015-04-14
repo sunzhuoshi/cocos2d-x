@@ -962,9 +962,6 @@
     <ClCompile Include="..\editor-support\cocostudio\ActionTimeline\CCFrame.cpp">
       <Filter>cocostudio\TimelineAction</Filter>
     </ClCompile>
-    <ClCompile Include="..\editor-support\cocostudio\ActionTimeline\CCNodeReader.cpp">
-      <Filter>cocostudio\TimelineAction</Filter>
-    </ClCompile>
     <ClCompile Include="..\editor-support\cocostudio\ActionTimeline\CCTimeLine.cpp">
       <Filter>cocostudio\TimelineAction</Filter>
     </ClCompile>
@@ -1809,6 +1806,18 @@
     <ClCompile Include="..\editor-support\cocostudio\CCObjectExtensionData.cpp">
       <Filter>cocostudio\json</Filter>
     </ClCompile>
+    <ClCompile Include="..\3d\CCSkybox.cpp">
+      <Filter>3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3d\CCTextureCube.cpp">
+      <Filter>3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\editor-support\cocostudio\CocoStudio.cpp">
+      <Filter>cocostudio\json</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3d\CCTerrain.cpp">
+      <Filter>3d</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CCAction.h">
@@ -2619,9 +2628,6 @@
       <Filter>cocostudio\TimelineAction</Filter>
     </ClInclude>
     <ClInclude Include="..\editor-support\cocostudio\ActionTimeline\CCFrame.h">
-      <Filter>cocostudio\TimelineAction</Filter>
-    </ClInclude>
-    <ClInclude Include="..\editor-support\cocostudio\ActionTimeline\CCNodeReader.h">
       <Filter>cocostudio\TimelineAction</Filter>
     </ClInclude>
     <ClInclude Include="..\editor-support\cocostudio\ActionTimeline\CCTimeLine.h">
@@ -3515,6 +3521,18 @@
     </ClInclude>
     <ClInclude Include="..\editor-support\cocostudio\CCObjectExtensionData.h">
       <Filter>cocostudio\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3d\CCSkybox.h">
+      <Filter>3d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3d\CCTextureCube.h">
+      <Filter>3d</Filter>
+    </ClInclude>
+    <ClInclude Include="..\editor-support\cocostudio\CocoStudio.h">
+      <Filter>cocostudio\json</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3d\CCTerrain.h">
+      <Filter>3d</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
