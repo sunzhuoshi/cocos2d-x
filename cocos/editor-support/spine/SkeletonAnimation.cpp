@@ -102,10 +102,6 @@ SkeletonAnimation::SkeletonAnimation ()
         : SkeletonRenderer() {
 }
 
-SkeletonAnimation::SkeletonAnimation ()
-		: SkeletonRenderer() {
-}
-
 SkeletonAnimation::SkeletonAnimation (spSkeletonData *skeletonData)
 		: SkeletonRenderer(skeletonData) {
 	initialize();
