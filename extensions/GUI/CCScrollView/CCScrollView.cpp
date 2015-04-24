@@ -61,7 +61,10 @@ CCScrollView::CCScrollView()
 
 CCScrollView::~CCScrollView()
 {
-    m_pTouches->release();
+    // m_pTouches maybe NULL, when created from JavaScript (initWithViewSize not called)
+    if (m_pTouches) {
+        m_pTouches->release();        
+    }
 }
 
 CCScrollView* CCScrollView::create(CCSize size, CCNode* container/* = NULL*/)
