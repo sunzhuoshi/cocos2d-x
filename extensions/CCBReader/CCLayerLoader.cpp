@@ -11,6 +11,11 @@
 NS_CC_EXT_BEGIN
 
 void CCLayerLoader::onHandlePropTypeCheck(CCNode * pNode, CCNode * pParent, const char * pPropertyName, bool pCheck, CCBReader * pCCBReader) {
+    //< HACK: support legacy CocosBuilder(3.0.x)
+    if (strcmp(pPropertyName, "touchEnabled") == 0) {
+        ((CCLayer *)pNode)->setTouchEnabled(pCheck);
+    } else
+    //>
     if(strcmp(pPropertyName, PROPERTY_TOUCH_ENABLED) == 0) {
         ((CCLayer *)pNode)->setTouchEnabled(pCheck);
     } else if(strcmp(pPropertyName, PROPERTY_ACCELEROMETER_ENABLED) == 0) {
