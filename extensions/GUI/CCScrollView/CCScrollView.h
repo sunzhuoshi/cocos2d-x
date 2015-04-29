@@ -28,7 +28,6 @@
 
 #include "cocos2d.h"
 #include "ExtensionMacros.h"
-#include "ccTypeInfo.h"
 
 NS_CC_EXT_BEGIN
 
@@ -45,8 +44,11 @@ typedef enum {
 } CCScrollViewDirection;
 
 class CCScrollView;
-
-class CCScrollViewDelegate
+/**
+ *  @js NA
+ *  @lua NA
+ */
+class CC_EX_DLL CCScrollViewDelegate
 {
 public:
     virtual ~CCScrollViewDelegate() {}
@@ -54,23 +56,23 @@ public:
     virtual void scrollViewDidZoom(CCScrollView* view) = 0;
 };
 
+
 /**
  * ScrollView support for cocos2d for iphone.
  * It provides scroll view functionalities to cocos2d projects natively.
+ * @lua NA
  */
-class CCScrollView : public CCLayer, public TypeInfo
+class CC_EX_DLL CCScrollView : public CCLayer
 {
 public:
     /**
-     *  Returns an unique ID for this class.
-     *  @note It's only used for JSBindings now.
-     *  @return The unique ID for this class.
+     *  @js ctor
      */
-    virtual long getClassTypeInfo() {
-		static const long id = cocos2d::getHashCodeByString(typeid(cocos2d::extension::CCScrollView).name());
-		return id;
-    }
     CCScrollView();
+    /**
+     *  @js NA
+     *  @lua NA
+     */
     virtual ~CCScrollView();
 
     bool init();
@@ -204,7 +206,9 @@ public:
      */
     bool isClippingToBounds() { return m_bClippingToBounds; }
     void setClippingToBounds(bool bClippingToBounds) { m_bClippingToBounds = bClippingToBounds; }
-
+    /**
+     *  @js NA
+     */
     virtual void visit();
     virtual void addChild(CCNode * child, int zOrder, int tag);
     virtual void addChild(CCNode * child, int zOrder);
@@ -331,6 +335,17 @@ protected:
      */
     CCRect m_tParentScissorRect;
     bool m_bScissorRestored;
+public:
+    enum ScrollViewScriptEventType
+    {
+        kScrollViewScroll   = 0,
+        kScrollViewZoom,
+    };
+    void registerScriptHandler(int nFunID,int nScriptEventType);
+    void unregisterScriptHandler(int nScriptEventType);
+    int  getScriptHandler(int nScriptEventType);
+private:
+    std::map<int,int> m_mapScriptHandler;
 };
 
 // end of GUI group

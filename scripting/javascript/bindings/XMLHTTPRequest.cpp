@@ -178,10 +178,11 @@ void MinXmlHttpRequest::handle_requestResponse(cocos2d::extension::CCHttpClient 
     char statusString[64] = {};
     sprintf(statusString, "HTTP Status Code: %d, tag = %s", statusCode, response->getHttpRequest()->getTag());
     
-    if (200 != statusCode) // 404, dns error
+    if (!response->isSucceed())
     {
         CCLOG("response failed");
         CCLOG("error buffer: %s", response->getErrorBuffer());
+        return;
     }
     
     // set header
@@ -204,10 +205,17 @@ void MinXmlHttpRequest::handle_requestResponse(cocos2d::extension::CCHttpClient 
     
     strcpy(concatenated, s2.c_str());
     
-    status = statusCode;
-    readyState = DONE;
-    if (200 == statusCode) {
+    if (statusCode == 200)
+    {
+        //Succeeded
+        status = 200;
+        readyState = DONE;
         data << concatenated;
+        dataSize = buffer->size();
+    }
+    else
+    {
+        status = 0;
     }
     // Free Memory.
     free((void*) concatHeader);
@@ -585,6 +593,7 @@ JS_BINDED_FUNC_IMPL(MinXmlHttpRequest, open)
         
         url = urlstr;
         meth = method;
+        readyState = 1;
         isAsync = async;
         
         if (url.length() > 5 && url.compare(url.length() - 5, 5, ".json") == 0) {
@@ -764,7 +773,7 @@ JS_BINDED_FUNC_IMPL(MinXmlHttpRequest, overrideMimeType)
  *
  */
 static void basic_object_finalize(JSFreeOp *freeOp, JSObject *obj) {
-    CCLOGINFO("basic_object_finalize %p ...", obj);
+    CCLOG("basic_object_finalize %p ...", obj);
 }
 
 /**

@@ -293,7 +293,7 @@ void CCBMFontConfiguration::parseInfoArguments(std::string line)
     int index2 = line.find(' ', index);
     std::string value = line.substr(index, index2-index);
     sscanf(value.c_str(), "padding=%d,%d,%d,%d", &m_tPadding.top, &m_tPadding.right, &m_tPadding.bottom, &m_tPadding.left);
-    CCLOGINFO("cocos2d: padding: %d,%d,%d,%d\n", m_tPadding.left, m_tPadding.top, m_tPadding.right, m_tPadding.bottom);
+    CCLOG("cocos2d: padding: %d,%d,%d,%d", m_tPadding.left, m_tPadding.top, m_tPadding.right, m_tPadding.bottom);
 }
 
 void CCBMFontConfiguration::parseCommonArguments(std::string line)
@@ -588,6 +588,7 @@ void CCLabelBMFont::createFontChars()
     unsigned int stringLen = m_sString ? cc_wcslen(m_sString) : 0;
     if (stringLen == 0)
     {
+        this->setContentSize(CC_SIZE_PIXELS_TO_POINTS(tmpSize));
         return;
     }
 
@@ -1149,7 +1150,10 @@ void CCLabelBMFont::updateLabel()
                         if (index < 0) continue;
 
                         CCSprite* characterSprite = (CCSprite*)getChildByTag(index);
-                        characterSprite->setPosition(ccpAdd(characterSprite->getPosition(), ccp(shift, 0.0f)));
+                        if (characterSprite)
+                        {
+                            characterSprite->setPosition(ccpAdd(characterSprite->getPosition(), ccp(shift, 0.0f)));
+                        }
                     }
                 }
 
@@ -1237,6 +1241,10 @@ const char* CCLabelBMFont::getFntFile()
     return m_sFntFile.c_str();
 }
 
+CCBMFontConfiguration* CCLabelBMFont::getConfiguration() const
+{
+	return m_pConfiguration;
+}
 
 //LabelBMFont - Debug draw
 #if CC_LABELBMFONT_DEBUG_DRAW

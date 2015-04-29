@@ -6,6 +6,11 @@ set -e
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 COCOS2DX_ROOT="$DIR"/../..
 HOST_NAME=""
+
+pushd $COCOS2DX_ROOT
+python download-deps.py -r=yes
+popd
+
 mkdir -p $HOME/bin
 pushd $HOME/bin
 
@@ -18,12 +23,16 @@ install_android_ndk()
     else
         HOST_NAME="linux"
     fi
-    echo "Download android-ndk-r8e-${HOST_NAME}-x86_64.tar.bz2 ..."
-    curl -O http://dl.google.com/android/ndk/android-ndk-r8e-${HOST_NAME}-x86_64.tar.bz2
-    echo "Decompress android-ndk-r8e-${HOST_NAME}-x86_64.tar.bz2 ..."
-    tar xjf android-ndk-r8e-${HOST_NAME}-x86_64.tar.bz2
+
+    NDK_VERSION="android-ndk-r9b"
+    NDK_PACKAGE_NAME="${NDK_VERSION}-${HOST_NAME}-x86_64.tar.bz2"
+
+    echo "Download ${NDK_PACKAGE_NAME} ..."
+    curl -O http://dl.google.com/android/ndk/${NDK_PACKAGE_NAME}
+    echo "Decompress ${NDK_PACKAGE_NAME} ..."
+    tar xjf $NDK_PACKAGE_NAME
     # Rename ndk
-    mv android-ndk-r8e android-ndk
+    mv ${NDK_VERSION} android-ndk
 }
 
 install_llvm()
@@ -67,32 +76,33 @@ if [ "$GEN_JSB"x = "YES"x ]; then
 fi
 
 if [ "$PLATFORM"x = "linux"x ]; then
+    sudo apt-get update
     bash $COCOS2DX_ROOT/install-deps-linux.sh
 fi
 
 if [ "$PLATFORM"x = "nacl"x ]; then
     sudo apt-get update
-    sudo apt-get install libc6:i386
+    sudo apt-get install libc6:i386 libstdc++6:i386
     echo "Download nacl_sdk ..."
     wget http://storage.googleapis.com/nativeclient-mirror/nacl/nacl_sdk/nacl_sdk.zip
-    echo "Decompress nacl_sdk.zip" 
+    echo "Decompress nacl_sdk.zip"
     unzip nacl_sdk.zip
     nacl_sdk/naclsdk update --force pepper_canary
 fi
 
-if [ "$PLATFORM"x = "android"x ]; then 
+if [ "$PLATFORM"x = "android"x ]; then
     install_android_ndk
     install_llvm
 fi
 
-if [ "$PLATFORM"x = "emscripten"x ]; then 
+if [ "$PLATFORM"x = "emscripten"x ]; then
     install_llvm_3_2
 fi
 
 if [ "$PLATFORM"x = "ios"x ]; then
     install_android_ndk
     install_llvm
-    
+
     pushd $COCOS2DX_ROOT
     git submodule add https://github.com/facebook/xctool.git ./xctool
     git submodule init

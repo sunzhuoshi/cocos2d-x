@@ -51,7 +51,10 @@ enum ccScriptType {
     kScriptTypeLua,
     kScriptTypeJavascript
 };
-
+/**
+ * @js NA
+ * @lua NA
+ */
 class CCScriptHandlerEntry : public CCObject
 {
 public:
@@ -82,6 +85,8 @@ protected:
 /**
  * @addtogroup script_support
  * @{
+ * @js NA
+ * @lua NA
  */
 
 class CCSchedulerScriptHandlerEntry : public CCScriptHandlerEntry
@@ -123,7 +128,10 @@ private:
 };
 
 
-
+/**
+ * @js NA
+ * @lua NA
+ */
 class CCTouchScriptHandlerEntry : public CCScriptHandlerEntry
 {
 public:
@@ -161,6 +169,10 @@ private:
 // Don't make CCScriptEngineProtocol inherits from CCObject since setScriptEngine is invoked only once in AppDelegate.cpp,
 // It will affect the lifecycle of ScriptCore instance, the autorelease pool will be destroyed before destructing ScriptCore.
 // So a crash will appear on Win32 if you click the close button.
+/**
+ * @js NA
+ * @lua NA
+ */
 class CC_DLL CCScriptEngineProtocol
 {
 public:
@@ -199,10 +211,10 @@ public:
      @return The integer value returned from the script function.
      */
     virtual int executeGlobalFunction(const char* functionName) = 0;
-    
+
     // added support for setOpacity event to simplify opacity logic by sunzhuoshi
     // TODO: find why CCRGBAProtocol *object failed to get native proxy
-    virtual int executeRGBAProtocolOnOpacitySetEvent(void* object, unsigned int opacity) = 0;
+    virtual int executeRGBAProtocolOnOpacitySetEvent(void* object, unsigned int opacity) = 0;    
     /**
      @brief Execute a node event function
      @param pNode which node produce this event
@@ -212,11 +224,11 @@ public:
     virtual int executeNodeEvent(CCNode* pNode, int nAction) = 0;
     
     virtual int executeMenuItemEvent(CCMenuItem* pMenuItem) = 0;
-    
+
     // Execute a control event
     // Note: only used in GUI extension by sunzhuoshi
     virtual int executeControlEvent(void* control, int event) { return 0; };
-    
+
     /** Execute a notification event function */
     virtual int executeNotificationEvent(CCNotificationCenter* pNotificationCenter, const char* pszName) = 0;
     
@@ -237,17 +249,32 @@ public:
 
     /** function for common event */
     virtual int executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource = NULL, const char* pEventSourceClassName = NULL) = 0;
+    
+    /** function for c++ call back lua funtion */
+    virtual int executeEventWithArgs(int nHandler, CCArray* pArgs) { return 0; }
 
     /** called by CCAssert to allow scripting engine to handle failed assertions
      * @return true if the assert was handled by the script engine, false otherwise.
      */
     virtual bool handleAssert(const char *msg) = 0;
+    
+    /**
+     *
+     */
+    enum ConfigType
+    {
+        NONE,
+        COCOSTUDIO,
+    };
+    virtual bool parseConfig(ConfigType type, const std::string& str) = 0;
 };
 
 /**
  CCScriptEngineManager is a singleton which holds an object instance of CCScriptEngineProtocl
  It helps cocos2d-x and the user code to find back LuaEngine object
  @since v0.99.5-x-0.8.5
+ @js NA
+ @lua NA
  */
 class CC_DLL CCScriptEngineManager
 {

@@ -121,9 +121,9 @@ cc.UNIFORM_TIME	= 0x3;
 cc.UNIFORM_MAX	= 0x8;
 cc.VERTEX_ATTRIB_FLAG_COLOR	= 0x2;
 cc.VERTEX_ATTRIB_FLAG_NONE	= 0x0;
-cc.VERTEX_ATTRIB_FLAG_POSCOLORTEX	= 0x7;
+cc.VERTEX_ATTRIB_FLAG_POS_COLOR_TEX	= 0x7;
 cc.VERTEX_ATTRIB_FLAG_POSITION	= 0x1;
-cc.VERTEX_ATTRIB_FLAG_TEXCOORDS	= 0x4;
+cc.VERTEX_ATTRIB_FLAG_TEX_COORDS	= 0x4;
 cc.VERTEX_ATTRIB_COLOR	= 0x1;
 cc.VERTEX_ATTRIB_MAX	= 0x3;
 cc.VERTEX_ATTRIB_POSITION	= 0x0;
@@ -168,3 +168,27 @@ cc.UNIFORM_RANDOM01_S	= 'CC_Random01';
 cc.UNIFORM_SAMPLER_S	= 'CC_Texture0';
 cc.UNIFORM_SIN_TIME_S	= 'CC_SinTime';
 cc.UNIFORM_TIME_S	= 'CC_Time';
+
+cc.RESOLUTION_POLICY = {
+    // The entire application is visible in the specified area without trying to preserve the original aspect ratio.
+    // Distortion can occur, and the application may appear stretched or compressed.
+    EXACTFIT:0,
+    // The entire application fills the specified area, without distortion but possibly with some cropping,
+    // while maintaining the original aspect ratio of the application.
+    NOBORDER:1,
+    // The entire application is visible in the specified area without distortion while maintaining the original
+    // aspect ratio of the application. Borders can appear on two sides of the application.
+    SHOW_ALL:2,
+    // The application takes the height of the design resolution size and modifies the width of the internal
+    // canvas so that it fits the aspect ratio of the device
+    // no distortion will occur however you must make sure your application works on different
+    // aspect ratios
+    HEIGHT:3,
+    // The application takes the width of the design resolution size and modifies the height of the internal
+    // canvas so that it fits the aspect ratio of the device
+    // no distortion will occur however you must make sure your application works on different
+    // aspect ratios
+    WIDTH:4,
+
+    UNKNOWN:5
+};

@@ -181,6 +181,8 @@
 		1551A73E158F2ADE00E66CFE /* EAGLView.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A492158F2ADE00E66CFE /* EAGLView.h */; };
 		1551A73F158F2ADE00E66CFE /* EAGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1551A493158F2ADE00E66CFE /* EAGLView.mm */; };
 		1551A74B158F2ADE00E66CFE /* OpenGL_Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A4A0158F2ADE00E66CFE /* OpenGL_Internal.h */; };
+		1551A74C158F2ADE00E66CFE /* AccelerometerSimulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A4A2158F2ADE00E66CFE /* AccelerometerSimulation.h */; };
+		1551A74D158F2ADE00E66CFE /* AccelerometerSimulation.m in Sources */ = {isa = PBXBuildFile; fileRef = 1551A4A3158F2ADE00E66CFE /* AccelerometerSimulation.m */; };
 		1551A74E158F2ADE00E66CFE /* platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A4A4158F2ADE00E66CFE /* platform.cpp */; };
 		1551A74F158F2ADE00E66CFE /* platform.h in Headers */ = {isa = PBXBuildFile; fileRef = 1551A4A5158F2ADE00E66CFE /* platform.h */; };
 		1551A816158F2ADF00E66CFE /* CCScriptSupport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1551A5C1158F2ADE00E66CFE /* CCScriptSupport.cpp */; };
@@ -494,6 +496,8 @@
 		1551A492158F2ADE00E66CFE /* EAGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EAGLView.h; sourceTree = "<group>"; };
 		1551A493158F2ADE00E66CFE /* EAGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EAGLView.mm; sourceTree = "<group>"; };
 		1551A4A0158F2ADE00E66CFE /* OpenGL_Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGL_Internal.h; sourceTree = "<group>"; };
+		1551A4A2158F2ADE00E66CFE /* AccelerometerSimulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccelerometerSimulation.h; sourceTree = "<group>"; };
+		1551A4A3158F2ADE00E66CFE /* AccelerometerSimulation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccelerometerSimulation.m; sourceTree = "<group>"; };
 		1551A4A4158F2ADE00E66CFE /* platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = platform.cpp; sourceTree = "<group>"; };
 		1551A4A5158F2ADE00E66CFE /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
 		1551A5C1158F2ADE00E66CFE /* CCScriptSupport.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCScriptSupport.cpp; sourceTree = "<group>"; };
@@ -1026,8 +1030,18 @@
 				1551A492158F2ADE00E66CFE /* EAGLView.h */,
 				1551A493158F2ADE00E66CFE /* EAGLView.mm */,
 				1551A4A0158F2ADE00E66CFE /* OpenGL_Internal.h */,
+				1551A4A1158F2ADE00E66CFE /* Simulation */,
 			);
 			path = ios;
+			sourceTree = "<group>";
+		};
+		1551A4A1158F2ADE00E66CFE /* Simulation */ = {
+			isa = PBXGroup;
+			children = (
+				1551A4A2158F2ADE00E66CFE /* AccelerometerSimulation.h */,
+				1551A4A3158F2ADE00E66CFE /* AccelerometerSimulation.m */,
+			);
+			path = Simulation;
 			sourceTree = "<group>";
 		};
 		1551A5C0158F2ADE00E66CFE /* script_support */ = {
@@ -1091,25 +1105,25 @@
 			isa = PBXGroup;
 			children = (
 				1551A5E8158F2ADE00E66CFE /* base64.cpp */,
-				154269DA15B5653000712A7F /* CCNotificationCenter.cpp */,
-				1551A5EA158F2ADE00E66CFE /* CCPointExtension.cpp */,
-				1551A5EC158F2ADE00E66CFE /* CCProfiling.cpp */,
-				1A2802AE16DF1C5B00189CBF /* ccUTF8.cpp */,
-				1551A5F0158F2ADE00E66CFE /* ccUtils.cpp */,
-				1551A5F2158F2ADE00E66CFE /* CCVertex.cpp */,
-				1551A5FC158F2ADE00E66CFE /* TransformUtils.cpp */,
 				1551A5E9158F2ADE00E66CFE /* base64.h */,
+				154269DA15B5653000712A7F /* CCNotificationCenter.cpp */,
 				154269DB15B5653000712A7F /* CCNotificationCenter.h */,
+				1551A5EA158F2ADE00E66CFE /* CCPointExtension.cpp */,
 				1551A5EB158F2ADE00E66CFE /* CCPointExtension.h */,
+				1551A5EC158F2ADE00E66CFE /* CCProfiling.cpp */,
 				1551A5ED158F2ADE00E66CFE /* CCProfiling.h */,
+				1A2802AE16DF1C5B00189CBF /* ccUTF8.cpp */,
 				1A2802AF16DF1C5B00189CBF /* ccUTF8.h */,
+				1551A5F0158F2ADE00E66CFE /* ccUtils.cpp */,
 				1551A5F1158F2ADE00E66CFE /* ccUtils.h */,
+				1551A5F2158F2ADE00E66CFE /* CCVertex.cpp */,
 				1551A5F3158F2ADE00E66CFE /* CCVertex.h */,
-				1551A5FD158F2ADE00E66CFE /* TransformUtils.h */,
 				37EEEBF3175DDF3A003C1193 /* component */,
 				1551A5F4158F2ADE00E66CFE /* data_support */,
 				1551A5F9158F2ADE00E66CFE /* image_support */,
 				469A7DF016C24787006FFCB2 /* tinyxml2 */,
+				1551A5FC158F2ADE00E66CFE /* TransformUtils.cpp */,
+				1551A5FD158F2ADE00E66CFE /* TransformUtils.h */,
 				46A393F116E5D01B00210B16 /* user_default */,
 				1551A5FE158F2ADE00E66CFE /* zip_support */,
 			);
@@ -1379,6 +1393,7 @@
 				1551A73C158F2ADE00E66CFE /* CCStdC.h in Headers */,
 				1551A73E158F2ADE00E66CFE /* EAGLView.h in Headers */,
 				1551A74B158F2ADE00E66CFE /* OpenGL_Internal.h in Headers */,
+				1551A74C158F2ADE00E66CFE /* AccelerometerSimulation.h in Headers */,
 				1551A74F158F2ADE00E66CFE /* platform.h in Headers */,
 				1551A817158F2ADF00E66CFE /* CCScriptSupport.h in Headers */,
 				1551A819158F2ADF00E66CFE /* CCGLProgram.h in Headers */,
@@ -1487,7 +1502,7 @@
 		1551A336158F2AB200E66CFE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "cocos2d-x";
 			};
 			buildConfigurationList = 1551A339158F2AB200E66CFE /* Build configuration list for PBXProject "cocos2dx" */;
@@ -1590,6 +1605,7 @@
 				1551A739158F2ADE00E66CFE /* CCLock.cpp in Sources */,
 				1551A73D158F2ADE00E66CFE /* CCThread.mm in Sources */,
 				1551A73F158F2ADE00E66CFE /* EAGLView.mm in Sources */,
+				1551A74D158F2ADE00E66CFE /* AccelerometerSimulation.m in Sources */,
 				1551A74E158F2ADE00E66CFE /* platform.cpp in Sources */,
 				1551A816158F2ADF00E66CFE /* CCScriptSupport.cpp in Sources */,
 				1551A818158F2ADF00E66CFE /* CCGLProgram.cpp in Sources */,
@@ -1655,9 +1671,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_WARN_BOOL_CONVERSION = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -1671,14 +1686,10 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				ONLY_ACTIVE_ARCH = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
 				WARNING_CFLAGS = "-fdiagnostics-show-option";
 			};
@@ -1688,9 +1699,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_WARN_BOOL_CONVERSION = YES;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -1701,13 +1711,10 @@
 					"NDEBUG=1",
 				);
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 				WARNING_CFLAGS = "-fdiagnostics-show-option";
@@ -1717,6 +1724,7 @@
 		1551A34D158F2AB200E66CFE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				DSTROOT = /tmp/cocos2dx.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "cocos2dx-Prefix.pch";
@@ -1731,6 +1739,7 @@
 					"\"$(SRCROOT)/../kazmath/include\"",
 					"\"$(SDKROOT)/usr/include/libxml2\"",
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../platform/third_party/ios/libraries\"",
@@ -1744,6 +1753,7 @@
 		1551A34E158F2AB200E66CFE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				DSTROOT = /tmp/cocos2dx.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "cocos2dx-Prefix.pch";
@@ -1757,6 +1767,7 @@
 					"\"$(SRCROOT)/../kazmath/include\"",
 					"\"$(SDKROOT)/usr/include/libxml2\"",
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../platform/third_party/ios/libraries\"",

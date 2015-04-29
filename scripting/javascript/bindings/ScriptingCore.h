@@ -85,10 +85,9 @@ public:
      @return The integer value returned from the script function.
      */
 	virtual int executeGlobalFunction(const char* functionName) { return 0; }
-    virtual int executeRGBAProtocolOnOpacitySetEvent(void* object, unsigned int opacity);
+
     virtual int executeNodeEvent(CCNode* pNode, int nAction);
     virtual int executeMenuItemEvent(CCMenuItem* pMenuItem);
-    virtual int executeControlEvent(void* control, int event);
     virtual int executeNotificationEvent(CCNotificationCenter* pNotificationCenter, const char* pszName);
     virtual int executeCallFuncActionEvent(CCCallFunc* pAction, CCObject* pTarget = NULL);
     virtual int executeSchedule(int nHandler, float dt, CCNode* pNode = NULL);
@@ -99,11 +98,13 @@ public:
     virtual int executeEvent(int nHandler, const char* pEventName, CCObject* pEventSource = NULL, const char* pEventSourceClassName = NULL) { return 0; }
 
     virtual bool handleAssert(const char *msg) { return false; }
+    
+    virtual bool parseConfig(ConfigType type, const std::string& str);
 
     bool executeFunctionWithObjectData(CCNode *self, const char *name, JSObject *obj);
     JSBool executeFunctionWithOwner(jsval owner, const char *name, uint32_t argc = 0, jsval* vp = NULL, jsval* retVal = NULL);
 
-    void executeJSFunctionWithThisObj(jsval thisObj, jsval callback, jsval *data);
+    void executeJSFunctionWithThisObj(jsval thisObj, jsval callback, uint32_t argc = 0, jsval* vp = NULL, jsval* retVal = NULL);
 
 	/**
 	 * will eval the specified string
@@ -209,7 +210,6 @@ public:
 
 // some utility functions
 // to native
-JSBool jsval_to_float_vector(JSContext *cx, jsval vp, std::vector<float> &ret);
 JSBool jsval_to_int32( JSContext *cx, jsval vp, int32_t *ret );
 JSBool jsval_to_uint32( JSContext *cx, jsval vp, uint32_t *ret );
 JSBool jsval_to_uint16( JSContext *cx, jsval vp, uint16_t *ret );
@@ -233,7 +233,7 @@ JSBool jsval_to_ccfontdefinition( JSContext *cx, jsval vp, ccFontDefinition *out
 jsval int32_to_jsval( JSContext *cx, int32_t l);
 jsval uint32_to_jsval( JSContext *cx, uint32_t number );
 jsval long_long_to_jsval(JSContext* cx, long long v);
-jsval std_string_to_jsval(JSContext* cx, string& v);
+jsval std_string_to_jsval(JSContext* cx, const string& v);
 jsval c_string_to_jsval(JSContext* cx, const char* v, size_t length = -1);
 jsval ccpoint_to_jsval(JSContext* cx, CCPoint& v);
 jsval ccrect_to_jsval(JSContext* cx, CCRect& v);
@@ -294,7 +294,7 @@ public:
         // JS_EncodeString isn't supported in SpiderMonkey ff19.0.
         //buffer = JS_EncodeString(cx, string);
         unsigned short* pStrUTF16 = (unsigned short*)JS_GetStringCharsZ(cx, str);
-        buffer = cc_utf16_to_utf8(pStrUTF16, -1, NULL, NULL);
+        buffer = cc_utf16_to_utf8(pStrUTF16);
 	}
 	std::string get() {
         return buffer;

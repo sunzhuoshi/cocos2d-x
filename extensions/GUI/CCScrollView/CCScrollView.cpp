@@ -61,10 +61,9 @@ CCScrollView::CCScrollView()
 
 CCScrollView::~CCScrollView()
 {
-    // m_pTouches maybe NULL, when created from JavaScript (initWithViewSize not called)
-    if (m_pTouches) {
-        m_pTouches->release();        
-    }
+    CC_SAFE_RELEASE(m_pTouches);
+    this->unregisterScriptHandler(kScrollViewScroll);
+    this->unregisterScriptHandler(kScrollViewZoom);
 }
 
 CCScrollView* CCScrollView::create(CCSize size, CCNode* container/* = NULL*/)
@@ -123,6 +122,7 @@ bool CCScrollView::initWithViewSize(CCSize size, CCNode *container/* = NULL*/)
         
         this->addChild(m_pContainer);
         m_fMinScale = m_fMaxScale = 1.0f;
+        m_mapScriptHandler.clear();
         return true;
     }
     return false;
@@ -635,8 +635,7 @@ bool CCScrollView::ccTouchBegan(CCTouch* touch, CCEvent* event)
         m_fTouchLength = ccpDistance(m_pContainer->convertTouchToNodeSpace((CCTouch*)m_pTouches->objectAtIndex(0)),
                                    m_pContainer->convertTouchToNodeSpace((CCTouch*)m_pTouches->objectAtIndex(1)));
         m_bDragging  = false;
-    }
-    CCLayer::ccTouchBegan(touch, event);
+    } 
     return true;
 }
 
@@ -646,7 +645,7 @@ void CCScrollView::ccTouchMoved(CCTouch* touch, CCEvent* event)
     {
         return;
     }
-    CCLayer::ccTouchMoved(touch, event);
+
     if (m_pTouches->containsObject(touch))
     {
         if (m_pTouches->count() == 1 && m_bDragging)
@@ -727,7 +726,6 @@ void CCScrollView::ccTouchEnded(CCTouch* touch, CCEvent* event)
     {
         return;
     }
-    CCLayer::ccTouchEnded(touch, event);
     if (m_pTouches->containsObject(touch))
     {
         if (m_pTouches->count() == 1 && m_bTouchMoved)
@@ -785,4 +783,27 @@ CCRect CCScrollView::getViewRect()
     return CCRectMake(screenPos.x, screenPos.y, m_tViewSize.width*scaleX, m_tViewSize.height*scaleY);
 }
 
+void CCScrollView::registerScriptHandler(int nFunID,int nScriptEventType)
+{
+    this->unregisterScriptHandler(nScriptEventType);
+    m_mapScriptHandler[nScriptEventType] = nFunID;
+}
+void CCScrollView::unregisterScriptHandler(int nScriptEventType)
+{
+    std::map<int,int>::iterator iter = m_mapScriptHandler.find(nScriptEventType);
+    
+    if (m_mapScriptHandler.end() != iter)
+    {
+        m_mapScriptHandler.erase(iter);
+    }
+}
+int  CCScrollView::getScriptHandler(int nScriptEventType)
+{
+    std::map<int,int>::iterator iter = m_mapScriptHandler.find(nScriptEventType);
+    
+    if (m_mapScriptHandler.end() != iter)
+        return iter->second;
+    
+    return 0;
+}
 NS_CC_EXT_END
