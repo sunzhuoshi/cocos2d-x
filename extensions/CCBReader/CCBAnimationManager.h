@@ -45,7 +45,7 @@ private:
     std::string mDocumentControllerName;
     std::string lastCompletedSequenceName;
 
-    SEL_CallFunc mAnimationCompleteCallbackFunc;
+    SEL_CallFuncND mAnimationCompleteCallbackFunc;
     CCObject *mTarget;
     
     
@@ -121,7 +121,7 @@ public:
     /**
      *  @lua NA
      */
-    void setAnimationCompletedCallback(CCObject *target, SEL_CallFunc callbackFunc);
+    void setAnimationCompletedCallback(CCObject *target, SEL_CallFuncND callbackFunc);
 
     void debug();
     /**
