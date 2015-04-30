@@ -204,7 +204,8 @@ protected:
     /** font tint */
     ccColor3B   m_textFillColor;
 
-    
+    // TODO: finish it
+    bool m_adjustsFontSizeToFitWidth;
 };
 
 
