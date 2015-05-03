@@ -90,18 +90,18 @@ static void ReportException(JSContext *cx)
 }
 
 static void executeJSFunctionFromReservedSpot(JSContext *cx, JSObject *obj,
-                                              jsval &dataVal, jsval &retval) {
-
+                                              unsigned argc, jsval *dataVals, jsval &retval) {
+    
     jsval func = JS_GetReservedSlot(obj, 0);
-
+    
     if(func == JSVAL_VOID) { return; }
     jsval thisObj = JS_GetReservedSlot(obj, 1);
     JSAutoCompartment ac(cx, obj);
     if(thisObj == JSVAL_VOID) {
-        JS_CallFunctionValue(cx, obj, func, 1, &dataVal, &retval);
+        JS_CallFunctionValue(cx, obj, func, argc, dataVals, &retval);
     } else {
         assert(!JSVAL_IS_PRIMITIVE(thisObj));
-        JS_CallFunctionValue(cx, JSVAL_TO_OBJECT(thisObj), func, 1, &dataVal, &retval);
+        JS_CallFunctionValue(cx, JSVAL_TO_OBJECT(thisObj), func, argc, dataVals, &retval);
     }
 }
 
@@ -754,6 +754,16 @@ void ScriptingCore::cleanupSchedulesAndActions(js_proxy_t* p)
     }
 }
 
+int ScriptingCore::executeRGBAProtocolOnOpacitySetEvent(void* object, unsigned int opacity)
+{
+    js_proxy_t * p = jsb_get_native_proxy(object);
+    if (!p) return 0;
+    jsval retval;
+    jsval dataVal = UINT_TO_JSVAL(opacity);
+    executeFunctionWithOwner(OBJECT_TO_JSVAL(p->obj), "onOpacitySet", 1, &dataVal, &retval);
+    return 1;
+}
+
 int ScriptingCore::executeNodeEvent(CCNode* pNode, int nAction)
 {
     js_proxy_t * p = jsb_get_native_proxy(pNode);
@@ -797,8 +807,26 @@ int ScriptingCore::executeMenuItemEvent(CCMenuItem* pMenuItem)
     js_proxy_t *proxy = jsb_get_native_proxy(pMenuItem);
     dataVal = (proxy ? OBJECT_TO_JSVAL(proxy->obj) : JSVAL_NULL);
 
-    executeJSFunctionFromReservedSpot(this->cx_, p->obj, dataVal, retval);
+    executeJSFunctionFromReservedSpot(this->cx_, p->obj, 1, &dataVal, retval);
 
+    return 1;
+}
+
+int ScriptingCore::executeControlEvent(void* control, int event)
+{
+    js_proxy_t *p;
+    JS_GET_PROXY(p, control);
+    
+    if (!p) {
+        return 0;
+    }
+    jsval retVal;
+    jsval dataVals[2];
+    dataVals[0] = OBJECT_TO_JSVAL(p->obj);
+    dataVals[1] = INT_TO_JSVAL(event);
+    
+    executeJSFunctionFromReservedSpot(this->cx_, p->obj, 2, &dataVals[0], retVal);
+    
     return 1;
 }
 
@@ -1020,6 +1048,26 @@ int ScriptingCore::executeCustomTouchEvent(int eventType,
 }
 
 #pragma mark - Conversion Routines
+JSBool jsval_to_float_vector(JSContext *cx, jsval vp, std::vector<float> &ret)
+{
+    JSObject *jsobj = NULL;
+    uint32_t len = 0;
+    JSB_PRECONDITION2(JS_ValueToObject(cx, vp, &jsobj), cx, JS_FALSE, "Failed to convert value to object");
+    JSB_PRECONDITION2(JS_GetArrayLength(cx, jsobj, &len), cx, JS_FALSE, "Failed to get the length of array ");
+    ret.resize(len);
+    for (uint32_t i=0; i<len; i++) {
+        jsval value;
+        double number = 0.0;
+        JSB_PRECONDITION2(JS_GetElement(cx, jsobj, i, &value), cx, JS_FALSE, "Failed to get array element");
+        JSB_PRECONDITION2(value.isNumber() && JS_ValueToNumber(cx, value, &number) && !isnan(number),
+                          cx,
+                          JS_FALSE,
+                          "Failed to convert value to number");
+        ret[i] = (float)number;
+    }
+    return JS_TRUE;
+}
+
 JSBool jsval_to_int32( JSContext *cx, jsval vp, int32_t *outval )
 {
     JSBool ok = JS_TRUE;

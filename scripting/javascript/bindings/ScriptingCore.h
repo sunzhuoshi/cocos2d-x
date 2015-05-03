@@ -85,9 +85,10 @@ public:
      @return The integer value returned from the script function.
      */
 	virtual int executeGlobalFunction(const char* functionName) { return 0; }
-
+    virtual int executeRGBAProtocolOnOpacitySetEvent(void* object, unsigned int opacity);
     virtual int executeNodeEvent(CCNode* pNode, int nAction);
     virtual int executeMenuItemEvent(CCMenuItem* pMenuItem);
+    virtual int executeControlEvent(void* control, int event);
     virtual int executeNotificationEvent(CCNotificationCenter* pNotificationCenter, const char* pszName);
     virtual int executeCallFuncActionEvent(CCCallFunc* pAction, CCObject* pTarget = NULL);
     virtual int executeSchedule(int nHandler, float dt, CCNode* pNode = NULL);
@@ -210,6 +211,7 @@ public:
 
 // some utility functions
 // to native
+JSBool jsval_to_float_vector(JSContext *cx, jsval vp, std::vector<float> &ret);
 JSBool jsval_to_int32( JSContext *cx, jsval vp, int32_t *ret );
 JSBool jsval_to_uint32( JSContext *cx, jsval vp, uint32_t *ret );
 JSBool jsval_to_uint16( JSContext *cx, jsval vp, uint16_t *ret );
