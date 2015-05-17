@@ -376,6 +376,7 @@ protected:
     
     void showStats();
     void createStatsLabel();
+    void setStatsLabelPosition();
     void calculateMPF();
     void getFPSImageData(unsigned char** datapointer, unsigned int* length);
     

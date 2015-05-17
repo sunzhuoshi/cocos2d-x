@@ -940,25 +940,31 @@ void CCDirector::createStatsLabel()
      Secondly, the size of this image is 480*320, to display the FPS label with correct size, 
      a factor of design resolution ratio of 480x320 is also needed.
      */
-    float factor = CCEGLView::sharedOpenGLView()->getDesignResolutionSize().height / 320.0f;
-
     m_pFPSLabel = new CCLabelAtlas();
     m_pFPSLabel->setIgnoreContentScaleFactor(true);
     m_pFPSLabel->initWithString("00.0", texture, 12, 32 , '.');
-    m_pFPSLabel->setScale(factor);
 
     m_pSPFLabel = new CCLabelAtlas();
     m_pSPFLabel->setIgnoreContentScaleFactor(true);
     m_pSPFLabel->initWithString("0.000", texture, 12, 32, '.');
-    m_pSPFLabel->setScale(factor);
 
     m_pDrawsLabel = new CCLabelAtlas();
     m_pDrawsLabel->setIgnoreContentScaleFactor(true);
     m_pDrawsLabel->initWithString("000", texture, 12, 32, '.');
-    m_pDrawsLabel->setScale(factor);
 
     CCTexture2D::setDefaultAlphaPixelFormat(currentFormat);
 
+    this->setStatsLabelPosition();
+}
+
+void CCDirector::setStatsLabelPosition()
+{
+    float factor = CCEGLView::sharedOpenGLView()->getDesignResolutionSize().height / 320.0f;
+    
+    m_pFPSLabel->setScale(factor);
+    m_pSPFLabel->setScale(factor);
+    m_pDrawsLabel->setScale(factor);
+    
     m_pDrawsLabel->setPosition(ccpAdd(ccp(0, 34*factor), CC_DIRECTOR_STATS_POSITION));
     m_pSPFLabel->setPosition(ccpAdd(ccp(0, 17*factor), CC_DIRECTOR_STATS_POSITION));
     m_pFPSLabel->setPosition(CC_DIRECTOR_STATS_POSITION);
