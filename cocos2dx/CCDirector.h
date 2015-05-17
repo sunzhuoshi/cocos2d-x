@@ -73,6 +73,7 @@ class CCActionManager;
 class CCTouchDispatcher;
 class CCKeypadDispatcher;
 class CCAccelerometer;
+class CCSprite;
 
 /**
 @brief Class that creates and handle the main Window and manages how
@@ -445,6 +446,12 @@ protected:
     
     // CCEGLViewProtocol will recreate stats labels to fit visible rect
     friend class CCEGLViewProtocol;
+    //< HACK to show background image in the black border when kResolutionShowAll policy used
+public:
+    void setBackground(const char *filePath);
+private:
+    CCSprite *m_background;
+    //>
 };
 
 /** 

@@ -174,6 +174,10 @@ public:
      * Get scale factor of the vertical direction.
      */
     float getScaleY() const;
+    
+    ResolutionPolicy getResolutionPolicy() {
+        return m_eResolutionPolicy;
+    }
 private:
     void getSetOfTouchesEndOrCancel(CCSet& set, int num, int ids[], float xs[], float ys[]);
 

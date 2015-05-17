@@ -64,7 +64,7 @@ THE SOFTWARE.
 #include "platform/CCImage.h"
 #include "CCEGLView.h"
 #include "CCConfiguration.h"
-
+#include "CCSprite.h"
 
 
 /**
@@ -102,7 +102,7 @@ CCDirector* CCDirector::sharedDirector(void)
 
 CCDirector::CCDirector(void)
 {
-
+    m_background = NULL;
 }
 
 bool CCDirector::init(void)
@@ -265,6 +265,19 @@ void CCDirector::drawScene(void)
     {
         setNextScene();
     }
+    
+    //< HACK to show background image in the black border when kResolutionShowAll policy used
+    if (m_background) {
+        ResolutionPolicy rp = m_pobOpenGLView->getResolutionPolicy();
+        CCSize rs = m_pobOpenGLView->getDesignResolutionSize();
+        if (rp == kResolutionShowAll) {
+            CCSize cs = m_background->getContentSize();
+            m_pobOpenGLView->setDesignResolutionSize(cs.width, cs.height, kResolutionNoBorder);
+            m_background->visit();
+            m_pobOpenGLView->setDesignResolutionSize(rs.width, rs.height, rp);
+        }
+    }
+    //>
 
     kmGLPushMatrix();
 
@@ -1058,6 +1071,23 @@ CCAccelerometer* CCDirector::getAccelerometer()
     return m_pAccelerometer;
 }
 
+//< HACK to show background image in the black border when kResolutionShowAll policy used
+void CCDirector::setBackground(const char *filePath)
+{
+    if (m_background) {
+        m_background->release();
+    }
+    if (!filePath) {
+        m_background = NULL;
+        return;
+    }
+    m_background = CCSprite::create(filePath);
+    m_background->retain();
+    
+    CCSize cs = m_background->getContentSize();
+    m_background->setPosition(ccp(cs.width / 2.0f, cs.height / 2.0f));
+}
+//>
 /***************************************************
 * implementation of DisplayLinkDirector
 **************************************************/
