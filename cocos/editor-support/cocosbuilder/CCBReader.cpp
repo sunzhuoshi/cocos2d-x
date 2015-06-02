@@ -250,11 +250,18 @@ Node* CCBReader::readNodeGraphFromData(std::shared_ptr<cocos2d::Data> data, Ref 
     }
     
     // Assign actionManagers to userObject
+    //< HACK to keep animation manager insert order
+    /*
     for (auto iter = _animationManagers->begin(); iter != _animationManagers->end(); ++iter)
     {
         Node* pNode = iter->first;
         CCBAnimationManager* manager = iter->second;
-        
+    */
+    for (auto iter = _animationManagers->ordered_keys_begin(); iter != _animationManagers->ordered_keys_end(); ++iter)
+    {
+        Node* pNode = *iter;
+        CCBAnimationManager* manager = _animationManagers->at(pNode);
+    //>
         pNode->setUserObject(manager);
 
         if (_jsControlled)

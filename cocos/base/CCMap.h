@@ -59,7 +59,9 @@ public:
 #else
     typedef std::map<K, V> RefMap;
 #endif
-    
+    //<
+    typedef std::vector<K> RefKeys;
+    //>
     // ------------------------------------------
     // Iterators
     // ------------------------------------------
@@ -68,7 +70,11 @@ public:
     typedef typename RefMap::iterator iterator;
     /** Const iterator, can be used to loop the Map. */
     typedef typename RefMap::const_iterator const_iterator;
-    
+
+    //<
+    typedef typename RefKeys::iterator keys_iterator;
+    typedef typename RefKeys::const_iterator const_keys_iterator;
+    //>
     /** Return iterator to beginning. */
     iterator begin() { return _data.begin(); }
     /** Return const_iterator to beginning. */
@@ -84,6 +90,10 @@ public:
     /** Return const_iterator to end.*/
     const_iterator cend() const { return _data.cend(); }
     
+    //<
+    const_keys_iterator ordered_keys_begin() { return _ordered_keys.begin(); };
+    const_keys_iterator ordered_keys_end() { return _ordered_keys.end(); };
+    //>
     /** Default constructor */
     Map<K, V>()
     : _data()
@@ -99,6 +109,9 @@ public:
         static_assert(std::is_convertible<V, Ref*>::value, "Invalid Type for cocos2d::Map<K, V>!");
         CCLOGINFO("In the constructor with capacity of Map!");
         _data.reserve(capacity);
+        //<
+        _ordered_keys.reserve(capacity);
+        //>
     }
     
     /** Copy constructor. */
@@ -107,6 +120,9 @@ public:
         static_assert(std::is_convertible<V, Ref*>::value, "Invalid Type for cocos2d::Map<K, V>!");
         CCLOGINFO("In the copy constructor of Map!");
         _data = other._data;
+        //<
+        _ordered_keys = other._ordered_keys;
+        //>
         addRefForAllObjects();
     }
     
@@ -116,6 +132,9 @@ public:
         static_assert(std::is_convertible<V, Ref*>::value, "Invalid Type for cocos2d::Map<K, V>!");
         CCLOGINFO("In the move constructor of Map!");
         _data = std::move(other._data);
+        //<
+        _ordered_keys = std::move(other._ordered_keys);
+        //>
     }
     
     /** 
@@ -134,6 +153,9 @@ public:
 #if USE_STD_UNORDERED_MAP
         _data.reserve(capacity);
 #endif
+        //<
+        _ordered_keys.reserve(capacity);
+        //>
     }
     
     /** Returns the number of buckets in the Map container. */
@@ -275,9 +297,24 @@ public:
         CCASSERT(object != nullptr, "Object is nullptr!");
         erase(key);
         _data.insert(std::make_pair(key, object));
+        //<
+        _ordered_keys.push_back(key);
+        //>
         object->retain();
     }
-    
+    //<
+    void _eraseKey(const K& key)
+    {
+        for (keys_iterator it=_ordered_keys.begin(); it!=_ordered_keys.end();) {
+            if (*it == key) {
+                it = _ordered_keys.erase(it);
+            }
+            else {
+                ++it;
+            }
+        }
+    }
+    //>
     /** 
      * Removes an element with an iterator from the Map<K, V> container.
      *
@@ -288,6 +325,9 @@ public:
     {
         CCASSERT(position != _data.cend(), "Invalid iterator!");
         position->second->release();
+        //<
+        _eraseKey(position->first);
+        //>
         return _data.erase(position);
     }
     
@@ -305,6 +345,9 @@ public:
         {
             iter->second->release();
             _data.erase(iter);
+            //<
+            _eraseKey(k);
+            //>
             return 1;
         }
         
@@ -336,6 +379,9 @@ public:
         }
         
         _data.clear();
+        //<
+        _ordered_keys.clear();
+        //>
     }
     
     /** 
@@ -386,6 +432,9 @@ public:
             CCLOGINFO("In the copy assignment operator of Map!");
             clear();
             _data = other._data;
+            //<
+            _ordered_keys = other._ordered_keys;
+            //>
             addRefForAllObjects();
         }
         return *this;
@@ -398,6 +447,9 @@ public:
             CCLOGINFO("In the move assignment operator of Map!");
             clear();
             _data = std::move(other._data);
+            //<
+            _ordered_keys = std::move(other._ordered_keys);
+            //>
         }
         return *this;
     }
@@ -414,6 +466,9 @@ protected:
     }
     
     RefMap _data;
+    //<
+    RefKeys _ordered_keys;
+    //>
 };
 
 // end group
