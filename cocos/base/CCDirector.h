@@ -60,6 +60,7 @@ class Renderer;
 class Camera;
 
 class Console;
+class Sprite;
 
 /**
  * @brief Matrix stack type.
@@ -599,6 +600,12 @@ protected:
 
     // GLView will recreate stats labels to fit visible rect
     friend class GLView;
+    //< HACK to show background image in the black border when ResolutionPolicy::SHOW_ALL policy used
+public:
+    void setBackground(const char *filePath);
+private:
+    Sprite *m_background;
+    //>
 };
 
 // end of base group

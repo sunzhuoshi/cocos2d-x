@@ -60,6 +60,7 @@ THE SOFTWARE.
 #include "base/CCAsyncTaskPool.h"
 #include "platform/CCApplication.h"
 //#include "platform/CCGLViewImpl.h"
+#include "2d/CCSprite.h"
 
 #if CC_ENABLE_SCRIPT_BINDING
 #include "CCScriptSupport.h"
@@ -108,6 +109,7 @@ Director* Director::getInstance()
 
 Director::Director()
 {
+    m_background = NULL;
 }
 
 bool Director::init(void)
@@ -279,6 +281,18 @@ void Director::drawScene()
     {
         setNextScene();
     }
+    
+    //< HACK to show background image in the black border when ResolutionPolicy::SHOW_ALL policy used
+    if (m_background && ResolutionPolicy::SHOW_ALL == _openGLView->getResolutionPolicy()) {
+        Size rs = _openGLView->getDesignResolutionSize();
+        Size cs = m_background->getContentSize();
+        
+        _openGLView->setDesignResolutionSize(cs.width, cs.height, ResolutionPolicy::NO_BORDER);
+        m_background->visit();
+        _renderer->render();
+        _openGLView->setDesignResolutionSize(rs.width, rs.height, ResolutionPolicy::SHOW_ALL);
+    }
+    //>
 
     pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
     
@@ -1296,6 +1310,23 @@ void Director::setEventDispatcher(EventDispatcher* dispatcher)
     }
 }
 
+//< HACK to show background image in the black border when ResolutionPolicy::SHOW_ALL policy used
+void Director::setBackground(const char *filePath)
+{
+    if (m_background) {
+        m_background->release();
+    }
+    if (!filePath) {
+        m_background = NULL;
+        return;
+    }
+    m_background = Sprite::create(filePath);
+    m_background->retain();
+    
+    Size cs = m_background->getContentSize();
+    m_background->setPosition(cs.width / 2.0f, cs.height / 2.0f);
+}
+//>
 /***************************************************
 * implementation of DisplayLinkDirector
 **************************************************/
